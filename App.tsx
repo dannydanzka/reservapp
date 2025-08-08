@@ -1,28 +1,11 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
+ * ReservApp - Aplicación de Reservas con Stack Moderno
+ * React Native 0.80 + React 19 + TypeScript + Redux Toolkit
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React from 'react';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+import App from './src/App';
 
 export default App;
