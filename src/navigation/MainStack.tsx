@@ -1,30 +1,33 @@
 import React from 'react';
+
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { MainStackParamList } from './types';
+import { MainStackParamList } from '@navigation/types';
+import ProfileScreen from '@mod-profile/presentation/components/UserProfileScreen/UserProfileScreen';
+import SettingsScreen from '@presentation/screens/main/AccountScreen';
+
 import TabNavigator from './TabNavigator';
-import ProfileScreen from '../screens/main/ProfileScreen';
-import SettingsScreen from '../screens/main/SettingsScreen';
 
 const Stack = createStackNavigator<MainStackParamList>();
 
 const MainStack: React.FC = () => {
   return (
     <Stack.Navigator
+      id={undefined}
       screenOptions={{
-        headerShown: false,
         cardStyle: { backgroundColor: 'white' },
+        headerShown: false,
       }}
     >
-      <Stack.Screen name="TabNavigator" component={TabNavigator} />
-      <Stack.Screen 
-        name="Profile" 
+      <Stack.Screen component={TabNavigator} name='TabNavigator' />
+      <Stack.Screen
         component={ProfileScreen}
+        name='Profile'
         options={{ headerShown: true, title: 'Perfil' }}
       />
-      <Stack.Screen 
-        name="Settings" 
+      <Stack.Screen
         component={SettingsScreen}
+        name='Settings'
         options={{ headerShown: true, title: 'Configuración' }}
       />
     </Stack.Navigator>

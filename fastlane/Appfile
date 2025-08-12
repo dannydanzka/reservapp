@@ -1,0 +1,17 @@
+# App configuration for Fastlane
+
+# iOS Configuration
+app_identifier("com.reservapp.mobile") # The bundle identifier of your app
+apple_id("your-apple-id@email.com") # Your Apple ID email
+itc_team_id("your-app-store-connect-team-id") # App Store Connect Team ID
+team_id("your-developer-team-id") # Developer Team ID
+
+# Android Configuration
+package_name("com.reservapp.mobile") # e.g. com.krausefx.app
+json_key_file("./android/keystore/google-play-service-account.json") # Path to the json secret file
+
+# Optional: Specify a different Apple ID for the Apple Developer Portal
+# apple_dev_portal_id("developer-account@email.com")
+
+# Optional: Specify a different App Store Connect account
+# itunes_connect_id("app-store-connect@email.com")

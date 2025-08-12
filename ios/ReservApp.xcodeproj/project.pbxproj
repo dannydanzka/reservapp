@@ -106,6 +106,7 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ReservApp" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				510AE198B1574C83A936637B /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -198,6 +199,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReservApp/Pods-ReservApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		510AE198B1574C83A936637B /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if ! nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    echo \"Starting Metro bundler...\"\n    # Start Metro bundler in new terminal window\n    osascript -e \"tell application \\\"Terminal\\\" to do script \\\"cd ${SRCROOT}/.. && npm start\\\"\"\n    echo \"Metro bundler starting in new terminal window\"\n  else\n    echo \"Metro bundler already running on port ${RCT_METRO_PORT}\"\n  fi\nelse\n  echo \"RCT_NO_LAUNCH_PACKAGER is set, skipping Metro bundler launch\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {

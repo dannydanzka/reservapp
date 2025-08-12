@@ -1,19 +1,19 @@
 import React from 'react';
+
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { SearchStackParamList } from '../types';
-import { theme } from '../../libs/ui/theme/theme';
-
-// Screens
-import SearchHomeScreen from '../../screens/tabs/search/SearchHomeScreen';
-import SearchResultsScreen from '../../screens/tabs/search/SearchResultsScreen';
-import MapViewScreen from '../../screens/tabs/search/MapViewScreen';
+import { SearchStackParamList } from '@navigation/types';
+import { theme } from '@styles/theme';
+import MapViewScreen from '@presentation/screens/tabs/search/MapViewScreen';
+import SearchHomeScreen from '@presentation/screens/tabs/search/SearchHomeScreen';
+import SearchResultsScreen from '@presentation/screens/tabs/search/SearchResultsScreen';
 
 const Stack = createStackNavigator<SearchStackParamList>();
 
 const SearchStack: React.FC = () => {
   return (
     <Stack.Navigator
+      id={undefined}
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.white,
@@ -28,24 +28,24 @@ const SearchStack: React.FC = () => {
       }}
     >
       <Stack.Screen
-        name="SearchHome"
         component={SearchHomeScreen}
+        name='SearchHome'
         options={{
           title: 'Buscar',
         }}
       />
-      
+
       <Stack.Screen
-        name="SearchResults"
         component={SearchResultsScreen}
+        name='SearchResults'
         options={({ route }) => ({
           title: `Resultados: "${route.params.query}"`,
         })}
       />
-      
+
       <Stack.Screen
-        name="MapView"
         component={MapViewScreen}
+        name='MapView'
         options={{
           title: 'Mapa',
         }}

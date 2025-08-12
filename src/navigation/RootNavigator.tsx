@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
-import { useAppSelector } from '../store/store';
-import { useSessionRestore } from '../hooks/useSessionRestore';
-import { RootStackParamList } from './types';
-import AuthStack from './stacks/AuthStack';
-import MainDrawer from './drawers/MainDrawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+
+import { RootStackParamList } from '@navigation/types';
+import { useAppSelector } from '@store/store';
+import { useSessionRestore } from '@hooks/useSessionRestore';
+import SplashScreen from '@presentation/screens/SplashScreen';
+
+import AuthStack from './AuthStack';
 import BookingFlow from './stacks/BookingFlow';
-import SplashScreen from '../screens/SplashScreen';
+import MainDrawer from './drawers/MainDrawer';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const { isRestoring, isReady } = useSessionRestore();
+  const { isReady, isRestoring } = useSessionRestore();
   const [showSplash, setShowSplash] = useState(true);
 
   // Mostrar splash mientras se restaura la sesión o mientras no esté listo
   if (isRestoring || !isReady || showSplash) {
     return (
-      <SplashScreen 
+      <SplashScreen
         onFinish={() => {
           if (isReady) {
             setShowSplash(false);
@@ -32,18 +34,18 @@ const RootNavigator: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator id={undefined} screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="MainDrawer" component={MainDrawer} />
-            <Stack.Screen 
-              name="BookingFlow" 
+            <Stack.Screen component={MainDrawer} name='MainDrawer' />
+            <Stack.Screen
               component={BookingFlow}
+              name='BookingFlow'
               options={{ presentation: 'modal' }}
             />
           </>
         ) : (
-          <Stack.Screen name="AuthStack" component={AuthStack} />
+          <Stack.Screen component={AuthStack} name='AuthStack' />
         )}
       </Stack.Navigator>
     </NavigationContainer>

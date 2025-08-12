@@ -1,0 +1,395 @@
+name: 🏭 Production Builds & Deploy
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*.*.*' ]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - ios
+        - android
+        - both
+      increment_version:
+        description: 'Increment version'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+      upload_to_stores:
+        description: 'Upload to app stores'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+        - 'true'
+        - 'false'
+      ios_upload_testflight:
+        description: 'Upload iOS to TestFlight'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+        - 'true'
+        - 'false'
+      android_track:
+        description: 'Android Play Store track'
+        required: true
+        default: 'internal'
+        type: choice
+        options:
+        - internal
+        - alpha
+        - beta
+        - production
+
+env:
+  NODE_VERSION: '18'
+  JAVA_VERSION: '11'
+  RUBY_VERSION: '3.1'
+
+jobs:
+  # Pre-production checks
+  pre-production-checks:
+    name: 🔍 Pre-Production Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🔍 TypeScript check (strict)
+        run: yarn type-check
+
+      - name: 🎨 Lint code (strict)
+        run: yarn lint --max-warnings 0
+
+      - name: 🧪 Run all tests with coverage
+        run: |
+          if yarn test --listTests --json | jq -r '.[] | length' | grep -q '^0$'; then
+            echo "⚠️ No tests found - consider adding tests for production"
+          else
+            yarn test --watchAll=false --coverage=true --ci
+          fi
+
+      - name: 📊 Check bundle size
+        run: |
+          yarn install --frozen-lockfile
+          echo "📊 Bundle analysis would run here"
+          # Add your bundle analysis command here
+          # e.g., yarn analyze-bundle
+
+      - name: 🔒 Security audit
+        run: yarn audit --level=high
+        continue-on-error: true
+
+      - name: 📤 Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: production
+          name: codecov-production
+        continue-on-error: true
+
+  # iOS Production Build
+  ios-production:
+    name: 🍎 iOS Production Build & Deploy
+    runs-on: macos-latest
+    needs: pre-production-checks
+    if: github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'both' || github.event.inputs.platform == ''
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: 📦 Install Node dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🔐 Setup iOS certificates & profiles
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        run: |
+          bundle exec fastlane ios setup_certificates type:appstore
+
+      - name: 🏗️ Build iOS Production
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        run: |
+          mkdir -p ios/builds/production
+          bundle exec fastlane ios production \
+            increment_version:${{ github.event.inputs.increment_version || 'patch' }} \
+            upload_to_testflight:${{ github.event.inputs.ios_upload_testflight || 'true' }}
+
+      - name: 📤 Upload iOS Production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-production-${{ github.run_number }}
+          path: ios/builds/production/*.ipa
+          retention-days: 90
+
+      - name: 📋 iOS Build Summary
+        run: |
+          echo "## 🍎 iOS Production Build" >> $GITHUB_STEP_SUMMARY
+          echo "✅ iOS Production IPA generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Artifact: ios-production-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.ios_upload_testflight }}" == "true" ]; then
+            echo "🚀 Uploaded to TestFlight" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: 🔄 Commit version changes
+        if: github.event.inputs.increment_version != ''
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ios/ReservApp.xcodeproj/project.pbxproj
+          git add ios/ReservApp/Info.plist
+          git commit -m "chore: bump iOS version [skip ci]" || exit 0
+          git push origin main || true
+
+  # Android Production Build
+  android-production:
+    name: 🤖 Android Production Build & Deploy
+    runs-on: ubuntu-latest
+    needs: pre-production-checks
+    if: github.event.inputs.platform == 'android' || github.event.inputs.platform == 'both' || github.event.inputs.platform == ''
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: 📦 Install Node dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🤖 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🔐 Setup Android Keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          mkdir -p android/keystore
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/keystore/release.keystore
+          echo "KEYSTORE_FILE=../keystore/release.keystore" >> android/gradle.properties
+          echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> android/gradle.properties
+          echo "KEY_ALIAS=$KEY_ALIAS" >> android/gradle.properties
+          echo "KEY_PASSWORD=$KEY_PASSWORD" >> android/gradle.properties
+
+      - name: 🔐 Setup Google Play Service Account
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          mkdir -p android/keystore
+          echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > android/keystore/google-play-service-account.json
+
+      - name: 🔐 Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: 🏗️ Build Android Production
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_PATH: './android/keystore/google-play-service-account.json'
+        run: |
+          mkdir -p android/builds/production
+          bundle exec fastlane android production \
+            increment_version:${{ github.event.inputs.increment_version || 'patch' }} \
+            upload_to_play_store:${{ github.event.inputs.upload_to_stores || 'false' }}
+
+      - name: 📤 Upload Android Production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-production-${{ github.run_number }}
+          path: |
+            android/builds/production/*.aab
+            android/builds/production/*.apk
+          retention-days: 90
+
+      - name: 📋 Android Build Summary
+        run: |
+          echo "## 🤖 Android Production Build" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Android Production AAB & APK generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Artifact: android-production-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.upload_to_stores }}" == "true" ]; then
+            echo "🚀 Uploaded to Google Play (${{ github.event.inputs.android_track }} track)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: 🔄 Commit version changes
+        if: github.event.inputs.increment_version != ''
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add android/app/build.gradle
+          git commit -m "chore: bump Android version [skip ci]" || exit 0
+          git push origin main || true
+
+  # Create Production Release
+  create-production-release:
+    name: 📦 Create Production Release
+    runs-on: ubuntu-latest
+    needs: [ios-production, android-production]
+    if: startsWith(github.ref, 'refs/tags/v') && (needs.ios-production.result == 'success' || needs.android-production.result == 'success')
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📥 Download iOS artifact
+        if: needs.ios-production.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-production-${{ github.run_number }}
+          path: ./production-artifacts/ios/
+
+      - name: 📥 Download Android artifact
+        if: needs.android-production.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: android-production-${{ github.run_number }}
+          path: ./production-artifacts/android/
+
+      - name: 📦 Create Production Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./production-artifacts/ios/*.ipa
+            ./production-artifacts/android/*.aab
+            ./production-artifacts/android/*.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          name: "Production Release ${{ github.ref_name }}"
+          body: |
+            ## 🏭 Production Release
+            
+            This is a production-ready release of ReservApp Mobile.
+            
+            ### 📱 Downloads
+            - **iOS**: Download the `.ipa` file for internal distribution
+            - **Android**: Download the `.aab` file for Google Play Store or `.apk` for direct installation
+            
+            ### 🚀 Deployment Status
+            - iOS TestFlight: ${{ github.event.inputs.ios_upload_testflight == 'true' && '✅ Uploaded' || '⏸️ Manual upload required' }}
+            - Google Play: ${{ github.event.inputs.upload_to_stores == 'true' && '✅ Uploaded' || '⏸️ Manual upload required' }}
+            
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Post-production tasks
+  post-production:
+    name: 📋 Post-Production Tasks
+    runs-on: ubuntu-latest
+    needs: [ios-production, android-production]
+    if: always() && (needs.ios-production.result == 'success' || needs.android-production.result == 'success')
+    steps:
+      - name: 📊 Generate deployment report
+        run: |
+          echo "# 🏭 Production Deployment Report" > deployment-report.md
+          echo "" >> deployment-report.md
+          echo "**Date**: $(date)" >> deployment-report.md
+          echo "**Commit**: $GITHUB_SHA" >> deployment-report.md  
+          echo "**Actor**: $GITHUB_ACTOR" >> deployment-report.md
+          echo "" >> deployment-report.md
+          echo "## Build Status" >> deployment-report.md
+          echo "- iOS: ${{ needs.ios-production.result || 'skipped' }}" >> deployment-report.md
+          echo "- Android: ${{ needs.android-production.result || 'skipped' }}" >> deployment-report.md
+          echo "" >> deployment-report.md
+          echo "## Store Upload Status" >> deployment-report.md
+          echo "- iOS TestFlight: ${{ github.event.inputs.ios_upload_testflight == 'true' && '✅ Uploaded' || '⏸️ Manual upload required' }}" >> deployment-report.md
+          echo "- Google Play (${{ github.event.inputs.android_track }}): ${{ github.event.inputs.upload_to_stores == 'true' && '✅ Uploaded' || '⏸️ Manual upload required' }}" >> deployment-report.md
+
+      - name: 📤 Upload deployment report
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-report-${{ github.run_number }}
+          path: deployment-report.md
+          retention-days: 365
+
+      - name: 📢 Send comprehensive notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{
+                "text": "🏭 Production deployment completed for ReservApp Mobile",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*🏭 Production Deployment Complete*\n\n*Platform Status:*\n• iOS: ${{ needs.ios-production.result || 'skipped' }}\n• Android: ${{ needs.android-production.result || 'skipped' }}\n\n*Store Upload:*\n• TestFlight: ${{ github.event.inputs.ios_upload_testflight == 'true' && '✅ Uploaded' || '⏸️ Manual' }}\n• Google Play: ${{ github.event.inputs.upload_to_stores == 'true' && '✅ Uploaded' || '⏸️ Manual' }}"
+                    }
+                  },
+                  {
+                    "type": "context",
+                    "elements": [
+                      {
+                        "type": "mrkdwn",
+                        "text": "Commit: '"$GITHUB_SHA"' by '"$GITHUB_ACTOR"'"
+                      }
+                    ]
+                  }
+                ]
+              }' \
+              $SLACK_WEBHOOK_URL
+          fi

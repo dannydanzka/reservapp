@@ -1,24 +1,26 @@
 import React from 'react';
+
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AuthStackParamList } from './types';
-import LoginScreen from '../screens/auth/LoginScreen';
-import RegisterScreen from '../screens/auth/RegisterScreen';
-import ForgotPasswordScreen from '../screens/auth/ForgotPasswordScreen';
+import { AuthStackParamList } from '@navigation/types';
+import ForgotPasswordScreen from '@mod-auth/presentation/components/ForgotPasswordScreen/ForgotPasswordScreen';
+import LoginScreen from '@mod-auth/presentation/components/login/Login.screen';
+import RegisterScreen from '@mod-auth/presentation/components/register/Register.screen';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
 const AuthStack: React.FC = () => {
   return (
     <Stack.Navigator
+      id={undefined}
       screenOptions={{
-        headerShown: false,
         cardStyle: { backgroundColor: 'white' },
+        headerShown: false,
       }}
     >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen component={LoginScreen} name='Login' />
+      <Stack.Screen component={RegisterScreen} name='Register' />
+      <Stack.Screen component={ForgotPasswordScreen} name='ForgotPassword' />
     </Stack.Navigator>
   );
 };

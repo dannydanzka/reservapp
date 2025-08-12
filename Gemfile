@@ -14,3 +14,17 @@ gem 'bigdecimal'
 gem 'logger'
 gem 'benchmark'
 gem 'mutex_m'
+
+# Fastlane for CI/CD
+gem "fastlane", ">= 2.212.0"
+
+# Fastlane plugins
+gem "dotenv"
+gem "match"
+gem "slack-notifier"
+gem "scan"
+gem "frameit"
+gem "spaceship"
+gem "pilot"
+gem "supply"
+gem "semantic"

@@ -1,91 +1,96 @@
 import React from 'react';
+
+import { Calendar, Home as HomeIcon, Settings, ShoppingBag, Wallet } from 'lucide-react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Compass, Search, Heart, Calendar, User } from 'lucide-react-native';
 
-import { TabParamList } from '../types';
-import { theme } from '../../libs/ui/theme/theme';
-
-// Stack navigators para cada tab
-import DiscoverStack from './DiscoverStack';
-import SearchStack from './SearchStack';
-import FavoritesScreen from '../../screens/tabs/FavoritesScreen';
-import BookingsScreen from '../../screens/tabs/BookingsScreen';
-import AccountScreen from '../../screens/tabs/AccountScreen';
+import { TabParamList } from '@navigation/types';
+import { theme } from '@styles/theme';
+import HomeScreen from '@presentation/screens/main/HomeScreen';
+import ReservationsScreen from '@presentation/screens/main/ReservationsScreen';
+import ServicesScreen from '@presentation/screens/main/ServicesScreen';
+import SettingsScreen from '@presentation/screens/main/AccountScreen';
+import WalletScreen from '@mod-payments/presentation/components/wallet/Wallet.screen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
+      id={undefined}
       screenOptions={{
+        headerShown: false,
         tabBarActiveTintColor: theme.colors.primary[500],
         tabBarInactiveTintColor: theme.colors.gray[400],
-        tabBarStyle: {
-          backgroundColor: theme.colors.white,
-          borderTopColor: theme.colors.gray[200],
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
-        },
         tabBarLabelStyle: {
+          fontFamily: theme.typography.fontFamily.primary.medium,
           fontSize: theme.typography.fontSize.xs,
           fontWeight: '500',
         },
-        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: theme.colors.white,
+          borderTopColor: theme.colors.gray[200],
+          elevation: 8,
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+          shadowOffset: { height: -2, width: 0 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+        },
       }}
     >
       <Tab.Screen
-        name="Discover"
-        component={DiscoverStack}
+        component={HomeScreen}
+        name='Home'
         options={{
-          title: 'Descubrir',
-          tabBarIcon: ({ color, size }) => (
-            <Compass color={color} size={size} />
+          tabBarIcon: ({ color = theme.colors.gray[400], size = 24 }) => (
+            <HomeIcon color={color} size={size} />
           ),
+          title: 'Inicio',
         }}
       />
-      
+
       <Tab.Screen
-        name="Search"
-        component={SearchStack}
+        component={ServicesScreen}
+        name='Services'
         options={{
-          title: 'Buscar',
-          tabBarIcon: ({ color, size }) => (
-            <Search color={color} size={size} />
+          tabBarIcon: ({ color = theme.colors.gray[400], size = 24 }) => (
+            <ShoppingBag color={color} size={size} />
           ),
+          title: 'Servicios',
         }}
       />
-      
+
       <Tab.Screen
-        name="Favorites"
-        component={FavoritesScreen}
+        component={ReservationsScreen}
+        name='Reservations'
         options={{
-          title: 'Favoritos',
-          tabBarIcon: ({ color, size }) => (
-            <Heart color={color} size={size} />
-          ),
-        }}
-      />
-      
-      <Tab.Screen
-        name="Bookings"
-        component={BookingsScreen}
-        options={{
-          title: 'Reservas',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color = theme.colors.gray[400], size = 24 }) => (
             <Calendar color={color} size={size} />
           ),
+          title: 'Reservas',
         }}
       />
-      
+
       <Tab.Screen
-        name="Account"
-        component={AccountScreen}
+        component={WalletScreen}
+        name='Wallet'
         options={{
-          title: 'Cuenta',
-          tabBarIcon: ({ color, size }) => (
-            <User color={color} size={size} />
+          tabBarIcon: ({ color = theme.colors.gray[400], size = 24 }) => (
+            <Wallet color={color} size={size} />
           ),
+          title: 'Billetera',
+        }}
+      />
+
+      <Tab.Screen
+        component={SettingsScreen}
+        name='Settings'
+        options={{
+          tabBarIcon: ({ color = theme.colors.gray[400], size = 24 }) => (
+            <Settings color={color} size={size} />
+          ),
+          title: 'Ajustes',
         }}
       />
     </Tab.Navigator>
