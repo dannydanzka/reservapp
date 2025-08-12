@@ -1,0 +1,16 @@
+{
+  "eslint.options": {
+    "overrideConfigFile": "./eslint.config.js"
+  },
+  "eslint.workingDirectories": ["."],
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact", 
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.experimental.useFlatConfig": true,
+  "typescript.preferences.projectPath": "./tsconfig.json",
+  "typescript.preferences.includePackageJsonAutoImports": "off"
+}

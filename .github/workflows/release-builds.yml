@@ -1,0 +1,268 @@
+name: 🚀 Release Builds
+
+on:
+  push:
+    branches: [ main, release/* ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - ios
+        - android
+        - both
+      increment_version:
+        description: 'Increment version (optional)'
+        required: false
+        default: ''
+        type: choice
+        options:
+        - ''
+        - patch
+        - minor
+        - major
+
+env:
+  NODE_VERSION: '18'
+  JAVA_VERSION: '11'
+  RUBY_VERSION: '3.1'
+
+jobs:
+  # Quality checks
+  quality-checks:
+    name: 🔍 Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: 📦 Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🔍 TypeScript check
+        run: yarn type-check
+
+      - name: 🎨 Lint code
+        run: yarn lint
+
+      - name: 🧪 Run tests
+        run: |
+          if yarn test --listTests --json | jq -r '.[] | length' | grep -q '^0$'; then
+            echo "No tests found, skipping..."
+          else
+            yarn test --watchAll=false --coverage=true
+          fi
+
+      - name: 📤 Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+        continue-on-error: true
+
+  # iOS Release Build
+  ios-release:
+    name: 🍎 iOS Release Build
+    runs-on: macos-latest
+    needs: quality-checks
+    if: github.event.inputs.platform == 'ios' || github.event.inputs.platform == 'both' || github.event.inputs.platform == ''
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for version management
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: 📦 Install Node dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🔐 Setup iOS certificates
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        run: bundle exec fastlane ios setup_certificates type:adhoc
+
+      - name: 🏗️ Build iOS Release
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          mkdir -p ios/builds/release
+          if [ -n "${{ github.event.inputs.increment_version }}" ]; then
+            bundle exec fastlane ios release increment_version:${{ github.event.inputs.increment_version }}
+          else
+            bundle exec fastlane ios release
+          fi
+
+      - name: 📤 Upload iOS Release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-${{ github.run_number }}
+          path: ios/builds/release/*.ipa
+          retention-days: 30
+
+      - name: 📋 Create iOS Release Summary
+        run: |
+          echo "## 🍎 iOS Release Build" >> $GITHUB_STEP_SUMMARY
+          echo "✅ iOS Release IPA generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Artifact: ios-release-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 Download from Actions artifacts" >> $GITHUB_STEP_SUMMARY
+
+  # Android Release Build
+  android-release:
+    name: 🤖 Android Release Build  
+    runs-on: ubuntu-latest
+    needs: quality-checks
+    if: github.event.inputs.platform == 'android' || github.event.inputs.platform == 'both' || github.event.inputs.platform == ''
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for version management
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'yarn'
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 💎 Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+
+      - name: 📦 Install Node dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🤖 Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🔐 Setup Android Keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          mkdir -p android/keystore
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/keystore/release.keystore
+            echo "KEYSTORE_FILE=../keystore/release.keystore" >> android/gradle.properties
+            echo "KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD" >> android/gradle.properties
+            echo "KEY_ALIAS=$KEY_ALIAS" >> android/gradle.properties
+            echo "KEY_PASSWORD=$KEY_PASSWORD" >> android/gradle.properties
+          else
+            echo "⚠️ Android keystore not configured"
+          fi
+
+      - name: 🔐 Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: 🏗️ Build Android Release
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          mkdir -p android/builds/release
+          if [ -n "${{ github.event.inputs.increment_version }}" ]; then
+            bundle exec fastlane android release increment_version:${{ github.event.inputs.increment_version }}
+          else
+            bundle exec fastlane android release
+          fi
+
+      - name: 📤 Upload Android Release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-${{ github.run_number }}
+          path: android/builds/release/*.apk
+          retention-days: 30
+
+      - name: 📋 Create Android Release Summary
+        run: |
+          echo "## 🤖 Android Release Build" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Android Release APK generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Artifact: android-release-${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 Download from Actions artifacts" >> $GITHUB_STEP_SUMMARY
+
+  # Create GitHub Release
+  create-release:
+    name: 📦 Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [ios-release, android-release]
+    if: startsWith(github.ref, 'refs/tags/v') && (needs.ios-release.result == 'success' || needs.android-release.result == 'success')
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📥 Download iOS artifact
+        if: needs.ios-release.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-release-${{ github.run_number }}
+          path: ./release-artifacts/ios/
+
+      - name: 📥 Download Android artifact
+        if: needs.android-release.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: android-release-${{ github.run_number }}
+          path: ./release-artifacts/android/
+
+      - name: 📦 Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./release-artifacts/ios/*.ipa
+            ./release-artifacts/android/*.apk
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Notify completion
+  notify-completion:
+    name: 📢 Notify Completion
+    runs-on: ubuntu-latest
+    needs: [ios-release, android-release]
+    if: always()
+    steps:
+      - name: 📢 Send notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST -H 'Content-type: application/json' \
+              --data '{"text":"🚀 Release builds completed for ReservApp Mobile\n• iOS: ${{ needs.ios-release.result || 'skipped' }}\n• Android: ${{ needs.android-release.result || 'skipped' }}\n• Commit: '"$GITHUB_SHA"' by '"$GITHUB_ACTOR"'\n• Ref: '"$GITHUB_REF"'"}' \
+              $SLACK_WEBHOOK_URL
+          fi

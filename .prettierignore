@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+coverage/
+android/
+ios/
+.expo/
+*.log
+.git/
+.DS_Store
+*.lock
+yarn.lock
+package-lock.json
+.env*
+!.env.example

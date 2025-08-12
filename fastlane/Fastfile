@@ -1,0 +1,512 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+# Import environment variables
+import_from_git(url: 'https://github.com/fastlane/fastlane')
+dotenv
+
+# Global variables
+APP_NAME = "ReservApp"
+BUNDLE_IDENTIFIER_IOS = "com.reservapp.mobile"
+PACKAGE_NAME_ANDROID = "com.reservapp.mobile"
+
+# Slack configuration (optional)
+SLACK_WEBHOOK_URL = ENV["SLACK_WEBHOOK_URL"]
+
+##################################
+# SHARED LANES
+##################################
+
+# Increment version number
+lane :increment_version do |options|
+  type = options[:type] || "patch" # major, minor, patch
+
+  # iOS version increment
+  increment_version_number(
+    version_number: increment_version_number_in_xcodeproj(
+      bump_type: type,
+      xcodeproj: "./ios/#{APP_NAME}.xcodeproj"
+    )
+  )
+
+  # Android version increment
+  android_set_version_name(
+    version_name: increment_version_number_in_plist(
+      target: APP_NAME
+    ),
+    gradle_file: "./android/app/build.gradle"
+  )
+
+  android_set_version_code(
+    version_code: (android_get_version_code(gradle_file: "./android/app/build.gradle") + 1).to_s,
+    gradle_file: "./android/app/build.gradle"
+  )
+end
+
+# Clean workspace
+lane :clean_workspace do
+  # Clean iOS
+  clean_build_artifacts
+  clear_derived_data(derived_data_path: "./ios/DerivedData")
+
+  # Clean Android
+  gradle(task: "clean", project_dir: "./android")
+
+  # Clean React Native
+  sh("cd .. && npx react-native start --reset-cache --verbose")
+  sh("cd .. && rm -rf node_modules && yarn install")
+
+  UI.success("🧹 Workspace cleaned successfully!")
+end
+
+# Install dependencies
+lane :install_dependencies do
+  # Install Node dependencies
+  sh("cd .. && yarn install --frozen-lockfile")
+
+  # Install iOS dependencies
+  cocoapods(podfile: "./ios/Podfile", try_repo_update_on_error: true)
+
+  UI.success("📦 Dependencies installed successfully!")
+end
+
+# Run linting and type checking
+lane :run_tests do
+  # TypeScript type checking
+  sh("cd .. && yarn type-check")
+
+  # ESLint
+  sh("cd .. && yarn lint")
+
+  UI.success("✅ Code quality checks passed!")
+end
+
+# Send notification to Slack
+lane :notify_slack do |options|
+  if SLACK_WEBHOOK_URL
+    slack(
+      message: options[:message],
+      webhook_url: SLACK_WEBHOOK_URL,
+      success: options[:success] || true,
+      payload: {
+        "Build Date" => Time.now.to_s,
+        "App" => APP_NAME,
+        "Version" => options[:version] || "Unknown"
+      }
+    )
+  else
+    UI.important("📢 Slack webhook not configured, skipping notification")
+  end
+end
+
+##################################
+# iOS PLATFORM
+##################################
+
+platform :ios do
+
+  desc "Setup iOS certificates and profiles"
+  lane :setup_certificates do |options|
+    type = options[:type] || "development" # development, adhoc, appstore
+
+    match(
+      type: type,
+      readonly: false,
+      app_identifier: BUNDLE_IDENTIFIER_IOS
+    )
+
+    UI.success("🔐 iOS certificates and profiles setup complete!")
+  end
+
+  desc "Build iOS Debug (Development)"
+  lane :debug do |options|
+    install_dependencies
+    setup_certificates(type: "development")
+
+    # Build configuration
+    configuration = "Debug"
+    export_method = "development"
+
+    # Build the app
+    build_app(
+      workspace: "./ios/#{APP_NAME}.xcworkspace",
+      scheme: APP_NAME,
+      configuration: configuration,
+      export_method: export_method,
+      output_directory: "./ios/builds/debug",
+      output_name: "#{APP_NAME}-debug-#{Time.now.strftime('%Y%m%d-%H%M%S')}.ipa",
+      clean: true,
+      include_symbols: true,
+      include_bitcode: false,
+      export_options: {
+        provisioningProfiles: {
+          BUNDLE_IDENTIFIER_IOS => "match Development #{BUNDLE_IDENTIFIER_IOS}"
+        }
+      }
+    )
+
+    # Get version
+    version = get_version_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+    build_number = get_build_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+
+    notify_slack(
+      message: "🍎 iOS Debug build completed successfully! v#{version} (#{build_number})",
+      version: "#{version} (#{build_number})"
+    )
+
+    UI.success("🎉 iOS Debug build completed!")
+  end
+
+  desc "Build iOS Release (AdHoc)"
+  lane :release do |options|
+    install_dependencies
+    run_tests
+    setup_certificates(type: "adhoc")
+
+    # Increment build number
+    increment_build_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+
+    # Build configuration
+    configuration = "Release"
+    export_method = "ad-hoc"
+
+    # Build the app
+    build_app(
+      workspace: "./ios/#{APP_NAME}.xcworkspace",
+      scheme: APP_NAME,
+      configuration: configuration,
+      export_method: export_method,
+      output_directory: "./ios/builds/release",
+      output_name: "#{APP_NAME}-release-#{Time.now.strftime('%Y%m%d-%H%M%S')}.ipa",
+      clean: true,
+      include_symbols: false,
+      include_bitcode: false,
+      export_options: {
+        provisioningProfiles: { 
+          BUNDLE_IDENTIFIER_IOS => "match AdHoc #{BUNDLE_IDENTIFIER_IOS}"
+        }
+      }
+    )
+
+    # Get version
+    version = get_version_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+    build_number = get_build_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+
+    notify_slack(
+      message: "🍎 iOS Release (AdHoc) build completed successfully! v#{version} (#{build_number})",
+      version: "#{version} (#{build_number})"
+    )
+
+    UI.success("🎉 iOS Release build completed!")
+  end
+
+  desc "Build and Deploy iOS to App Store (Production)"
+  lane :production do |options|
+    install_dependencies
+    run_tests
+    setup_certificates(type: "appstore")
+
+    # Increment version if specified
+    if options[:increment_version]
+      increment_version(type: options[:increment_version])
+    end
+
+    # Increment build number
+    increment_build_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+
+    # Build configuration
+    configuration = "Release"
+    export_method = "app-store"
+
+    # Build the app
+    build_app(
+      workspace: "./ios/#{APP_NAME}.xcworkspace",
+      scheme: APP_NAME,
+      configuration: configuration,
+      export_method: export_method,
+      output_directory: "./ios/builds/production",
+      output_name: "#{APP_NAME}-production-#{Time.now.strftime('%Y%m%d-%H%M%S')}.ipa",
+      clean: true,
+      include_symbols: true,
+      include_bitcode: false,
+      export_options: {
+        provisioningProfiles: {
+          BUNDLE_IDENTIFIER_IOS => "match AppStore #{BUNDLE_IDENTIFIER_IOS}"
+        }
+      }
+    )
+
+    # Get version
+    version = get_version_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+    build_number = get_build_number(xcodeproj: "./ios/#{APP_NAME}.xcodeproj")
+
+    # Upload to TestFlight (optional)
+    if options[:upload_to_testflight] != false
+      pilot(
+        skip_waiting_for_build_processing: true,
+        app_identifier: BUNDLE_IDENTIFIER_IOS
+      )
+
+      notify_slack(
+        message: "🍎 iOS Production build uploaded to TestFlight! v#{version} (#{build_number})",
+        version: "#{version} (#{build_number})"
+      )
+    else
+      notify_slack(
+        message: "🍎 iOS Production build completed! v#{version} (#{build_number}) - Ready for manual upload",
+        version: "#{version} (#{build_number})"
+      )
+    end
+
+    UI.success("🎉 iOS Production build completed!")
+  end
+
+  desc "Upload iOS to App Store Connect"
+  lane :upload_to_app_store do
+    deliver(
+      app_identifier: BUNDLE_IDENTIFIER_IOS,
+      skip_screenshots: true,
+      skip_metadata: true,
+      force: true
+    )
+
+    UI.success("🚀 iOS app uploaded to App Store Connect!")
+  end
+
+end
+
+##################################
+# ANDROID PLATFORM
+##################################
+
+platform :android do
+
+  desc "Setup Android keystore and signing"
+  lane :setup_signing do
+    UI.important("🔐 Make sure your keystore is properly configured in:")
+    UI.important("   - android/app/build.gradle")
+    UI.important("   - android/gradle.properties")
+    UI.important("   - android/keystore/release.keystore")
+
+    UI.success("🔐 Android signing setup reminder complete!")
+  end
+
+  desc "Build Android Debug APK"
+  lane :debug do |options|
+    install_dependencies
+
+    # Build debug APK
+    gradle(
+      task: "assembleDebug",
+      project_dir: "./android",
+      properties: {
+        "versionCode" => android_get_version_code(gradle_file: "./android/app/build.gradle"),
+        "versionName" => android_get_version_name(gradle_file: "./android/app/build.gradle")
+      }
+    )
+
+    # Move APK to builds directory
+    output_dir = "./android/builds/debug"
+    sh("mkdir -p #{output_dir}")
+    sh("cp ./android/app/build/outputs/apk/debug/app-debug.apk #{output_dir}/#{APP_NAME}-debug-#{Time.now.strftime('%Y%m%d-%H%M%S')}.apk")
+
+    # Get version info
+    version_code = android_get_version_code(gradle_file: "./android/app/build.gradle")
+    version_name = android_get_version_name(gradle_file: "./android/app/build.gradle")
+
+    notify_slack(
+      message: "🤖 Android Debug APK build completed successfully! v#{version_name} (#{version_code})",
+      version: "#{version_name} (#{version_code})"
+    )
+
+    UI.success("🎉 Android Debug APK completed!")
+  end
+
+  desc "Build Android Release APK"
+  lane :release do |options|
+    install_dependencies
+    run_tests
+    setup_signing
+
+    # Increment version code
+    android_set_version_code(
+      version_code: (android_get_version_code(gradle_file: "./android/app/build.gradle") + 1).to_s,
+      gradle_file: "./android/app/build.gradle"
+    )
+
+    # Build release APK
+    gradle(
+      task: "assembleRelease",
+      project_dir: "./android",
+      properties: {
+        "versionCode" => android_get_version_code(gradle_file: "./android/app/build.gradle"),
+        "versionName" => android_get_version_name(gradle_file: "./android/app/build.gradle")
+      }
+    )
+
+    # Move APK to builds directory
+    output_dir = "./android/builds/release"
+    sh("mkdir -p #{output_dir}")
+    sh("cp ./android/app/build/outputs/apk/release/app-release.apk #{output_dir}/#{APP_NAME}-release-#{Time.now.strftime('%Y%m%d-%H%M%S')}.apk")
+
+    # Get version info
+    version_code = android_get_version_code(gradle_file: "./android/app/build.gradle")
+    version_name = android_get_version_name(gradle_file: "./android/app/build.gradle")
+
+    notify_slack(
+      message: "🤖 Android Release APK build completed successfully! v#{version_name} (#{version_code})",
+      version: "#{version_name} (#{version_code})"
+    )
+
+    UI.success("🎉 Android Release APK completed!")
+  end
+
+  desc "Build Android AAB for Production (Google Play)"
+  lane :production do |options|
+    install_dependencies
+    run_tests
+    setup_signing
+
+    # Increment version if specified
+    if options[:increment_version]
+      increment_version(type: options[:increment_version])
+    end
+
+    # Increment version code
+    android_set_version_code(
+      version_code: (android_get_version_code(gradle_file: "./android/app/build.gradle") + 1).to_s,
+      gradle_file: "./android/app/build.gradle"
+    )
+
+    # Build AAB (Android App Bundle)
+    gradle(
+      task: "bundleRelease",
+      project_dir: "./android",
+      properties: {
+        "versionCode" => android_get_version_code(gradle_file: "./android/app/build.gradle"),
+        "versionName" => android_get_version_name(gradle_file: "./android/app/build.gradle")
+      }
+    )
+
+    # Also build APK for distribution
+    gradle(
+      task: "assembleRelease",
+      project_dir: "./android"
+    )
+
+    # Move files to builds directory
+    output_dir = "./android/builds/production"
+    sh("mkdir -p #{output_dir}")
+    timestamp = Time.now.strftime('%Y%m%d-%H%M%S')
+    sh("cp ./android/app/build/outputs/bundle/release/app-release.aab #{output_dir}/#{APP_NAME}-production-#{timestamp}.aab")
+    sh("cp ./android/app/build/outputs/apk/release/app-release.apk #{output_dir}/#{APP_NAME}-production-#{timestamp}.apk")
+
+    # Get version info
+    version_code = android_get_version_code(gradle_file: "./android/app/build.gradle")
+    version_name = android_get_version_name(gradle_file: "./android/app/build.gradle")
+
+    # Upload to Google Play (optional)
+    if options[:upload_to_play_store] != false
+      begin
+        upload_to_play_store(
+          package_name: PACKAGE_NAME_ANDROID,
+          aab: "./android/app/build/outputs/bundle/release/app-release.aab",
+          track: "internal", # internal, alpha, beta, production
+          skip_upload_metadata: true,
+          skip_upload_changelogs: true,
+          skip_upload_images: true,
+          skip_upload_screenshots: true
+        )
+
+        notify_slack(
+          message: "🤖 Android Production AAB uploaded to Google Play! v#{version_name} (#{version_code})",
+          version: "#{version_name} (#{version_code})"
+        )
+      rescue => exception
+        UI.error("Failed to upload to Google Play: #{exception}")
+        notify_slack(
+          message: "🤖 Android Production AAB build completed! v#{version_name} (#{version_code}) - Manual upload required",
+          version: "#{version_name} (#{version_code})",
+          success: false
+        )
+      end
+    else
+      notify_slack(
+        message: "🤖 Android Production AAB build completed! v#{version_name} (#{version_code}) - Ready for manual upload",
+        version: "#{version_name} (#{version_code})"
+      )
+    end
+
+    UI.success("🎉 Android Production AAB completed!")
+  end
+
+  desc "Upload Android to Google Play Store"
+  lane :upload_to_play_store_manual do |options|
+    track = options[:track] || "internal" # internal, alpha, beta, production
+
+    upload_to_play_store(
+      package_name: PACKAGE_NAME_ANDROID,
+      aab: "./android/app/build/outputs/bundle/release/app-release.aab",
+      track: track,
+      skip_upload_metadata: false,
+      skip_upload_changelogs: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false
+    )
+
+    UI.success("🚀 Android app uploaded to Google Play Store!")
+  end
+
+end
+
+##################################
+# COMBINED LANES
+##################################
+
+desc "Build both iOS and Android Debug versions"
+lane :debug_all do
+  ios_debug
+  android_debug
+  UI.success("🎉 All debug builds completed!")
+end
+
+desc "Build both iOS and Android Release versions"
+lane :release_all do
+  ios_release
+  android_release
+  UI.success("🎉 All release builds completed!")
+end
+
+desc "Build both iOS and Android Production versions"
+lane :production_all do |options|
+  ios_production(options)
+  android_production(options)
+  UI.success("🎉 All production builds completed!")
+end
+
+##################################
+# ERROR HANDLING
+##################################
+
+error do |lane, exception|
+  UI.error("❌ Lane #{lane} failed with exception: #{exception}")
+
+  notify_slack(
+    message: "❌ Build failed in lane: #{lane}\nError: #{exception}",
+    success: false
+  )
+end

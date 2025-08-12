@@ -1,271 +1,219 @@
-# Architecture Documentation
+# ReservApp Mobile - Architecture Documentation
 
 ## Overview
 
-ReservApp Mobile es una aplicación React Native que implementa **Clean Architecture** con una estructura modular y escalable. La aplicación está diseñada para usuarios finales que realizan reservaciones en venues y servicios.
+ReservApp Mobile follows Clean Architecture principles with Domain-Driven Design (DDD), implementing a modular structure that mirrors the web application architecture for consistency across platforms.
 
-## Architecture Patterns
+## Architecture Layers
 
-### Clean Architecture Implementation
+### 1. Domain Layer (`src/modules/*/domain`)
+- **Entities**: Core business models and data structures
+- **Use Cases**: Business logic and application rules
+- **Interfaces**: Contracts for external dependencies
+- **Value Objects**: Immutable data structures
 
+### 2. Infrastructure Layer (`src/modules/*/infrastructure`)
+- **Repositories**: Data access implementations
+- **Services**: External service integrations
+- **Storage**: Local storage implementations
+- **Network**: API clients and HTTP handling
+
+### 3. Presentation Layer (`src/modules/*/presentation`)
+- **Screens**: React Native screen components
+- **Components**: Reusable UI components
+- **Hooks**: Custom React hooks
+- **State**: Redux slices and state management
+
+## Modular Structure
+
+### Authentication Module (`mod-auth`)
 ```
-src/
-├── components/          # UI Components Layer
-├── screens/            # Presentation Layer  
-├── hooks/              # Business Logic Hooks
-├── store/              # State Management Layer
-├── libs/
-│   ├── core/           # Core Business Logic
-│   ├── services/       # External Services Layer
-│   └── ui/             # UI Infrastructure
-└── navigation/         # Navigation Infrastructure
-```
-
-### Key Architectural Principles
-
-1. **Separation of Concerns**: Cada capa tiene responsabilidades específicas
-2. **Dependency Inversion**: Capas externas dependen de capas internas
-3. **Single Responsibility**: Cada módulo tiene una única responsabilidad
-4. **Open/Closed Principle**: Abierto para extensión, cerrado para modificación
-
-## Core Components
-
-### 1. State Management (Redux Toolkit)
-
-**Store Structure:**
-```typescript
-interface RootState {
-  auth: AuthState;
-  ui: UIState;
-  booking: BookingState;
-  venues: VenuesState;
-  reservations: ReservationsState;
-  services: ServicesState;
-  notifications: NotificationsState;
-}
-```
-
-**Slices Implemented:**
-- **AuthSlice**: Manejo de autenticación y sesión
-- **VenuesSlice**: Gestión de venues y filtros
-- **ReservationsSlice**: CRUD de reservaciones del usuario
-- **ServicesSlice**: Catálogo de servicios y promociones
-- **NotificationsSlice**: Sistema de notificaciones push/local
-
-### 2. Navigation Architecture
-
-**Stack Structure:**
-```
-RootNavigator
-├── SplashScreen (Session Restore)
-├── AuthStack (Login/Register)
-└── MainDrawer
-    ├── TabNavigator
-    │   ├── HomeTab
-    │   ├── ReservationsTab
-    │   └── ServicesTab
-    └── BookingFlow (Modal)
+mod-auth/
+├── domain/
+│   ├── entities/
+│   ├── use-cases/
+│   └── interfaces/
+├── infrastructure/
+│   ├── repositories/
+│   ├── services/
+│   └── storage/
+└── presentation/
+    ├── screens/
+    ├── components/
+    ├── hooks/
+    └── state/
 ```
 
-**Navigation Features:**
-- Session restoration automática
-- Deep linking ready
-- Type-safe navigation
-- Persistent navigation state
+### Booking Module (`mod-booking`)
+- Handles reservation creation, management, and flow
+- Integrates with venue and payment modules
+- Manages booking state and validation
 
-### 3. Service Layer
+### Notification Module (`mod-notification`)
+- Push and local notification handling
+- Real-time updates and badge management
+- User preferences and settings
 
-**Services Architecture:**
-```typescript
-// Core Services
-handleRequest()     // HTTP Client con token injection
-authService        // Autenticación y sesión
-dashboardService   // Dashboard y estadísticas
+### Payments Module (`mod-payments`)
+- Stripe integration and payment processing
+- Payment method management
+- Transaction history and receipts
 
-// Future Services
-venueService       // Venues y filtros
-reservationService // CRUD reservaciones  
-notificationService // Push notifications
-```
+### Profile Module (`mod-profile`)
+- User profile and account management
+- Settings and preferences
+- Avatar and personal information
 
-**Service Features:**
-- Automatic token injection
-- Error handling centralizado
-- Request/Response interceptors
-- Offline capability ready
+## Cross-Cutting Concerns
 
-## Infrastructure Components
+### Shared Libraries (`src/libs`)
+- **Core**: Essential utilities and providers
+- **Services**: Shared API and external service configurations
+- **UI**: Shared UI components and theme system
 
-### 1. Providers Stack
+### Navigation (`src/navigation`)
+- **Stacks**: Screen navigation hierarchies
+- **Drawers**: Side menu navigation
+- **Tabs**: Bottom tab navigation
+- **Types**: TypeScript navigation definitions
 
-```tsx
-<ErrorBoundary>
-  <GestureHandlerRootView>
-    <SafeAreaProvider>
-      <ReduxProvider>
-        <PersistGate>
-          <ThemeProvider>
-            <ModalProvider>
-              <ToastProvider>
-                <ErrorBoundary>
-                  {children}
-                </ErrorBoundary>
-              </ToastProvider>
-            </ModalProvider>
-          </ThemeProvider>
-        </PersistGate>
-      </ReduxProvider>
-    </SafeAreaProvider>
-  </GestureHandlerRootView>
-</ErrorBoundary>
-```
+### API Layer (`src/api`)
+- **Endpoints**: API endpoint definitions
+- **Clients**: HTTP client configurations
+- **Types**: API request/response types
 
-### 2. Core Hooks
+## Technology Stack
 
-**Custom Hooks:**
-- `useI18n()` - Internacionalización completa
-- `useFontScaling()` - Escalado dinámico de fuentes
-- `useKeyboard()` - Manejo inteligente del teclado
-- `useSessionRestore()` - Restauración de sesión
-- `useErrorHandler()` - Manejo de errores
+### Core Technologies
+- **React Native 0.80**: Mobile app framework
+- **React 19**: Latest React features
+- **TypeScript 5**: Type safety and development experience
+- **Redux Toolkit**: State management with RTK Query
 
-### 3. UI Components
+### Development Tools
+- **ESLint**: Code quality and consistency
+- **Prettier**: Code formatting
+- **Stylelint**: Style linting for styled-components
+- **Jest**: Testing framework
+- **Metro**: React Native bundler
 
-**Component Library:**
-```
-components/
-├── Form/
-│   ├── Input.tsx          # Input con validación
-│   ├── Button.tsx         # Button con estados
-│   └── Select.tsx         # Select con modal
-├── Layout/
-│   └── ScreenLayout.tsx   # Layout unificado
-├── Toast/
-│   └── ToastProvider.tsx  # Sistema de notificaciones
-├── Modal/
-│   └── ModalProvider.tsx  # Sistema de modales
-└── ErrorBoundary.tsx      # Error boundaries
-```
+## Design Patterns
+
+### Repository Pattern
+- Abstracts data access logic
+- Provides clean interfaces for data operations
+- Enables easy testing and mocking
+
+### Use Case Pattern
+- Encapsulates business logic
+- Provides clear application boundaries
+- Enables business rule testing
+
+### Provider Pattern
+- Centralizes application context
+- Manages global state and dependencies
+- Enables clean dependency injection
+
+### Component Composition
+- Each component in its own folder
+- Separate styled components
+- TypeScript interfaces for props
+- Index files for clean exports
 
 ## Data Flow
 
-### 1. User Action Flow
+1. **User Interaction**: User interacts with UI components
+2. **Action Dispatch**: Redux actions are dispatched
+3. **Use Case Execution**: Business logic is executed
+4. **Repository Call**: Data is fetched/updated via repositories
+5. **State Update**: Redux state is updated
+6. **UI Update**: Components re-render with new state
 
-```
-User Action → Component → Hook → Service → API → Redux → Component Update
-```
+## Error Handling
 
-### 2. State Management Flow
+### Error Boundaries
+- React error boundaries for graceful error handling
+- Fallback UI components for error states
+- Error reporting and logging
 
-```
-UI Event → Action Creator → Thunk → API Call → Reducer → State Update → UI Re-render
-```
-
-### 3. Navigation Flow
-
-```
-User Action → Navigation Action → Stack Navigator → Screen Component → Data Fetch
-```
-
-## Performance Considerations
-
-### 1. Code Splitting
-- Lazy loading de pantallas
-- Dynamic imports para servicios pesados
-- Component-level splitting
-
-### 2. State Optimization
-- Redux Persist con whitelist selectiva
-- Memoization en selectores
-- Normalized state structure
-
-### 3. Rendering Optimization
-- React.memo para componentes puros
-- useMemo/useCallback para expensive operations
-- Virtualized lists para datos largos
-
-## Security Architecture
-
-### 1. Authentication
-- JWT token management
-- Secure storage (Keychain/Keystore)
-- Auto-refresh de tokens
-
-### 2. Data Protection
-- API key obfuscation
-- Secure HTTP-only requests
-- Input validation y sanitization
-
-### 3. Error Handling
-- No sensitive data en logs
-- Graceful degradation
+### API Error Handling
+- Centralized error handling in HTTP client
 - User-friendly error messages
+- Retry mechanisms for network failures
 
-## Scalability Patterns
-
-### 1. Modular Structure
-- Feature-based organization
-- Shared components library
-- Pluggable services
-
-### 2. Configuration Management
-- Environment-based configs
-- Feature flags ready
-- A/B testing support
-
-### 3. Monitoring & Observability
-- Error tracking preparado
-- Performance monitoring hooks
-- User analytics integration points
+### Validation
+- Form validation with custom hooks
+- Schema validation with TypeScript
+- Real-time validation feedback
 
 ## Testing Strategy
 
-### 1. Unit Testing
-- Hooks testing con renderHook
-- Component testing con RTL
-- Service layer testing con mocks
+### Unit Testing
+- Jest for business logic testing
+- React Native Testing Library for component testing
+- Mock implementations for external dependencies
 
-### 2. Integration Testing
+### Integration Testing
 - Redux integration testing
-- Navigation flow testing
 - API integration testing
+- Navigation testing
 
-### 3. E2E Testing (Planned)
-- Critical user journeys
+### E2E Testing
+- Detox for end-to-end testing
+- Critical user flow testing
 - Cross-platform testing
-- Performance testing
 
-## Development Workflow
+## Performance Optimizations
 
-### 1. Code Quality
-- ESLint + Prettier configurado
-- TypeScript strict mode
-- Styled Components con theming
+### Code Splitting
+- Lazy loading of screens
+- Dynamic imports for heavy components
+- Bundle size optimization
 
-### 2. Git Workflow
-- Feature branch workflow
-- Conventional commits
-- Automated testing en PRs
+### Memoization
+- React.memo for component optimization
+- useMemo and useCallback for expensive operations
+- Redux selector optimization
 
-### 3. Deployment
+### List Performance
+- FlatList optimization for large datasets
+- Virtualization for long lists
+- Image lazy loading
+
+## Security Considerations
+
+### Data Protection
+- Secure storage for sensitive data
+- JWT token management
+- API endpoint security
+
+### Input Validation
+- Client-side validation
+- Sanitization of user inputs
+- XSS prevention
+
+## Deployment
+
+### Build Configuration
 - Environment-specific builds
-- Automated versioning
-- Distribution via stores
+- Code signing and provisioning
+- App store optimization
 
-## Future Architecture Considerations
+### Release Management
+- Semantic versioning
+- Release notes and changelogs
+- Rollback strategies
 
-### 1. Offline-First
-- Redux Persist enhancement
-- Local database (SQLite)
-- Sync strategies
+## Future Enhancements
 
-### 2. Micro-Frontend
-- Module federation
-- Independent deployments
-- Shared component library
+### Planned Features
+- Offline mode support
+- Real-time synchronization
+- Advanced caching strategies
+- Performance monitoring
 
-### 3. Advanced Features
-- Push notifications
-- Background sync
-- Real-time updates
-- Analytics integration
+### Architecture Evolution
+- Micro-frontend considerations
+- Serverless integration
+- GraphQL adoption
+- AI/ML integration

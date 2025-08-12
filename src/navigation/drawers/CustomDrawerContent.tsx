@@ -1,30 +1,37 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Alert } from 'react-native';
+
+import { Alert, TouchableOpacity } from 'react-native';
+import {
+  Bell,
+  Calendar,
+  CreditCard,
+  HelpCircle,
+  Info,
+  LogOut,
+  Settings,
+  User,
+  UserCircle,
+} from 'lucide-react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import { User, UserCircle, Calendar, CreditCard, Settings, HelpCircle, Info, LogOut } from 'lucide-react-native';
 import styled from 'styled-components/native';
 
-import { useAppSelector, useAppDispatch } from '../../store/store';
-import { logout } from '../../store/slices/authSlice';
-import { theme } from '../../libs/ui/theme/theme';
+import { logout } from '@infrastructure/state/slices/authSlice';
+import { theme } from '@styles/theme';
+import { useAppDispatch, useAppSelector } from '@infrastructure/state/store';
 
 const CustomDrawerContent: React.FC<any> = (props) => {
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro que deseas cerrar sesión?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Cerrar Sesión', 
-          style: 'destructive',
-          onPress: () => dispatch(logout()),
-        },
-      ]
-    );
+    Alert.alert('Cerrar Sesión', '¿Estás seguro que deseas cerrar sesión?', [
+      { style: 'cancel', text: 'Cancelar' },
+      {
+        onPress: () => dispatch(logout()),
+        style: 'destructive',
+        text: 'Cerrar Sesión',
+      },
+    ]);
   };
 
   return (
@@ -32,7 +39,7 @@ const CustomDrawerContent: React.FC<any> = (props) => {
       {/* Header with user info */}
       <DrawerHeader>
         <UserAvatar>
-          <User size={40} color={theme.colors.white} />
+          <User color={theme.colors.white} size={40} />
         </UserAvatar>
         <UserInfo>
           <UserName>{user?.name || 'Usuario'}</UserName>
@@ -43,48 +50,68 @@ const CustomDrawerContent: React.FC<any> = (props) => {
       {/* Navigation Items */}
       <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: 0 }}>
         <DrawerItem
-          label="Mi Perfil"
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <UserCircle color={color} size={size} />
+          )}
+          label='Mi Perfil'
           onPress={() => props.navigation.navigate('Profile')}
-          icon={({ color, size }) => <UserCircle color={color} size={size} />}
-        />
-        
-        <DrawerItem
-          label="Mis Reservas"
-          onPress={() => props.navigation.navigate('MyBookings')}
-          icon={({ color, size }) => <Calendar color={color} size={size} />}
         />
 
         <DrawerItem
-          label="Métodos de Pago"
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <Bell color={color} size={size} />
+          )}
+          label='Notificaciones'
+          onPress={() => props.navigation.navigate('Notifications')}
+        />
+
+        <DrawerItem
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <Calendar color={color} size={size} />
+          )}
+          label='Mis Reservas'
+          onPress={() => props.navigation.navigate('MyBookings')}
+        />
+
+        <DrawerItem
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <CreditCard color={color} size={size} />
+          )}
+          label='Métodos de Pago'
           onPress={() => props.navigation.navigate('PaymentMethods')}
-          icon={({ color, size }) => <CreditCard color={color} size={size} />}
         />
 
         <Separator />
 
         <DrawerItem
-          label="Configuración"
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <Settings color={color} size={size} />
+          )}
+          label='Configuración'
           onPress={() => props.navigation.navigate('Settings')}
-          icon={({ color, size }) => <Settings color={color} size={size} />}
         />
 
         <DrawerItem
-          label="Ayuda y Soporte"
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <HelpCircle color={color} size={size} />
+          )}
+          label='Ayuda y Soporte'
           onPress={() => props.navigation.navigate('HelpSupport')}
-          icon={({ color, size }) => <HelpCircle color={color} size={size} />}
         />
 
         <DrawerItem
-          label="Acerca de"
+          icon={({ color = theme.colors.gray[400], size = 24 }) => (
+            <Info color={color} size={size} />
+          )}
+          label='Acerca de'
           onPress={() => props.navigation.navigate('About')}
-          icon={({ color, size }) => <Info color={color} size={size} />}
         />
       </DrawerContentScrollView>
 
       {/* Footer with logout */}
       <DrawerFooter>
         <LogoutButton onPress={handleLogout}>
-          <LogOut size={20} color={theme.colors.error[500]} />
+          <LogOut color={theme.colors.error[500]} size={20} />
           <LogoutText>Cerrar Sesión</LogoutText>
         </LogoutButton>
       </DrawerFooter>

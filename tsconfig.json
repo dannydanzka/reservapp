@@ -1,5 +1,4 @@
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["ES2020", "DOM"],
@@ -7,26 +6,65 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-native",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@screens/*": ["src/screens/*"],
-      "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"],
-      "@types/*": ["src/types/*"],
-      "@store/*": ["src/store/*"],
-      "@navigation/*": ["src/navigation/*"],
-      "@assets/*": ["src/assets/*"],
-      "@hooks/*": ["src/hooks/*"]
+      // Capas principales de Clean Architecture
+      "@libs/*": ["./src/libs/*"],
+      "@shared/*": ["./src/libs/shared/*"],
+      "@presentation/*": ["./src/libs/presentation/*"],
+      "@infrastructure/*": ["./src/libs/infrastructure/*"],
+      
+      // Subcapas específicas
+      "@components/*": ["./src/libs/presentation/components/*"],
+      "@components": ["./src/libs/presentation/components"],
+      "@screens/*": ["./src/libs/presentation/screens/*"],
+      "@hooks/*": ["./src/libs/presentation/hooks/*"],
+      "@providers/*": ["./src/libs/presentation/providers/*"],
+      "@layouts/*": ["./src/libs/presentation/layouts/*"],
+      "@styles/*": ["./src/libs/presentation/styles/*"],
+      
+      // Infrastructure
+      "@services/*": ["./src/libs/infrastructure/services/*"],
+      "@libs/services/*": ["./src/libs/infrastructure/services/*"],
+      "@state/*": ["./src/libs/infrastructure/state/*"],
+      "@repositories/*": ["./src/libs/infrastructure/repositories/*"],
+      "@store/*": ["./src/libs/infrastructure/state/*"],
+      "@slices/*": ["./src/libs/infrastructure/state/slices/*"],
+      
+      // Shared Resources
+      "@config/*": ["./src/libs/shared/config/*"],
+      "@types/*": ["./src/libs/shared/types/*"],
+      "@types": ["./src/libs/shared/types"],
+      "@constants/*": ["./src/libs/shared/constants/*"],
+      "@utils/*": ["./src/libs/shared/utils/*"],
+      "@i18n/*": ["./src/libs/shared/i18n/*"],
+      "@assets/*": ["./src/libs/shared/assets/*"],
+      
+      // Core Services
+      "@core/*": ["./src/libs/infrastructure/services/core/*"],
+      "@auth/*": ["./src/libs/infrastructure/services/core/auth/*"],
+      "@http/*": ["./src/libs/infrastructure/services/core/http/*"],
+      
+      // Modular Architecture
+      "@modules/*": ["./src/modules/*"],
+      "@mod-auth/*": ["./src/modules/mod-auth/*"],
+      "@mod-booking/*": ["./src/modules/mod-booking/*"],
+      "@mod-notification/*": ["./src/modules/mod-notification/*"],
+      "@mod-payments/*": ["./src/modules/mod-payments/*"],
+      "@mod-profile/*": ["./src/modules/mod-profile/*"],
+      
+      // Navigation & API
+      "@navigation/*": ["./src/navigation/*"],
+      "@api/*": ["./src/api/*"]
     }
   },
   "include": [

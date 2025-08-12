@@ -1,0 +1,26 @@
+# Matchfile for certificate and profile management
+
+# Git repository where certificates and profiles are stored
+git_url("https://github.com/your-org/certificates-reservapp")
+
+# Storage mode (git or google_cloud)
+storage_mode("git")
+
+# App identifier
+app_identifier(["com.reservapp.mobile"])
+
+# Your Apple ID
+username("your-apple-id@email.com")
+
+# Team ID (optional, will be derived from your Apple ID)
+team_id("YOUR_TEAM_ID")
+
+# For all new certificates and profiles to work on all devices
+force_for_new_devices(true)
+
+# To not revoke existing certificates
+readonly(false)
+
+# Keychain settings
+keychain_name("fastlane_tmp_keychain")
+keychain_password("fastlane_match_password")
