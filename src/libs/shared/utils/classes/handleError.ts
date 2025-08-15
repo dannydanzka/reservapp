@@ -2,7 +2,7 @@
 // This is a stub implementation for bundle generation
 // TODO: Implement actual error handling logic
 
-class HandleError extends Error {
+export class HandleError extends Error {
   public response?: any;
 
   constructor(response?: any, message?: string) {
@@ -11,12 +11,9 @@ class HandleError extends Error {
     this.name = 'HandleError';
   }
 
-  static handleGlobalError(error: any, customMessage?: string): void {
+  static handleGlobalError(_error: any, _customMessage?: string): void {
     // TODO: Implement actual error handling
-    console.error('Global error:', error);
-    if (customMessage) {
-      console.log('Custom message:', customMessage);
-    }
+    // Removed console logs for production
   }
 
   static formatError(error: any): string {
@@ -27,10 +24,8 @@ class HandleError extends Error {
     return 'Unknown error occurred';
   }
 
-  static logError(error: any, context?: string): void {
+  static logError(_error: any, _context?: string): void {
     // TODO: Implement error logging
-    console.error(`Error in ${context || 'unknown context'}:`, error);
+    // Removed console logs for production
   }
 }
-
-export default HandleError;

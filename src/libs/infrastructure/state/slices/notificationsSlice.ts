@@ -263,12 +263,12 @@ const notificationsSlice = createSlice({
       })
       .addCase(fetchNotifications.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.notifications = action.payload.data;
+        state.notifications = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchNotifications.rejected, (state, action) => {
@@ -282,7 +282,7 @@ const notificationsSlice = createSlice({
       })
       .addCase(fetchUnreadNotifications.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.unreadNotifications = action.payload.data;
+        state.unreadNotifications = action.payload.data || [];
       })
       .addCase(fetchUnreadNotifications.rejected, (state, action) => {
         state.isLoading = false;
@@ -370,12 +370,12 @@ const notificationsSlice = createSlice({
       })
       .addCase(fetchNotificationsByType.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.notifications = action.payload.data;
+        state.notifications = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchNotificationsByType.rejected, (state, action) => {
@@ -389,7 +389,7 @@ const notificationsSlice = createSlice({
       })
       .addCase(fetchRecentNotifications.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.notifications = action.payload.data;
+        state.notifications = action.payload.data || [];
       })
       .addCase(fetchRecentNotifications.rejected, (state, action) => {
         state.isLoading = false;
@@ -522,4 +522,4 @@ export const selectNotificationsPagination = (state: { notifications: Notificati
   state.notifications.pagination;
 
 export { notificationsSlice };
-export default notificationsSlice.reducer;
+export const notificationsReducer = notificationsSlice.reducer;

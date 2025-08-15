@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { Calendar, CreditCard, Home, Menu, Search, User } from 'lucide-react-native';
+import { Bell, Calendar, CreditCard, Home, Menu, Search } from 'lucide-react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
-import { DiscoverScreen } from '../../components/DiscoverScreen';
-import { HomeScreen } from '../../components/HomeScreen';
-import { ProfileScreen } from '../../../../modules/mod-profile/presentation/components/ProfileScreen';
-import { ReservationsScreen } from '../../components/ReservationsScreen';
+import { HomeScreen } from '../../../../modules/mod-home/presentation/components/HomeScreen';
+import { NotificationsScreen } from '../../../../modules/mod-notification/presentation/components/NotificationsScreen';
+import { PagosScreen } from '../../../../modules/mod-payments/presentation/components/PagosScreen';
+import { ReservationScreen } from '../../../../modules/mod-reservation/presentation/components/ReservationScreen';
+import { ServiceScreen } from '../../../../modules/mod-services/presentation/components/ServiceScreen';
 import { TabParamList } from '../types';
-import { WalletScreen } from '../../../../modules/mod-payments/presentation/components/WalletScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -74,14 +74,14 @@ export const HomeTabs: React.FC = () => {
           switch (route.name) {
             case 'Home':
               return <Home color={color} size={iconSize} />;
-            case 'Discover':
+            case 'Services':
               return <Search color={color} size={iconSize} />;
             case 'Reservations':
               return <Calendar color={color} size={iconSize} />;
-            case 'Wallet':
+            case 'Notifications':
+              return <Bell color={color} size={iconSize} />;
+            case 'Payments':
               return <CreditCard color={color} size={iconSize} />;
-            case 'Profile':
-              return <User color={color} size={iconSize} />;
             default:
               return <Home color={color} size={iconSize} />;
           }
@@ -112,39 +112,39 @@ export const HomeTabs: React.FC = () => {
         }}
       />
       <Tab.Screen
-        component={DiscoverScreen}
-        name='Discover'
+        component={ServiceScreen}
+        name='Services'
         options={{
-          headerTitle: 'Descubrir',
+          headerTitle: 'Servicios',
           tabBarAccessibilityLabel: 'Explorar venues y servicios',
-          tabBarLabel: 'Descubrir',
+          tabBarLabel: 'Servicios',
         }}
       />
       <Tab.Screen
-        component={ReservationsScreen}
+        component={ReservationScreen}
         name='Reservations'
         options={{
           headerTitle: 'Mis Reservas',
           tabBarAccessibilityLabel: 'Ver mis reservas',
-          tabBarLabel: 'Reservas',
+          tabBarLabel: 'Mis Reservas',
         }}
       />
       <Tab.Screen
-        component={WalletScreen}
-        name='Wallet'
+        component={NotificationsScreen}
+        name='Notifications'
         options={{
-          headerTitle: 'Wallet',
+          headerTitle: 'Notificaciones',
+          tabBarAccessibilityLabel: 'Ver notificaciones',
+          tabBarLabel: 'Notificaciones',
+        }}
+      />
+      <Tab.Screen
+        component={PagosScreen}
+        name='Payments'
+        options={{
+          headerTitle: 'Mis Pagos',
           tabBarAccessibilityLabel: 'Gestionar métodos de pago',
-          tabBarLabel: 'Wallet',
-        }}
-      />
-      <Tab.Screen
-        component={ProfileScreen}
-        name='Profile'
-        options={{
-          headerTitle: 'Mi Perfil',
-          tabBarAccessibilityLabel: 'Ver mi perfil',
-          tabBarLabel: 'Perfil',
+          tabBarLabel: 'Mis Pagos',
         }}
       />
     </Tab.Navigator>

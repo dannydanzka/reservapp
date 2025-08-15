@@ -55,6 +55,21 @@ class ReservationsService {
     return [];
   }
 
+  async getMyReservations(pagination?: any): Promise<{ data: Reservation[] }> {
+    // TODO: Implement real API call
+    return { data: [] };
+  }
+
+  async getUpcomingReservations(pagination?: any): Promise<{ data: Reservation[] }> {
+    // TODO: Implement real API call
+    return { data: [] };
+  }
+
+  async getReservationHistory(pagination?: any): Promise<{ data: Reservation[] }> {
+    // TODO: Implement real API call
+    return { data: [] };
+  }
+
   async getReservationById(id: string): Promise<Reservation> {
     // TODO: Implement real API call
     throw new Error('Not implemented');

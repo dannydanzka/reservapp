@@ -8,7 +8,7 @@ import {
   ReservationFilters,
   ReservationStatus,
 } from '@shared/types';
-import handleRequest from '@http/handleRequest.config';
+import { handleRequest } from '@http/handleRequest.config';
 
 class ReservationsService {
   private readonly baseUrl = API_CONFIG.BASE_URL;

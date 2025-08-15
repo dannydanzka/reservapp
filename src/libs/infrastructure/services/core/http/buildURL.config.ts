@@ -2,13 +2,13 @@ import querystring from 'querystring';
 
 import { BuildURLParams } from './interfaces/buildURL.interface';
 
-const renderEndpoint = (template: string, data: Record<string, unknown>) =>
+export const renderEndpoint = (template: string, data: Record<string, unknown>) =>
   template.replace(/{(.*?)}/g, (_, key) => {
     const value = data[key];
     return typeof value === 'string' ? value : String(value ?? '');
   });
 
-const buildURL = ({
+export const buildURL = ({
   endpoint,
   extraCustomQuery = '',
   params,
@@ -33,5 +33,3 @@ const buildURL = ({
 
   return finalURL;
 };
-
-export default buildURL;

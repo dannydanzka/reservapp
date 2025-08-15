@@ -9,7 +9,7 @@ import {
   ServiceStats,
   TimeSlot,
 } from '@shared/types';
-import handleRequest from '@http/handleRequest.config';
+import { handleRequest } from '@http/handleRequest.config';
 
 class ServicesService {
   private readonly baseUrl = API_CONFIG.BASE_URL;
@@ -23,11 +23,18 @@ class ServicesService {
   ): Promise<PaginatedResponse<Service>> {
     try {
       const query = {
+        isActive: true,
+        limit: pagination?.limit || 10,
+        // Always filter active services for mobile
+        page: pagination?.page || 1,
         ...filters,
-        ...pagination,
       };
 
-      const response = await handleRequest<ApiResponse<PaginatedResponse<Service>>>({
+      const response = await handleRequest<{
+        data: Service[];
+        pagination: any;
+        success: boolean;
+      }>({
         customDefaultErrorMessage: 'Error al cargar servicios',
         endpoint: API_ENDPOINTS.SERVICES.LIST,
         method: 'get',
@@ -37,11 +44,21 @@ class ServicesService {
       });
 
       if (response.success && response.data) {
-        return response.data;
+        // La respuesta real de la API viene directamente estructurada
+        const pagination = response.pagination;
+        const hasMore = pagination.page < pagination.pages;
+
+        return {
+          data: response.data,
+          pagination: {
+            ...pagination,
+            hasMore,
+          },
+        } as PaginatedResponse<Service>;
       }
       throw new Error(response.message || 'Error al cargar servicios');
     } catch (error) {
-      console.error('ServicesService.getServices error:', error);
+      console.error('❌ ServicesService.getServices error:', error);
       throw error;
     }
   }

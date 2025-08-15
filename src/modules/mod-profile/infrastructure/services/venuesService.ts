@@ -10,7 +10,8 @@ import {
   VenueFilters,
   VenueStats,
 } from '@shared/types';
-import handleRequest from '@http/handleRequest.config';
+
+import { handleRequest } from '../../../../libs/infrastructure/services/core/http/handleRequest.config';
 
 class VenuesService {
   private readonly baseUrl = API_CONFIG.BASE_URL;
@@ -334,39 +335,16 @@ class VenuesService {
   }
 
   /**
-   * Obtener venues públicos (sin autenticación requerida)
-   */
-  async getPublicVenues(filters?: Partial<VenueFilters>): Promise<PaginatedResponse<Venue>> {
-    try {
-      const response = await handleRequest<ApiResponse<PaginatedResponse<Venue>>>({
-        customDefaultErrorMessage: 'Error al cargar venues públicos',
-        endpoint: API_ENDPOINTS.PUBLIC.VENUES,
-        method: 'get',
-        query: filters,
-        timeout: API_CONFIG.TIMEOUT,
-        url: this.baseUrl,
-      });
-
-      if (response.success && response.data) {
-        return response.data;
-      }
-      throw new Error(response.message || 'Error al cargar venues públicos');
-    } catch (error) {
-      console.error('VenuesService.getPublicVenues error:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Obtener lista de venues favoritos del usuario
    */
   async getFavoriteVenues(pagination?: PaginationParams): Promise<PaginatedResponse<Venue>> {
     try {
+      // Use regular venues endpoint since favorites endpoint doesn't exist
       const response = await handleRequest<ApiResponse<PaginatedResponse<Venue>>>({
         customDefaultErrorMessage: 'Error al cargar venues favoritos',
-        endpoint: API_ENDPOINTS.VENUES.FAVORITES,
+        endpoint: API_ENDPOINTS.VENUES.LIST,
         method: 'get',
-        query: pagination as Record<string, unknown>,
+        query: { ...pagination, limit: 2 } as Record<string, unknown>, // Limit to 2 for favorites
         timeout: API_CONFIG.TIMEOUT,
         url: this.baseUrl,
       });

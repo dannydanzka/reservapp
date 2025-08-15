@@ -1,6 +1,6 @@
-import { getAuthToken } from '../../../../shared/utils/sessionStorage';
+import { getAuthToken } from '../utils/sessionStorage';
 
-const injectAuthorizationHeader = async (
+export const injectAuthorizationHeader = async (
   headers: Record<string, string> = {},
   url?: string
 ): Promise<Record<string, string>> => {
@@ -14,5 +14,3 @@ const injectAuthorizationHeader = async (
     ...(token && { Authorization: `Bearer ${token}` }),
   };
 };
-
-export default injectAuthorizationHeader;

@@ -4,11 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AuthStack } from './stacks/AuthStack';
+import { getProfile, verifyToken } from '../../infrastructure/state/slices/authSlice';
 import { MainStack } from './stacks/MainStack';
 import { RootStackParamList } from './types';
 import { SplashScreen } from '../components/SplashScreen';
 import { useAppDispatch, useAppSelector } from '../../infrastructure/store/hooks';
-import { verifyToken } from '../../infrastructure/state/slices/authSlice';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -27,6 +27,9 @@ export const RootNavigator: React.FC = () => {
       // Verificar token si existe
       if (token && !isAuthenticated) {
         dispatch(verifyToken());
+      } else if (isAuthenticated && token) {
+        // Si ya está autenticado, cargar el profile del usuario
+        dispatch(getProfile());
       } else {
         // Si no hay token, terminar el splash después del timeout
         setTimeout(() => {

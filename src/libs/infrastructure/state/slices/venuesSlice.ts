@@ -9,7 +9,8 @@ import {
   VenueFilters,
   VenueStats,
 } from '@shared/types';
-import { venuesService } from '@libs/services';
+
+import venuesService from '../../../../modules/mod-profile/infrastructure/services/venuesService';
 
 export interface VenuesState {
   venues: Venue[];
@@ -196,19 +197,6 @@ export const fetchVenuesByCategory = createAsyncThunk(
   }
 );
 
-export const fetchPublicVenues = createAsyncThunk(
-  'venues/fetchPublicVenues',
-  async (filters: Partial<VenueFilters> | undefined, { rejectWithValue }) => {
-    try {
-      const response = await venuesService.getPublicVenues(filters);
-      return response;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Error al cargar venues públicos';
-      return rejectWithValue(message);
-    }
-  }
-);
-
 export const fetchFavoriteVenues = createAsyncThunk(
   'venues/fetchFavoriteVenues',
   async (pagination: PaginationParams | undefined, { rejectWithValue }) => {
@@ -309,12 +297,12 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchVenues.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.venues = action.payload.data;
+        state.venues = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || false,
+          limit: action.payload.meta?.limit || 0 || 20,
+          page: action.payload.meta?.page || 1,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchVenues.rejected, (state, action) => {
@@ -340,7 +328,7 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchNearbyVenues.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.nearbyVenues = action.payload.data;
+        state.nearbyVenues = action.payload.data || [];
       })
       .addCase(fetchNearbyVenues.rejected, (state, action) => {
         state.isLoading = false;
@@ -353,7 +341,7 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchPopularVenues.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.popularVenues = action.payload.data;
+        state.popularVenues = action.payload.data || [];
       })
       .addCase(fetchPopularVenues.rejected, (state, action) => {
         state.isLoading = false;
@@ -377,7 +365,7 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchVenueReviews.fulfilled, (state, action) => {
         state.isLoadingReviews = false;
-        state.reviews = action.payload.data;
+        state.reviews = action.payload.data || [];
       })
       .addCase(fetchVenueReviews.rejected, (state, action) => {
         state.isLoadingReviews = false;
@@ -402,12 +390,12 @@ const venuesSlice = createSlice({
       })
       .addCase(searchVenues.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.venues = action.payload.data;
+        state.venues = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || false,
+          limit: action.payload.meta?.limit || 0 || 20,
+          page: action.payload.meta?.page || 1,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(searchVenues.rejected, (state, action) => {
@@ -421,28 +409,15 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchVenuesByCategory.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.venues = action.payload.data;
+        state.venues = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || false,
+          limit: action.payload.meta?.limit || 0 || 20,
+          page: action.payload.meta?.page || 1,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchVenuesByCategory.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      // Fetch Public Venues
-      .addCase(fetchPublicVenues.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchPublicVenues.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.venues = action.payload.data;
-      })
-      .addCase(fetchPublicVenues.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
@@ -453,9 +428,9 @@ const venuesSlice = createSlice({
       })
       .addCase(fetchFavoriteVenues.fulfilled, (state, action) => {
         state.isLoadingFavorites = false;
-        state.favoriteVenues = action.payload.data;
+        state.favoriteVenues = action.payload.data || [];
         // Update favorite IDs array
-        state.favoriteIds = action.payload.data.map((venue) => venue.id);
+        state.favoriteIds = (action.payload.data || []).map((venue) => venue.id);
       })
       .addCase(fetchFavoriteVenues.rejected, (state, action) => {
         state.isLoadingFavorites = false;
@@ -591,4 +566,4 @@ export const selectIsVenueFavorite = (venueId: string) => (state: { venues: Venu
   state.venues.favoriteIds.includes(venueId);
 
 export { venuesSlice };
-export default venuesSlice.reducer;
+export const venuesReducer = venuesSlice.reducer;

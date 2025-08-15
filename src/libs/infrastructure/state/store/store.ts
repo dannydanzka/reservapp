@@ -4,12 +4,12 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authSlice } from '../slices/authSlice';
-import { notificationsSlice } from '../slices/notificationsSlice';
-import { reservationSlice } from '../slices/reservationSlice';
-import { reservationsSlice } from '../slices/reservationsSlice';
-import { servicesSlice } from '../slices/servicesSlice';
+import { notificationsReducer, notificationsSlice } from '../slices/notificationsSlice';
+import { reservationReducer, reservationSlice } from '../slices/reservationSlice';
+import { reservationsReducer, reservationsSlice } from '../slices/reservationsSlice';
+import { servicesReducer, servicesSlice } from '../slices/servicesSlice';
 import { uiSlice } from '../slices/uiSlice';
-import { venuesSlice } from '../slices/venuesSlice';
+import { venuesReducer, venuesSlice } from '../slices/venuesSlice';
 
 const persistConfig = {
   key: 'root',
@@ -19,12 +19,12 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
-  notifications: notificationsSlice,
-  reservation: reservationSlice.reducer,
-  reservations: reservationsSlice,
-  services: servicesSlice,
+  notifications: notificationsReducer,
+  reservation: reservationReducer,
+  reservations: reservationsReducer,
+  services: servicesReducer,
   ui: uiSlice.reducer,
-  venues: venuesSlice,
+  venues: venuesReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

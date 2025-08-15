@@ -53,4 +53,4 @@ class HandleError extends Error {
   }
 }
 
-export default HandleError;
+export { HandleError };

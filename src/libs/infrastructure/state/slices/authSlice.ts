@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { authService } from '@auth/authService';
-// import { clearSession } from '@core/utils/sessionStorage'; // TODO: implement sessionStorage utils
+import { clearSession, saveAuthToken, saveSession } from '../../services/core/utils/sessionStorage';
 import { LoginCredentials, LoginSession, RegisterData, User } from '@shared/types';
 
 interface AuthState {
@@ -150,6 +150,9 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.lastLogin = new Date().toISOString();
+        // Save token to AsyncStorage
+        saveAuthToken(action.payload.token);
+        saveSession(action.payload.user);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -170,6 +173,9 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.lastLogin = new Date().toISOString();
+        // Save token to AsyncStorage
+        saveAuthToken(action.payload.token);
+        saveSession(action.payload.user);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -219,6 +225,8 @@ export const authSlice = createSlice({
         state.error = null;
         state.isLoading = false;
         state.lastLogin = null;
+        // Clear session from AsyncStorage
+        clearSession();
       })
       .addCase(logoutUser.rejected, (state) => {
         // Incluso si falla, limpiamos la sesión
@@ -228,6 +236,8 @@ export const authSlice = createSlice({
         state.error = null;
         state.isLoading = false;
         state.lastLogin = null;
+        // Clear session from AsyncStorage even if logout failed
+        clearSession();
       });
   },
   initialState,
@@ -243,6 +253,8 @@ export const authSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.lastLogin = null;
+      // Clear session from AsyncStorage
+      clearSession();
     },
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
@@ -257,6 +269,9 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
       state.error = null;
       state.lastLogin = new Date().toISOString();
+      // Save token to AsyncStorage
+      saveAuthToken(action.payload.token);
+      saveSession(action.payload.user);
     },
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;

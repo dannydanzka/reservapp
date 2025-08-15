@@ -7,7 +7,8 @@ import {
   ReservationFilters,
   ReservationStatus,
 } from '@shared/types';
-import { reservationsService } from '@libs/services';
+
+import reservationsService from '../../../../modules/mod-reservation/infrastructure/services/reservationsService';
 
 export interface ReservationsState {
   reservations: Reservation[];
@@ -277,12 +278,12 @@ const reservationsSlice = createSlice({
       })
       .addCase(fetchReservations.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.reservations = action.payload.data;
+        state.reservations = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.pagination?.hasMore || false,
+          limit: action.payload.pagination?.limit || 10,
+          page: action.payload.pagination?.page || 1,
+          total: action.payload.pagination?.total || 0,
         };
       })
       .addCase(fetchReservations.rejected, (state, action) => {
@@ -296,12 +297,15 @@ const reservationsSlice = createSlice({
       })
       .addCase(fetchMyReservations.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.reservations = action.payload.data;
+        // El payload es directamente el array de reservaciones, no un objeto con data
+        state.reservations = Array.isArray(action.payload)
+          ? action.payload
+          : action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: false, // Por ahora sin paginación
+          limit: 10,
+          page: 1,
+          total: state.reservations.length,
         };
       })
       .addCase(fetchMyReservations.rejected, (state, action) => {
@@ -315,7 +319,7 @@ const reservationsSlice = createSlice({
       })
       .addCase(fetchUpcomingReservations.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.upcomingReservations = action.payload.data;
+        state.upcomingReservations = action.payload.data || [];
       })
       .addCase(fetchUpcomingReservations.rejected, (state, action) => {
         state.isLoading = false;
@@ -328,7 +332,7 @@ const reservationsSlice = createSlice({
       })
       .addCase(fetchReservationHistory.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.pastReservations = action.payload.data;
+        state.pastReservations = action.payload.data || [];
       })
       .addCase(fetchReservationHistory.rejected, (state, action) => {
         state.isLoading = false;
@@ -460,12 +464,12 @@ const reservationsSlice = createSlice({
       })
       .addCase(fetchReservationsByStatus.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.reservations = action.payload.data;
+        state.reservations = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.pagination?.hasMore || false,
+          limit: action.payload.pagination?.limit || 10,
+          page: action.payload.pagination?.page || 1,
+          total: action.payload.pagination?.total || 0,
         };
       })
       .addCase(fetchReservationsByStatus.rejected, (state, action) => {
@@ -535,4 +539,4 @@ export const selectAvailability = (state: { reservations: ReservationsState }) =
   state.reservations.availability;
 
 export { reservationsSlice };
-export default reservationsSlice.reducer;
+export const reservationsReducer = reservationsSlice.reducer;

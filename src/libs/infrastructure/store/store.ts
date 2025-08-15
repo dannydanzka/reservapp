@@ -12,11 +12,12 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authSlice } from '../state/slices/authSlice';
-import { notificationsSlice } from '../state/slices/notificationsSlice';
-import { reservationSlice } from '../state/slices/reservationSlice';
-import { reservationsSlice } from '../state/slices/reservationsSlice';
-import { servicesSlice } from '../state/slices/servicesSlice';
-import { venuesSlice } from '../state/slices/venuesSlice';
+import { dashboardReducer } from '../state/slices/dashboardSlice';
+import { notificationsReducer, notificationsSlice } from '../state/slices/notificationsSlice';
+import { reservationReducer, reservationSlice } from '../state/slices/reservationSlice';
+import { reservationsReducer, reservationsSlice } from '../state/slices/reservationsSlice';
+import { servicesReducer, servicesSlice } from '../state/slices/servicesSlice';
+import { venuesReducer, venuesSlice } from '../state/slices/venuesSlice';
 
 // Configuración de persistencia para diferentes slices
 const authPersistConfig = {
@@ -46,11 +47,12 @@ const reservationPersistConfig = {
 // Root reducer combinando todos los slices
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authSlice.reducer),
-  notifications: notificationsSlice.reducer,
-  reservation: persistReducer(reservationPersistConfig, reservationSlice.reducer),
-  reservations: persistReducer(reservationsPersistConfig, reservationsSlice.reducer),
-  services: servicesSlice.reducer,
-  venues: persistReducer(venuesPersistConfig, venuesSlice.reducer),
+  dashboard: dashboardReducer,
+  notifications: notificationsReducer,
+  reservation: persistReducer(reservationPersistConfig, reservationReducer),
+  reservations: persistReducer(reservationsPersistConfig, reservationsReducer),
+  services: servicesReducer,
+  venues: persistReducer(venuesPersistConfig, venuesReducer),
 });
 
 // Configuración del store
