@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
   // Authentication endpoints - ReservApp Web API
   AUTH: {
     CHANGE_PASSWORD: '/auth/change-password',
+    DASHBOARD: '/mobile/user/dashboard',
     FORGOT_PASSWORD: '/auth/forgot-password',
     LOGIN: '/auth/login',
     LOGOUT: '/auth/logout',
@@ -55,7 +56,6 @@ export const API_ENDPOINTS = {
   // Public API (no authentication required)
   PUBLIC: {
     SERVICES: '/public/services',
-    VENUES: '/public/venues',
   },
 
   // Reservations management - Real API endpoints

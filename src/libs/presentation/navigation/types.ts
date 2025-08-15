@@ -15,7 +15,9 @@ export interface AuthStackParamList {
 export interface MainStackParamList {
   MainDrawer: undefined;
   VenueDetails: { venueId: string };
-  ReservationFlow: { venueId: string; serviceId?: string };
+  ReservationDetails: { serviceId?: string; reservationId?: string };
+  ReservationFlow: { venueId: string; serviceId?: string; service?: any };
+  ServiceDetail: { serviceId: string };
   [key: string]: any;
 }
 
@@ -24,15 +26,15 @@ export interface DrawerParamList {
   Reservations: undefined;
   Notifications: undefined;
   Profile: undefined;
-  Settings: undefined;
+  Pagos: undefined;
   [key: string]: any;
 }
 
 export interface TabParamList {
   Home: undefined;
-  Discover: undefined;
+  Services: undefined;
   Reservations: undefined;
-  Wallet: undefined;
-  Profile: undefined;
+  Notifications: undefined;
+  Payments: undefined;
   [key: string]: any;
 }

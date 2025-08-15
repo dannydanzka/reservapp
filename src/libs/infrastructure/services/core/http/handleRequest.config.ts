@@ -5,11 +5,11 @@ import to from 'await-to-js';
 
 import { getNameFromFilename } from '@constants/multimediaType.constant';
 
+import { axiosSimulator } from './axiosSimulator.config';
+import { buildURL } from './buildURL.config';
+import { defaultErrorHandling } from './defaultErrorHandling.config';
 import { HandleRequestParams } from './types/request.types';
-import axiosSimulator from './axiosSimulator.config';
-import buildURL from './buildURL.config';
-import defaultErrorHandling from './defaultErrorHandling.config';
-import injectAuthorizationHeader from './injectAuthorizationHeader.config';
+import { injectAuthorizationHeader } from './injectAuthorizationHeader.config';
 
 const isMockedResponseFunction = <T>(value: unknown): value is () => T =>
   typeof value === 'function';
@@ -50,6 +50,8 @@ const handleRequest = async <T = unknown>({
   }
 
   const fullURL = buildURL({ endpoint, extraCustomQuery, params, query, url });
+  // Logging removido para evitar spam
+
   let formData: FormData | undefined;
 
   if (upload) {
@@ -94,4 +96,4 @@ const handleRequest = async <T = unknown>({
   return preProcessResponse ? (preProcessResponse(res.data) as T) : res.data;
 };
 
-export default handleRequest;
+export { handleRequest };

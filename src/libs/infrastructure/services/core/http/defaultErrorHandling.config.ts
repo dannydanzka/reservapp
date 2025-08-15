@@ -1,8 +1,8 @@
-import HandleError from '../../../../shared/utils/classes/handleError';
+import { HandleError } from '../../../../shared/utils/classes/handleError';
 
 const DEFAULT_ERROR_MESSAGE = 'Lo sentimos, ha ocurrido un error.';
 
-const defaultErrorHandling = (
+export const defaultErrorHandling = (
   error: unknown,
   customDefaultErrorMessage: string | false = false,
   shouldReturnErrorCodeFirst = false
@@ -28,5 +28,3 @@ const defaultErrorHandling = (
 
   throw new HandleError(responseError.response, errorMessage);
 };
-
-export default defaultErrorHandling;

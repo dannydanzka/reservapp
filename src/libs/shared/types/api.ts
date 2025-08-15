@@ -29,7 +29,7 @@ export interface PaginationParams {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  meta: {
+  pagination: {
     page: number;
     limit: number;
     total: number;

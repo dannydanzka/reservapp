@@ -58,7 +58,9 @@
       "Bash(yarn fix:imports:*)",
       "Bash(yarn bundle:*)",
       "Bash(kill:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(yarn type-check:*)",
+      "Bash(yarn format:*)"
     ],
     "deny": []
   }

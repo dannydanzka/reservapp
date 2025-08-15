@@ -1,0 +1,1 @@
+export { PagosScreen } from './PagosScreen';

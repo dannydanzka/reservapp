@@ -7,4 +7,4 @@ const axiosSimulator = async <T>({ delay, mockedResponse }: AxiosSimulatorProps<
   return mockedResponse;
 };
 
-export default axiosSimulator;
+export { axiosSimulator };

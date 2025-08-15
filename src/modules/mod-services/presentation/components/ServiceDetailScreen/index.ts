@@ -1,0 +1,1 @@
+export { ServiceDetailScreen } from './ServiceDetailScreen';

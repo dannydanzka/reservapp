@@ -8,10 +8,33 @@ import {
   User,
 } from '@shared/types';
 // import { clearSession, getAuthToken, saveAuthToken, saveSession } from '@core/utils/sessionStorage'; // TODO: implement
-import handleRequest from '@http/handleRequest.config';
+import { handleRequest } from '@http/handleRequest.config';
 
 class AuthService {
   private readonly baseUrl = API_CONFIG.BASE_URL;
+
+  /**
+   * Obtener dashboard móvil con stats del usuario
+   */
+  async getDashboard(): Promise<any> {
+    try {
+      const response = await handleRequest<ApiResponse<any>>({
+        customDefaultErrorMessage: 'Error al cargar dashboard',
+        endpoint: API_ENDPOINTS.AUTH.DASHBOARD,
+        method: 'get',
+        timeout: API_CONFIG.TIMEOUT,
+        url: this.baseUrl,
+      });
+
+      if (response.success && response.data) {
+        return response.data;
+      }
+
+      throw new Error(response.message || 'Error al cargar dashboard');
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
    * Autenticar usuario con email y contraseña
@@ -36,7 +59,6 @@ class AuthService {
       }
       throw new Error(response.message || 'Error al iniciar sesión');
     } catch (error) {
-      console.error('AuthService.login error:', error);
       throw error;
     }
   }
@@ -64,7 +86,6 @@ class AuthService {
       }
       throw new Error(response.message || 'Error al registrar usuario');
     } catch (error) {
-      console.error('AuthService.register error:', error);
       throw error;
     }
   }
@@ -89,7 +110,6 @@ class AuthService {
       }
       throw new Error(response.message || 'Error al obtener perfil');
     } catch (error) {
-      console.error('AuthService.getProfile error:', error);
       throw error;
     }
   }
@@ -109,7 +129,6 @@ class AuthService {
       // Usar getProfile como verificación de token (API real no tiene verify-token)
       return await this.getProfile();
     } catch (error) {
-      console.error('AuthService.verifyToken error:', error);
       // Si el token no es válido, limpiamos la sesión
       // await clearSession(); // TODO: implement
       throw error;
@@ -130,13 +149,11 @@ class AuthService {
         url: this.baseUrl, // No mostrar error si falla
       }).catch(() => {
         // Ignoramos errores del logout en servidor
-        console.log('Server logout failed, continuing with local logout');
       });
 
       // Siempre limpiamos la sesión local
       // await clearSession(); // TODO: implement
     } catch (error) {
-      console.error('AuthService.logout error:', error);
       // Siempre limpiamos la sesión aunque falle el servidor
       // await clearSession(); // TODO: implement
     }
@@ -160,7 +177,6 @@ class AuthService {
         throw new Error(response.message || 'Error al enviar email de recuperación');
       }
     } catch (error) {
-      console.error('AuthService.forgotPassword error:', error);
       throw error;
     }
   }
@@ -183,7 +199,6 @@ class AuthService {
         throw new Error(response.message || 'Error al restablecer contraseña');
       }
     } catch (error) {
-      console.error('AuthService.resetPassword error:', error);
       throw error;
     }
   }
@@ -206,7 +221,6 @@ class AuthService {
         throw new Error(response.message || 'Error al cambiar contraseña');
       }
     } catch (error) {
-      console.error('AuthService.changePassword error:', error);
       throw error;
     }
   }

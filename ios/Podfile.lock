@@ -2278,6 +2278,35 @@ PODS:
     - Yoga
   - RNCMaskedView (0.1.11):
     - React
+  - RNDateTimePicker (8.4.4):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - RNGestureHandler (2.28.0):
     - boost
     - DoubleConversion
@@ -2691,6 +2720,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -2861,6 +2891,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -2953,6 +2985,7 @@ SPEC CHECKSUMS:
   ReactCommon: b028d09a66e60ebd83ca59d8cc9a1216360db147
   RNCAsyncStorage: 1f04c8d56558e533277beda29187f571cf7eecb2
   RNCMaskedView: 4c5ee1c8667d56077246cc6d1977f77393923560
+  RNDateTimePicker: e7e2718eb18be7435bfa6d6c8c84e336dde80334
   RNGestureHandler: db29d3e7edf41a11d133cc3ffd4029762376ed1a
   RNReanimated: e8c97df80681b4a8c1737e3526f690db141156f7
   RNScreens: 9924375d5b9bf84336fd113cee427ec082f3b384

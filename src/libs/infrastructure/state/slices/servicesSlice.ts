@@ -343,12 +343,22 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+
+        const newPage = action.payload.pagination?.page || 1;
+        const isFirstPage = newPage === 1;
+
+        // Si es la primera página, reemplaza. Si no, agrega al final
+        if (isFirstPage) {
+          state.services = action.payload.data || [];
+        } else {
+          state.services = [...state.services, ...(action.payload.data || [])];
+        }
+
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.pagination?.hasMore || false,
+          limit: action.payload.pagination?.limit || 10,
+          page: action.payload.pagination?.page || 1,
+          total: action.payload.pagination?.total || 0,
         };
       })
       .addCase(fetchServices.rejected, (state, action) => {
@@ -374,7 +384,7 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchPopularServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.popularServices = action.payload.data;
+        state.popularServices = action.payload.data || [];
       })
       .addCase(fetchPopularServices.rejected, (state, action) => {
         state.isLoading = false;
@@ -387,7 +397,7 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchAvailableServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.availableServices = action.payload.data;
+        state.availableServices = action.payload.data || [];
       })
       .addCase(fetchAvailableServices.rejected, (state, action) => {
         state.isLoading = false;
@@ -400,12 +410,12 @@ const servicesSlice = createSlice({
       })
       .addCase(searchServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.pagination?.hasMore || false,
+          limit: action.payload.pagination?.limit || 10,
+          page: action.payload.pagination?.page || 1,
+          total: action.payload.pagination?.total || 0,
         };
       })
       .addCase(searchServices.rejected, (state, action) => {
@@ -432,12 +442,12 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServicesByCategory.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchServicesByCategory.rejected, (state, action) => {
@@ -451,12 +461,12 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServicesByType.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchServicesByType.rejected, (state, action) => {
@@ -470,12 +480,12 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchVenueServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchVenueServices.rejected, (state, action) => {
@@ -489,7 +499,7 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchPublicServices.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
       })
       .addCase(fetchPublicServices.rejected, (state, action) => {
         state.isLoading = false;
@@ -502,12 +512,12 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServicesByPriceRange.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchServicesByPriceRange.rejected, (state, action) => {
@@ -521,12 +531,12 @@ const servicesSlice = createSlice({
       })
       .addCase(fetchServicesByCapacity.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.services = action.payload.data;
+        state.services = action.payload.data || [];
         state.pagination = {
-          hasMore: action.payload.meta.hasMore,
-          limit: action.payload.meta.limit,
-          page: action.payload.meta.page,
-          total: action.payload.meta.total,
+          hasMore: action.payload.meta?.hasMore || 0,
+          limit: action.payload.meta?.limit || 0,
+          page: action.payload.meta?.page || 0,
+          total: action.payload.meta?.total || 0,
         };
       })
       .addCase(fetchServicesByCapacity.rejected, (state, action) => {
@@ -597,4 +607,4 @@ export const selectServiceAvailability = (state: { services: ServicesState }) =>
 export const selectServiceReviews = (state: { services: ServicesState }) => state.services.reviews;
 
 export { servicesSlice };
-export default servicesSlice.reducer;
+export const servicesReducer = servicesSlice.reducer;

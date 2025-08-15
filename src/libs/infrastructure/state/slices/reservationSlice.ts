@@ -141,4 +141,4 @@ export const {
   setSelectedService,
 } = reservationSlice.actions;
 
-export default reservationSlice.reducer;
+export const reservationReducer = reservationSlice.reducer;

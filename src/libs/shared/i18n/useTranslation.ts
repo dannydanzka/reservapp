@@ -181,4 +181,4 @@ export const formatRelativeTime = (date: Date): string => {
   return formatDate(date);
 };
 
-export default useTranslation;
+// useTranslation is already exported as named export above

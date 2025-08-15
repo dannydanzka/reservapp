@@ -1,6 +1,40 @@
-import { API_ENDPOINTS } from '@http/api.config';
+import { API_ENDPOINTS } from '@shared/config/api.config';
 import { ApiResponse, PaginatedResponse, PaginationOptions } from '@http/types/request.types';
 import { handleRequest } from '@http/handleRequest.config';
+
+// Stripe Test Data for Development
+export const STRIPE_TEST_DATA = {
+  // Test card data
+  TEST_CARDS: {
+    MASTERCARD_SUCCESS: {
+      brand: 'mastercard',
+      cvc: '123',
+      expiryMonth: 12,
+      expiryYear: 2025,
+      last4: '4444',
+      number: '5555555555554444',
+    },
+    VISA_DECLINED: {
+      brand: 'visa',
+      cvc: '123',
+      expiryMonth: 12,
+      expiryYear: 2025,
+      last4: '0002',
+      number: '4000000000000002',
+    },
+    VISA_SUCCESS: {
+      brand: 'visa',
+      cvc: '123',
+      expiryMonth: 12,
+      expiryYear: 2025,
+      last4: '4242',
+      number: '4242424242424242',
+    },
+  },
+
+  // Test Payment Method ID (Visa card ending in 4242)
+  TEST_PAYMENT_METHOD_ID: 'pm_card_visa_test',
+} as const;
 
 export interface PaymentMethod {
   id: string;
@@ -144,14 +178,23 @@ class StripeService {
 
   // Payment Intents
   async createPaymentIntent(data: CreatePaymentIntentData): Promise<PaymentIntent> {
-    const response = await handleRequest<ApiResponse<PaymentIntent>>({
-      body: data,
-      endpoint: API_ENDPOINTS.PAYMENTS.CREATE_INTENT,
-      method: 'post',
-      url: this.baseUrl,
-    });
+    console.log('🔄 Creating payment intent with data:', data);
+    console.log('🌐 Request URL:', `${this.baseUrl}${API_ENDPOINTS.PAYMENTS.CREATE_INTENT}`);
+    
+    try {
+      const response = await handleRequest<ApiResponse<PaymentIntent>>({
+        body: data,
+        endpoint: API_ENDPOINTS.PAYMENTS.CREATE_INTENT,
+        method: 'post',
+        url: this.baseUrl,
+      });
 
-    return response.data;
+      console.log('✅ Payment intent response:', response);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Payment intent creation failed:', error);
+      throw error;
+    }
   }
 
   async getPaymentIntent(paymentIntentId: string): Promise<PaymentIntent> {
@@ -346,6 +389,58 @@ class StripeService {
     }
 
     return cleanCvc.length === 3 || cleanCvc.length === 4;
+  }
+
+  // Test Helper Methods for Development
+  getTestPaymentMethodId(): string {
+    return STRIPE_TEST_DATA.TEST_PAYMENT_METHOD_ID;
+  }
+
+  getTestCardData(cardType: keyof typeof STRIPE_TEST_DATA.TEST_CARDS = 'VISA_SUCCESS') {
+    return STRIPE_TEST_DATA.TEST_CARDS[cardType];
+  }
+
+  createTestPaymentMethod(): CreatePaymentMethodData {
+    const testCard = this.getTestCardData();
+    return {
+      billingDetails: {
+        address: {
+          city: 'Ciudad de México',
+          country: 'MX',
+          line1: '123 Test Street',
+          postalCode: '01000',
+          state: 'CDMX',
+        },
+        email: 'test@reservapp.com',
+        name: 'Test User',
+      },
+      card: {
+        cvc: testCard.cvc,
+        expiryMonth: testCard.expiryMonth,
+        expiryYear: testCard.expiryYear,
+        number: testCard.number,
+      },
+      type: 'card',
+    };
+  }
+
+  async createTestPaymentIntent(
+    reservationId: string,
+    amount: number = 10000
+  ): Promise<PaymentIntent> {
+    const testData: CreatePaymentIntentData = {
+      amount, // $100.00 MXN in cents
+      currency: 'mxn',
+      description: 'Test payment for ReservApp reservation',
+      metadata: {
+        environment: 'sandbox',
+        test: 'true',
+      },
+      paymentMethodId: this.getTestPaymentMethodId(),
+      reservationId,
+    };
+
+    return this.createPaymentIntent(testData);
   }
 }
 
