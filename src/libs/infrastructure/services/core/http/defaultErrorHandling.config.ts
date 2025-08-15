@@ -1,4 +1,4 @@
-import HandleError from '@core/utils/classes/handleError';
+import HandleError from '../../../../shared/utils/classes/handleError';
 
 const DEFAULT_ERROR_MESSAGE = 'Lo sentimos, ha ocurrido un error.';
 

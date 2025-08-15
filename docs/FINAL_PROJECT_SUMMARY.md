@@ -17,7 +17,7 @@ ReservApp Mobile es una aplicación React Native 0.80 completamente funcional y 
 ### 🏨 **Sistema de Reservas End-to-End**
 - **Browse venues** con filtros avanzados
 - **Service selection** con catálogo completo
-- **Booking flow** completo (fechas, huéspedes, pagos)
+- **Reservation flow** completo (fechas, huéspedes, pagos)
 - **Reservation management** (ver, cancelar, modificar)
 - **Check-in/Check-out** digital
 
@@ -242,10 +242,10 @@ Se integraron componentes avanzados del proyecto Jafra:
 15. **Enhanced Error Handling** tipado
 16. **Quality Gates** automáticos
 17. **VenueListScreen** - Complete venue discovery implementation
-18. **ServiceSelectionScreen** - Full booking flow service selection
+18. **ServiceSelectionScreen** - Full reservation flow service selection
 19. **NotificationsScreen** - Professional notifications center
 20. **ProfileScreen** - Complete user profile management
-21. **MyBookingsScreen** - Full reservation management system
+21. **MyReservationsScreen** - Full reservation management system
 22. **ESLint Code Quality** - ZERO warnings achievement (68 → 0)
 23. **WalletScreen & TabNavigator** - Complete wallet system with 5-tab navigation
 
@@ -258,10 +258,10 @@ Se integraron componentes avanzados del proyecto Jafra:
 
 ### **✅ Pantallas de Usuario Completadas** *(Todas implementadas)*
 - ✅ **VenueListScreen** - Complete venue discovery with filters, search, and pagination
-- ✅ **ServiceSelectionScreen** - Full service catalog with category filtering and booking integration
+- ✅ **ServiceSelectionScreen** - Full service catalog with category filtering and reservation integration
 - ✅ **NotificationsScreen** - Complete notifications center with filtering and real-time updates
 - ✅ **ProfileScreen** - Full profile management with editing, image upload, and navigation menu
-- ✅ **MyBookingsScreen** - Comprehensive reservation management with cancellation and status tracking
+- ✅ **MyReservationsScreen** - Comprehensive reservation management with cancellation and status tracking
 
 ---
 

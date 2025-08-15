@@ -102,7 +102,7 @@ src/
 ### 🏨 **Reservas End-to-End**
 - **Descubrimiento**: Browse venues con filtros avanzados
 - **Selección**: Catálogo de servicios con precios
-- **Booking**: Flow de 5 pasos optimizado
+- **Reservation**: Flow de 5 pasos optimizado
 - **Gestión**: Ver, cancelar, reagendar reservas
 - **Calificación**: Sistema de 5 estrellas
 
@@ -156,10 +156,10 @@ src/
 
 #### User Experience Screens ✅
 16. ✅ **VenueListScreen** - Discovery completo con filtros
-17. ✅ **ServiceSelectionScreen** - Catálogo con booking integration
+17. ✅ **ServiceSelectionScreen** - Catálogo con reservation integration
 18. ✅ **NotificationsScreen** - Centro de notificaciones profesional
 19. ✅ **ProfileScreen** - Gestión completa con image upload
-20. ✅ **MyBookingsScreen** - Sistema completo de reservas
+20. ✅ **MyReservationsScreen** - Sistema completo de reservas
 21. ✅ **Quality Gates** - CI/CD automático
 
 ---

@@ -227,6 +227,7 @@ export const disablePushNotifications = createAsyncThunk(
 
 // Initial State
 const initialState: NotificationsState = {
+  error: null,
   filters: {
     isRead: undefined,
     limit: 10,
@@ -234,22 +235,21 @@ const initialState: NotificationsState = {
     type: undefined,
   },
   isLoading: false,
-  error: null,
   isLoadingSettings: false,
   isMarkingRead: false,
-  notifications: [],
   isUpdatingSettings: false,
-  selectedNotification: null,
+  notifications: [],
   pagination: {
     hasMore: false,
     limit: 10,
     page: 1,
     total: 0,
   },
+  selectedNotification: null,
   settings: null,
   summary: null,
-  unreadNotifications: [],
   unreadCount: 0,
+  unreadNotifications: [],
 };
 
 // Slice

@@ -7,7 +7,7 @@ import {
   RegisterData,
   User,
 } from '@shared/types';
-import { clearSession, getAuthToken, saveAuthToken, saveSession } from '@core/utils/sessionStorage';
+// import { clearSession, getAuthToken, saveAuthToken, saveSession } from '@core/utils/sessionStorage'; // TODO: implement
 import handleRequest from '@http/handleRequest.config';
 
 class AuthService {
@@ -29,8 +29,8 @@ class AuthService {
 
       if (response.success && response.data) {
         // Guardar sesión en storage
-        await saveSession(response.data.user);
-        await saveAuthToken(response.data.token);
+        // await saveSession(response.data.user); // TODO: implement
+        // await saveAuthToken(response.data.token); // TODO: implement
 
         return response.data;
       }
@@ -57,8 +57,8 @@ class AuthService {
 
       if (response.success && response.data) {
         // Guardar sesión en storage
-        await saveSession(response.data.user);
-        await saveAuthToken(response.data.token);
+        // await saveSession(response.data.user); // TODO: implement
+        // await saveAuthToken(response.data.token); // TODO: implement
 
         return response.data;
       }
@@ -84,7 +84,7 @@ class AuthService {
 
       if (response.success && response.data) {
         // Actualizar sesión en storage
-        await saveSession(response.data);
+        // await saveSession(response.data); // TODO: implement
         return response.data;
       }
       throw new Error(response.message || 'Error al obtener perfil');
@@ -99,7 +99,8 @@ class AuthService {
    */
   async verifyToken(): Promise<User> {
     try {
-      const token = await getAuthToken();
+      // const token = await getAuthToken(); // TODO: implement
+      const token = null; // TODO: get from AsyncStorage
 
       if (!token) {
         throw new Error('No token found');
@@ -110,7 +111,7 @@ class AuthService {
     } catch (error) {
       console.error('AuthService.verifyToken error:', error);
       // Si el token no es válido, limpiamos la sesión
-      await clearSession();
+      // await clearSession(); // TODO: implement
       throw error;
     }
   }
@@ -133,11 +134,80 @@ class AuthService {
       });
 
       // Siempre limpiamos la sesión local
-      await clearSession();
+      // await clearSession(); // TODO: implement
     } catch (error) {
       console.error('AuthService.logout error:', error);
       // Siempre limpiamos la sesión aunque falle el servidor
-      await clearSession();
+      // await clearSession(); // TODO: implement
+    }
+  }
+
+  /**
+   * Solicitar restablecimiento de contraseña
+   */
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      const response = await handleRequest<ApiResponse<void>>({
+        body: { email },
+        customDefaultErrorMessage: 'Error al enviar email de recuperación',
+        endpoint: API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
+        method: 'post',
+        timeout: API_CONFIG.TIMEOUT,
+        url: this.baseUrl,
+      });
+
+      if (!response.success) {
+        throw new Error(response.message || 'Error al enviar email de recuperación');
+      }
+    } catch (error) {
+      console.error('AuthService.forgotPassword error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Restablecer contraseña con token
+   */
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    try {
+      const response = await handleRequest<ApiResponse<void>>({
+        body: { newPassword, token },
+        customDefaultErrorMessage: 'Error al restablecer contraseña',
+        endpoint: API_ENDPOINTS.AUTH.RESET_PASSWORD,
+        method: 'post',
+        timeout: API_CONFIG.TIMEOUT,
+        url: this.baseUrl,
+      });
+
+      if (!response.success) {
+        throw new Error(response.message || 'Error al restablecer contraseña');
+      }
+    } catch (error) {
+      console.error('AuthService.resetPassword error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Cambiar contraseña del usuario autenticado
+   */
+  async changePassword(data: ChangePasswordData): Promise<void> {
+    try {
+      const response = await handleRequest<ApiResponse<void>>({
+        body: data,
+        customDefaultErrorMessage: 'Error al cambiar contraseña',
+        endpoint: API_ENDPOINTS.AUTH.CHANGE_PASSWORD,
+        method: 'post',
+        timeout: API_CONFIG.TIMEOUT,
+        url: this.baseUrl,
+      });
+
+      if (!response.success) {
+        throw new Error(response.message || 'Error al cambiar contraseña');
+      }
+    } catch (error) {
+      console.error('AuthService.changePassword error:', error);
+      throw error;
     }
   }
 

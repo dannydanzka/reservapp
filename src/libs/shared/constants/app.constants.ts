@@ -26,7 +26,7 @@ export const STORAGE_KEYS = {
   USER_DATA: '@ReservApp:userData',
 } as const;
 
-export const BOOKING_STATUSES = {
+export const RESERVATION_STATUSES = {
   CANCELLED: 'cancelled',
   COMPLETED: 'completed',
   CONFIRMED: 'confirmed',

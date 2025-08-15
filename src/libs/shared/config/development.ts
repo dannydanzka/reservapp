@@ -15,18 +15,6 @@ const developmentConfig: AppConfig = {
     },
     URL: 'http://localhost:3001/api/auth',
   },
-  BOOKING_API: {
-    ENDPOINTS: {
-      CANCEL_BOOKING: '/bookings/{id}/cancel',
-      CREATE_BOOKING: '/bookings',
-      GET_AVAILABILITY: '/availability',
-      GET_BOOKINGS: '/bookings',
-      GET_BOOKING_DETAILS: '/bookings/{id}',
-      GET_SERVICES: '/services',
-      GET_SERVICE_DETAILS: '/services/{id}',
-    },
-    URL: 'http://localhost:3001/api/booking',
-  },
   DEBUG: true,
   ENVIRONMENT: 'development',
   PAYMENT_API: {
@@ -36,6 +24,18 @@ const developmentConfig: AppConfig = {
       PROCESS_PAYMENT: '/process',
     },
     URL: 'http://localhost:3001/api/payment',
+  },
+  RESERVATION_API: {
+    ENDPOINTS: {
+      CANCEL_RESERVATION: '/reservations/{id}/cancel',
+      CREATE_RESERVATION: '/reservations',
+      GET_AVAILABILITY: '/availability',
+      GET_RESERVATIONS: '/reservations',
+      GET_RESERVATION_DETAILS: '/reservations/{id}',
+      GET_SERVICES: '/services',
+      GET_SERVICE_DETAILS: '/services/{id}',
+    },
+    URL: 'http://localhost:3001/api/reservation',
   },
   VENUE_API: {
     ENDPOINTS: {

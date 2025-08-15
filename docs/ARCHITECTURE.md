@@ -44,10 +44,10 @@ mod-auth/
     └── state/
 ```
 
-### Booking Module (`mod-booking`)
+### Reservation Module (`mod-reservation`)
 - Handles reservation creation, management, and flow
 - Integrates with venue and payment modules
-- Manages booking state and validation
+- Manages reservation state and validation
 
 ### Notification Module (`mod-notification`)
 - Push and local notification handling

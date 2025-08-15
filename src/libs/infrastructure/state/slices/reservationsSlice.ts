@@ -236,34 +236,34 @@ export const fetchReservationsByStatus = createAsyncThunk(
 
 // Initial State
 const initialState: ReservationsState = {
+  availability: null,
+  error: null,
   filters: {
     dateFrom: undefined,
     dateTo: undefined,
     includeDetails: true,
-    serviceId: undefined,
     search: undefined,
-    userId: undefined,
+    serviceId: undefined,
     status: undefined,
+    userId: undefined,
     venueId: undefined,
   },
   isCancelling: false,
-  error: null,
   isCheckingIn: false,
-  availability: null,
-  isCreating: false,
   isCheckingOut: false,
-  pastReservations: [],
+  isCreating: false,
   isLoading: false,
-  reservations: [],
   isUpdating: false,
-  upcomingReservations: [],
   pagination: {
     hasMore: false,
     limit: 10,
     page: 1,
     total: 0,
   },
+  pastReservations: [],
+  reservations: [],
   selectedReservation: null,
+  upcomingReservations: [],
 };
 
 // Slice

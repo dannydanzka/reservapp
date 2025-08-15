@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { NotificationContainer } from '@presentation/components/NotificationDisplay';
-import EnhancedAppProviders from '@providers/EnhancedAppProviders';
-import RootNavigator from '@navigation/RootNavigator';
+import 'react-native-gesture-handler';
+
+import { RootNavigator } from './libs/presentation/navigation/RootNavigator';
+import AppProviders from './libs/infrastructure/providers/AppProviders';
 
 const App: React.FC = () => {
   return (
-    <EnhancedAppProviders>
+    <AppProviders>
       <RootNavigator />
-      <NotificationContainer />
-    </EnhancedAppProviders>
+    </AppProviders>
   );
 };
 

@@ -56,8 +56,8 @@ class ServicesService {
   ): Promise<PaginatedResponse<Service>> {
     try {
       const query = {
-        date,
         available: true,
+        date,
         ...filters,
         ...pagination,
       };
@@ -351,7 +351,7 @@ class ServicesService {
   ): Promise<TimeSlot[]> {
     try {
       const availability = await this.getServiceAvailability(serviceId, date);
-      
+
       // Filtrar slots disponibles con capacidad suficiente
       return availability.timeSlots.filter((slot) => {
         return slot.available && (!capacity || slot.capacity >= capacity);
@@ -363,7 +363,7 @@ class ServicesService {
   }
 
   /**
-   * Verificar disponibilidad para booking
+   * Verificar disponibilidad para reservation
    */
   async checkAvailability(
     serviceId: string,
@@ -374,10 +374,8 @@ class ServicesService {
   ): Promise<{ available: boolean; timeSlot?: TimeSlot }> {
     try {
       const availability = await this.getServiceAvailability(serviceId, date, duration);
-      
-      const timeSlot = availability.timeSlots.find(
-        (slot) => slot.startTime === startTime
-      );
+
+      const timeSlot = availability.timeSlots.find((slot) => slot.startTime === startTime);
 
       if (!timeSlot) {
         return { available: false };
@@ -431,7 +429,7 @@ class ServicesService {
       if (response.success && response.data) {
         return response.data;
       }
-      
+
       // Fallback a categorías predefinidas
       return [
         'ACCOMMODATION',
@@ -440,7 +438,7 @@ class ServicesService {
         'TOUR_EXPERIENCE',
         'EVENT_MEETING',
         'TRANSPORTATION',
-        'ENTERTAINMENT'
+        'ENTERTAINMENT',
       ];
     } catch (error) {
       console.warn('ServicesService.getServiceCategories using fallback:', error);
@@ -452,7 +450,7 @@ class ServicesService {
         'TOUR_EXPERIENCE',
         'EVENT_MEETING',
         'TRANSPORTATION',
-        'ENTERTAINMENT'
+        'ENTERTAINMENT',
       ];
     }
   }
@@ -467,12 +465,12 @@ class ServicesService {
     discountPercent?: number
   ): { basePrice: number; taxes: number; discount: number; finalPrice: number } {
     let basePrice = service.basePrice;
-    
+
     // Ajustar precio según tipo
     if (service.priceType === 'PER_PERSON') {
       basePrice *= capacity;
     }
-    
+
     // Ajustar por duración si aplica
     if (duration && service.price.unit === 'per_hour') {
       basePrice = (basePrice * duration) / 60; // Convertir minutos a horas
@@ -480,18 +478,18 @@ class ServicesService {
 
     // Calcular impuestos (ejemplo: 16% IVA México)
     const taxes = basePrice * 0.16;
-    
+
     // Calcular descuento
     const discount = discountPercent ? (basePrice * discountPercent) / 100 : 0;
-    
+
     // Precio final
     const finalPrice = basePrice + taxes - discount;
 
     return {
       basePrice: Math.round(basePrice * 100) / 100,
-      taxes: Math.round(taxes * 100) / 100,
       discount: Math.round(discount * 100) / 100,
       finalPrice: Math.round(finalPrice * 100) / 100,
+      taxes: Math.round(taxes * 100) / 100,
     };
   }
 
@@ -500,10 +498,10 @@ class ServicesService {
    */
   formatPrice(amount: number, currency: string = 'MXN'): string {
     return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
       currency,
-      minimumFractionDigits: 0,
       maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      style: 'currency',
     }).format(amount);
   }
 }
@@ -512,7 +510,7 @@ class ServicesService {
 export interface ServiceStats {
   totalServices: number;
   averageRating: number;
-  totalBookings: number;
+  totalReservations: number;
   averagePrice: number;
   popularCategories: Array<{
     category: string;

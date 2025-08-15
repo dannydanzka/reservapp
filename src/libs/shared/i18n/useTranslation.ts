@@ -2,10 +2,9 @@ import { useMemo } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import enTranslations from './locales/en-enhanced.json';
 import esTranslations from './locales/es-enhanced.json';
 
-export type Language = 'es' | 'en';
+export type Language = 'es';
 
 interface TranslationParams {
   [key: string]: string | number;
@@ -18,24 +17,15 @@ interface UseTranslationOptions {
 // Cache para el idioma actual
 let currentLanguage: Language = 'es';
 
-// Función para cambiar idioma
+// Función para cambiar idioma (solo español soportado)
 export const changeLanguage = async (lang: Language) => {
-  currentLanguage = lang;
-  await AsyncStorage.setItem('selectedLanguage', lang);
+  currentLanguage = 'es'; // Forzar español
+  await AsyncStorage.setItem('selectedLanguage', 'es');
 };
 
-// Función para obtener idioma guardado
+// Función para obtener idioma guardado (siempre español)
 export const getCurrentLanguage = async (): Promise<Language> => {
-  try {
-    const savedLang = (await AsyncStorage.getItem('selectedLanguage')) as Language;
-    if (savedLang) {
-      currentLanguage = savedLang;
-      return savedLang;
-    }
-  } catch (error) {
-    console.error('Error getting language:', error);
-  }
-  return 'es'; // Default
+  return 'es'; // Siempre español
 };
 
 // Función para obtener valor anidado del objeto de traducciones
@@ -60,8 +50,8 @@ const replaceParams = (str: string, params: TranslationParams): string => {
 // Hook principal de traducción
 export const useTranslation = () => {
   const translations = useMemo(() => {
-    return currentLanguage === 'es' ? esTranslations : enTranslations;
-  }, [currentLanguage]);
+    return esTranslations; // Solo español
+  }, []);
 
   const t = useMemo(() => {
     return (
@@ -123,8 +113,7 @@ export const useTranslation = () => {
 
 // Función standalone para usar fuera de componentes
 export const translate = (key: string, params?: TranslationParams): string => {
-  const translations = currentLanguage === 'es' ? esTranslations : enTranslations;
-  const value = getNestedValue(translations, key);
+  const value = getNestedValue(esTranslations, key); // Solo español
 
   if (value === undefined) {
     console.warn(`Translation key not found: ${key}`);
@@ -140,16 +129,14 @@ export const translate = (key: string, params?: TranslationParams): string => {
 
 // Utilidades adicionales
 export const formatCurrency = (amount: number, currency = 'MXN'): string => {
-  const locale = currentLanguage === 'es' ? 'es-MX' : 'en-US';
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat('es-MX', {
     currency,
     style: 'currency',
   }).format(amount);
 };
 
 export const formatDate = (date: Date): string => {
-  const locale = currentLanguage === 'es' ? 'es-MX' : 'en-US';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat('es-MX', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -157,16 +144,14 @@ export const formatDate = (date: Date): string => {
 };
 
 export const formatTime = (date: Date): string => {
-  const locale = currentLanguage === 'es' ? 'es-MX' : 'en-US';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat('es-MX', {
     hour: '2-digit',
     minute: '2-digit',
   }).format(date);
 };
 
 export const formatDateTime = (date: Date): string => {
-  const locale = currentLanguage === 'es' ? 'es-MX' : 'en-US';
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat('es-MX', {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',

@@ -10,40 +10,64 @@ export const theme = {
     xxl: 16,
   },
   colors: {
+    black: '#000000',
+
     border: {
       // Bordes muy sutiles
       default: '#e5e7eb',
-      light: '#f3f4f6', // Bordes normales
-      medium: '#d1d5db',
       // Bordes fuertes
       focus: '#3b82f6',
+
+      light: '#f3f4f6',
+
+      // Bordes normales
+      medium: '#d1d5db',
       // Bordes medios
       strong: '#9ca3af', // Bordes enfocados
     },
+
+    // Service Categories (para ReservApp)
+    categories: {
+      // Verde para spas
+      beauty: '#ec4899',
+
+      // Púrpura para tours
+      events: '#f59e0b',
+
+      // Rosa para belleza
+      hotel: '#3b82f6',
+
+      restaurant: '#f97316',
+
+      // Naranja para restaurantes
+      spa: '#22c55e',
+      // Azul para hoteles
+      tours: '#8b5cf6', // Amarillo para eventos
+    },
+
     error: {
       100: '#fee2e2',
       200: '#fecaca',
       300: '#fca5a5',
-      50: '#fef2f2',
       400: '#f87171',
+      50: '#fef2f2',
       500: '#ef4444',
       600: '#dc2626',
       700: '#b91c1c',
       800: '#991b1b',
       900: '#7f1d1d',
     },
-    // Service Categories (para ReservApp)
-    categories: {
-      restaurant: '#f97316',
-      // Verde para spas
-      beauty: '#ec4899',
-      // Naranja para restaurantes
-      spa: '#22c55e', // Rosa para belleza
-      hotel: '#3b82f6',
-      // Púrpura para tours
-      events: '#f59e0b',
-      // Azul para hoteles
-      tours: '#8b5cf6', // Amarillo para eventos
+
+    // Feedback Colors (extended)
+    feedback: {
+      errorDark: '#dc2626',
+      errorLight: '#fee2e2',
+      infoDark: '#2563eb',
+      infoLight: '#dbeafe',
+      successDark: '#15803d',
+      successLight: '#dcfce7',
+      warningDark: '#d97706',
+      warningLight: '#fef3c7',
     },
 
     gray: {
@@ -67,24 +91,12 @@ export const theme = {
       900: '#111827', // Títulos principales
     },
 
-    // Feedback Colors (extended)
-    feedback: {
-      successDark: '#15803d',
-      successLight: '#dcfce7',
-      warningDark: '#d97706',
-      warningLight: '#fef3c7',
-      errorDark: '#dc2626',
-      errorLight: '#fee2e2',
-      infoDark: '#2563eb',
-      infoLight: '#dbeafe',
-    },
-
     info: {
       100: '#dbeafe',
       200: '#bfdbfe',
-      50: '#eff6ff',
       300: '#93c5fd',
       400: '#60a5fa',
+      50: '#eff6ff',
       500: '#3b82f6',
       600: '#2563eb',
       700: '#1d4ed8',
@@ -94,39 +106,40 @@ export const theme = {
 
     primary: {
       // Muy claro
-      100: '#dbeafe',
+      100: '#e0e7ff',
 
       // Claro
-      200: '#bfdbfe',
+      200: '#c7d2fe',
 
-      25: '#fafaff',
+      25: '#eef2ff',
 
-      300: '#93c5fd',
+      300: '#a5b4fc',
+
+      400: '#818cf8',
       // Ultra claro para backgrounds sutiles
-      50: '#eff6ff',
-      400: '#60a5fa',
-      500: '#3b82f6', // Color principal de marca (matching web)
-      600: '#2563eb',
-      700: '#1d4ed8',
-      800: '#1e40af',
-      900: '#1e3a8a', // Muy oscuro
+      50: '#eef2ff',
+      500: '#4F46E5', // Color principal de marca (matching web)
+      600: '#4338ca',
+      700: '#3730a3',
+      800: '#312e81',
+      900: '#1e1b4b', // Muy oscuro
     },
-
-    black: '#000000',
 
     secondary: {
       // Muy claro
-      100: '#fdead7',
-
-      25: '#fffcf5',
+      100: '#ffedd5',
 
       // Claro
-      200: '#fbd3af',
+      200: '#fed7aa',
+
+      25: '#fff7ed',
+
+      300: '#fdba74',
+
+      400: '#fb923c',
       // Ultra claro para backgrounds sutiles
-      50: '#fef7ee',
-      300: '#f8b47c',
-      400: '#f59048',
-      500: '#f97316', // Color secundario principal (orange complementario)
+      50: '#fff7ed',
+      500: '#FF8A00', // Color secundario principal (orange matching web)
       600: '#ea580c',
       700: '#c2410c',
       800: '#9a3412',
@@ -149,9 +162,9 @@ export const theme = {
     success: {
       100: '#dcfce7',
       200: '#bbf7d0',
-      50: '#f0fdf4',
       300: '#86efac',
       400: '#4ade80',
+      50: '#f0fdf4',
       500: '#22c55e',
       600: '#16a34a',
       700: '#15803d',
@@ -161,13 +174,13 @@ export const theme = {
 
     // Semantic Colors (inspired by Jafra)
     surface: {
+      // Fondo elevado (modals, dropdowns)
+      disabled: '#f3f4f6',
+
       // Fondo terciario
       elevated: '#ffffff',
 
       primary: '#ffffff',
-
-      // Fondo elevado (modals, dropdowns)
-      disabled: '#f3f4f6',
 
       // Fondo principal de cards
       secondary: '#f9fafb',
@@ -175,43 +188,42 @@ export const theme = {
       tertiary: '#f3f4f6', // Fondo deshabilitado
     },
 
+    text: {
+      // Placeholders
+      disabled: '#d1d5db',
+
+      // Texto deshabilitado
+      inverse: '#ffffff',
+
+      // Texto sobre fondos oscuros
+      link: '#3b82f6',
+
+      // Links
+      linkHover: '#2563eb',
+
+      // Texto terciario
+      placeholder: '#9ca3af',
+      primary: '#111827',
+
+      // Texto principal
+      secondary: '#374151',
+      // Texto secundario
+      tertiary: '#6b7280', // Links hover
+    },
+
+    transparent: 'transparent',
     warning: {
       100: '#fef3c7',
-      50: '#fffbeb',
       200: '#fde68a',
       300: '#fcd34d',
       400: '#fbbf24',
+      50: '#fffbeb',
       500: '#f59e0b',
       600: '#d97706',
       700: '#b45309',
       800: '#92400e',
       900: '#78350f',
     },
-
-    text: {
-      // Placeholders
-      disabled: '#d1d5db',
-
-      // Texto terciario
-      placeholder: '#9ca3af',
-
-      // Texto deshabilitado
-      inverse: '#ffffff',
-
-      primary: '#111827',
-
-      // Texto sobre fondos oscuros
-      link: '#3b82f6',
-
-      // Texto principal
-      secondary: '#374151',
-
-      // Links
-      linkHover: '#2563eb',
-      // Texto secundario
-      tertiary: '#6b7280', // Links hover
-    },
-    transparent: 'transparent',
     white: '#ffffff',
   },
   shadows: {

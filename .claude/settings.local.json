@@ -52,7 +52,13 @@
       "Bash(yarn analyze:console:*)",
       "Bash(yarn doctor)",
       "Bash(yarn info)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(yarn build)",
+      "Bash(yarn verify:imports:*)",
+      "Bash(yarn fix:imports:*)",
+      "Bash(yarn bundle:*)",
+      "Bash(kill:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
