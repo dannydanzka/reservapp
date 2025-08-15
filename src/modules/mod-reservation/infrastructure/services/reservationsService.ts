@@ -50,6 +50,12 @@ class ReservationsService {
    */
   async createReservation(reservationData: CreateReservationData): Promise<Reservation> {
     try {
+      console.log(
+        '🌐 ReservationsService: Calling API with data:',
+        JSON.stringify(reservationData, null, 2)
+      );
+      console.log('🌐 ReservationsService: URL:', this.baseUrl + API_ENDPOINTS.RESERVATIONS.CREATE);
+
       const response = await handleRequest<ApiResponse<Reservation>>({
         body: reservationData,
         customDefaultErrorMessage: 'Error al crear reservación',
@@ -59,12 +65,21 @@ class ReservationsService {
         url: this.baseUrl,
       });
 
+      console.log('🌐 ReservationsService: API response:', JSON.stringify(response, null, 2));
+
       if (response.success && response.data) {
+        console.log('✅ ReservationsService: Success, returning reservation data');
         return response.data;
       }
+      console.error('❌ ReservationsService: API returned unsuccessful response');
       throw new Error(response.message || 'Error al crear reservación');
     } catch (error) {
-      console.error('ReservationsService.createReservation error:', error);
+      console.error('❌ ReservationsService.createReservation error:', error);
+      console.error('❌ ReservationsService: Error details:', {
+        message: error?.message,
+        name: error?.name,
+        stack: error?.stack?.substring(0, 200),
+      });
       throw error;
     }
   }

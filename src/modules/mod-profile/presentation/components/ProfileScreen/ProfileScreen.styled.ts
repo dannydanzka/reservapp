@@ -1,21 +1,21 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  flex: 1;
   background-color: #f8f9fa;
+  flex: 1;
   padding: 16px;
 `;
 
 export const ProfileCard = styled.View`
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 16px;
-  padding: 24px;
+  elevation: 4;
   margin-bottom: 20px;
+  padding: 24px;
   shadow-color: #000;
-  shadow-offset: 0px 2px;
+  shadow-offset: 0 2px;
   shadow-opacity: 0.1;
   shadow-radius: 8px;
-  elevation: 4;
 `;
 
 export const ProfileHeader = styled.View`
@@ -23,111 +23,111 @@ export const ProfileHeader = styled.View`
 `;
 
 export const ProfileAvatar = styled.View`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  background-color: #ff8a00;
-  justify-content: center;
   align-items: center;
+  background-color: #ff8a00;
+  border-radius: 40px;
+  height: 80px;
+  justify-content: center;
   margin-bottom: 16px;
+  width: 80px;
 `;
 
 export const ProfileAvatarText = styled.Text`
+  color: #fff;
   font-size: 32px;
   font-weight: bold;
-  color: #ffffff;
 `;
 
 export const ProfileName = styled.Text`
+  color: #212529;
   font-size: 24px;
   font-weight: bold;
-  color: #212529;
   margin-bottom: 4px;
   text-align: center;
 `;
 
 export const ProfileEmail = styled.Text`
-  font-size: 16px;
   color: #6c757d;
+  font-size: 16px;
   text-align: center;
 `;
 
 export const ProfileSection = styled.View`
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 12px;
-  padding: 20px;
+  elevation: 2;
   margin-bottom: 16px;
+  padding: 20px;
   shadow-color: #000;
-  shadow-offset: 0px 1px;
+  shadow-offset: 0 1px;
   shadow-opacity: 0.05;
   shadow-radius: 4px;
-  elevation: 2;
 `;
 
 export const SectionTitle = styled.Text`
+  color: #212529;
   font-size: 18px;
   font-weight: 600;
-  color: #212529;
   margin-bottom: 16px;
 `;
 
 export const InfoItem = styled.View`
-  flex-direction: row;
   align-items: center;
-  padding: 12px 0;
-  border-bottom-width: 1px;
   border-bottom-color: #f8f9fa;
+  border-bottom-width: 1px;
+  flex-direction: row;
+  padding: 12px 0;
 `;
 
 export const InfoIcon = styled.View`
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  background-color: #f8f9fa;
-  justify-content: center;
   align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  height: 40px;
+  justify-content: center;
   margin-right: 16px;
+  width: 40px;
 `;
 
 export const InfoLabel = styled.Text`
-  font-size: 14px;
   color: #6c757d;
   flex: 1;
+  font-size: 14px;
   font-weight: 500;
 `;
 
 export const InfoValue = styled.Text`
-  font-size: 14px;
   color: #212529;
   flex: 2;
-  text-align: right;
+  font-size: 14px;
   font-weight: 400;
+  text-align: right;
 `;
 
 export const LoadingContainer = styled.View`
-  flex: 1;
-  justify-content: center;
   align-items: center;
   background-color: #f8f9fa;
+  flex: 1;
+  justify-content: center;
 `;
 
 export const LoadingText = styled.Text`
-  margin-top: 16px;
   color: #6c757d;
   font-size: 16px;
+  margin-top: 16px;
 `;
 
 export const EmptyContainer = styled.View`
+  align-items: center;
+  background-color: #f8f9fa;
   flex: 1;
   justify-content: center;
-  align-items: center;
   padding: 32px;
-  background-color: #f8f9fa;
 `;
 
 export const EmptyText = styled.Text`
   color: #6c757d;
   font-size: 16px;
-  text-align: center;
   margin-bottom: 8px;
+  text-align: center;
 `;

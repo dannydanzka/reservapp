@@ -19,26 +19,19 @@ export const RootNavigator: React.FC = () => {
 
   useEffect(() => {
     const initializeApp = async () => {
-      // Mostrar splash por al menos 2 segundos
-      const splashTimeout = setTimeout(() => {
-        setIsInitializing(false);
-      }, 2000);
-
       // Verificar token si existe
       if (token && !isAuthenticated) {
         dispatch(verifyToken());
       } else if (isAuthenticated && token) {
         // Si ya está autenticado, cargar el profile del usuario
         dispatch(getProfile());
-      } else {
-        // Si no hay token, terminar el splash después del timeout
-        setTimeout(() => {
-          clearTimeout(splashTimeout);
-          setIsInitializing(false);
-        }, 2000);
       }
 
-      return () => clearTimeout(splashTimeout);
+      // Mostrar splash por al menos 2 segundos, pero no si ya estamos autenticados
+      const minSplashTime = isAuthenticated ? 500 : 2000;
+      setTimeout(() => {
+        setIsInitializing(false);
+      }, minSplashTime);
     };
 
     initializeApp();
@@ -47,7 +40,7 @@ export const RootNavigator: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isInitializing || isLoading ? (
+        {isInitializing || (isLoading && !isAuthenticated) ? (
           <Stack.Screen component={SplashScreen} name='Splash' />
         ) : isAuthenticated ? (
           <Stack.Screen component={MainStack} name='Main' />

@@ -53,6 +53,7 @@ export interface User {
   phone?: string;
   role: UserRole;
   isActive: boolean;
+  isPremium: boolean;
   stripeCustomerId?: string;
   businessName?: string;
   businessType?: string;

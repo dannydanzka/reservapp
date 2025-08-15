@@ -2,70 +2,70 @@ import { Animated } from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  flex: 1;
   background-color: #6b46c1;
+  flex: 1;
 `;
 
 export const LogoContainer = styled.View`
+  align-items: center;
   flex: 1;
   justify-content: center;
-  align-items: center;
   padding-horizontal: 40px;
 `;
 
 export const AppName = styled.Text`
+  color: #fff;
   font-size: 48px;
   font-weight: bold;
-  color: #ffffff;
-  text-align: center;
   letter-spacing: 2px;
-  text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  text-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
 `;
 
 export const Tagline = styled.Text`
+  color: rgb(255 255 255 / 0.9);
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  margin-top: 8px;
   font-weight: 500;
   letter-spacing: 0.5px;
+  margin-top: 8px;
+  text-align: center;
 `;
 
 export const LoadingContainer = styled(Animated.View)`
-  position: absolute;
+  align-items: center;
   bottom: 80px;
   left: 0;
+  position: absolute;
   right: 0;
-  align-items: center;
 `;
 
 export const LoadingText = styled.Text`
-  color: rgba(255, 255, 255, 0.8);
+  color: rgb(255 255 255 / 0.8);
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 20px;
   letter-spacing: 0.3px;
+  margin-bottom: 20px;
 `;
 
 export const DotsContainer = styled.View`
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
   gap: 8px;
 `;
 
 export const Dot = styled(Animated.View)`
-  width: 8px;
-  height: 8px;
+  background-color: rgb(255 255 255 / 0.7);
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.7);
+  height: 8px;
+  width: 8px;
 `;
 
 export const AnimatedIcon = styled(Animated.View)`
-  justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  background-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  background-color: rgb(255 255 255 / 0.1);
+  border-radius: 25px;
+  height: 50px;
+  justify-content: center;
+  width: 50px;
 `;

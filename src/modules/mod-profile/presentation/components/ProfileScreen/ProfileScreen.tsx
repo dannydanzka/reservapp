@@ -1,7 +1,17 @@
 import React, { useEffect } from 'react';
 
 import { ActivityIndicator, ScrollView } from 'react-native';
-import { Building, Calendar, Clock, Mail, MapPin, Phone, Shield, User } from 'lucide-react-native';
+import {
+  Building,
+  Calendar,
+  Clock,
+  Crown,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  User,
+} from 'lucide-react-native';
 
 import { getProfile } from '../../../../../libs/infrastructure/state/slices/authSlice';
 import { useAppDispatch, useAppSelector } from '../../../../../libs/infrastructure/store/hooks';
@@ -175,6 +185,14 @@ export const ProfileScreen: React.FC = () => {
             </InfoIcon>
             <InfoLabel>Estado</InfoLabel>
             <InfoValue>{displayUser.isActive ? 'Activo' : 'Inactivo'}</InfoValue>
+          </InfoItem>
+
+          <InfoItem>
+            <InfoIcon>
+              <Crown color={displayUser.isPremium ? '#FFD700' : '#666'} size={20} />
+            </InfoIcon>
+            <InfoLabel>Membresía</InfoLabel>
+            <InfoValue>{displayUser.isPremium ? 'Premium' : 'Básica'}</InfoValue>
           </InfoItem>
         </ProfileSection>
 

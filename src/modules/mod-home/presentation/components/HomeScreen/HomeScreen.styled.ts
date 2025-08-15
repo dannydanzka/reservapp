@@ -3,8 +3,8 @@ import styled from 'styled-components/native';
 import { theme } from '../../../../../libs/presentation/styles/theme';
 
 export const Container = styled.ScrollView`
-  flex: 1;
   background-color: ${theme.colors.primary[25]};
+  flex: 1;
 `;
 
 export const ContentContainer = styled.View`
@@ -17,15 +17,15 @@ export const WelcomeSection = styled.View`
 `;
 
 export const WelcomeText = styled.Text`
+  color: ${theme.colors.primary[600]};
   font-size: 28px;
   font-weight: bold;
-  color: ${theme.colors.primary[600]};
   margin-bottom: 4px;
 `;
 
 export const SubtitleText = styled.Text`
-  font-size: 16px;
   color: ${theme.colors.secondary[600]};
+  font-size: 16px;
   line-height: 22px;
 `;
 
@@ -34,45 +34,45 @@ export const StatsSection = styled.View`
 `;
 
 export const SectionTitle = styled.Text`
+  color: ${theme.colors.primary[600]};
   font-size: 20px;
   font-weight: 600;
-  color: ${theme.colors.primary[600]};
   margin-bottom: 16px;
 `;
 
 export const StatsGrid = styled.View`
   flex-direction: row;
-  justify-content: space-between;
   gap: 12px;
+  justify-content: space-between;
 `;
 
 export const StatCard = styled.View`
-  flex: 1;
-  background-color: ${theme.colors.white};
-  border-radius: 12px;
-  padding: 16px;
   align-items: center;
+  background-color: ${theme.colors.white};
   border: 1px solid ${theme.colors.secondary[100]};
+  border-radius: 12px;
+  elevation: 2;
+  flex: 1;
+  padding: 16px;
   shadow-color: ${theme.colors.secondary[200]};
-  shadow-offset: 0px 2px;
+  shadow-offset: 0 2px;
   shadow-opacity: 0.1;
   shadow-radius: 4px;
-  elevation: 2;
 `;
 
 export const StatNumber = styled.Text`
+  color: ${theme.colors.secondary[600]};
   font-size: 24px;
   font-weight: bold;
-  color: ${theme.colors.secondary[600]};
   margin-bottom: 4px;
 `;
 
 export const StatLabel = styled.Text`
+  color: ${theme.colors.text.secondary};
   font-size: 12px;
   font-weight: 500;
-  color: ${theme.colors.text.secondary};
-  text-align: center;
   line-height: 16px;
+  text-align: center;
 `;
 
 export const QuickActionsSection = styled.View`
@@ -80,49 +80,48 @@ export const QuickActionsSection = styled.View`
 `;
 
 export const ActionsGrid = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   gap: 12px;
 `;
 
 export const ActionCard = styled.TouchableOpacity`
+  align-items: center;
+  background-color: ${theme.colors.white};
+  border: 1px solid ${theme.colors.border.light};
+  border-radius: 12px;
+  elevation: 2;
   flex: 1;
   min-width: 45%;
-  background-color: ${theme.colors.white};
-  border-radius: 12px;
   padding: 20px 16px;
-  align-items: center;
-  border: 1px solid ${theme.colors.border.light};
   shadow-color: ${theme.colors.gray[300]};
-  shadow-offset: 0px 2px;
+  shadow-offset: 0 2px;
   shadow-opacity: 0.1;
   shadow-radius: 4px;
-  elevation: 2;
 `;
 
 export const ActionIconContainer = styled.View`
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
-  background-color: ${theme.colors.secondary[500]};
-  justify-content: center;
   align-items: center;
+  background-color: ${theme.colors.secondary[500]};
+  border-radius: 24px;
+  height: 48px;
+  justify-content: center;
   margin-bottom: 12px;
+  width: 48px;
 `;
 
 export const ActionTitle = styled.Text`
+  color: ${theme.colors.primary[600]};
   font-size: 14px;
   font-weight: 600;
-  color: ${theme.colors.primary[600]};
-  text-align: center;
   margin-bottom: 4px;
+  text-align: center;
 `;
 
 export const ActionSubtitle = styled.Text`
-  font-size: 12px;
   color: ${theme.colors.text.secondary};
-  text-align: center;
+  font-size: 12px;
   line-height: 16px;
+  text-align: center;
 `;
 
 export const RecommendationsSection = styled.View`
@@ -131,21 +130,21 @@ export const RecommendationsSection = styled.View`
 
 export const RecommendationCard = styled.TouchableOpacity`
   background-color: ${theme.colors.white};
-  border-radius: 12px;
-  margin-bottom: 12px;
   border: 1px solid ${theme.colors.border.light};
+  border-radius: 12px;
+  elevation: 2;
+  margin-bottom: 12px;
+  overflow: hidden;
   shadow-color: ${theme.colors.gray[300]};
-  shadow-offset: 0px 2px;
+  shadow-offset: 0 2px;
   shadow-opacity: 0.1;
   shadow-radius: 4px;
-  elevation: 2;
-  overflow: hidden;
 `;
 
 export const RecommendationImage = styled.Image`
-  width: 100%;
-  height: 120px;
   background-color: ${theme.colors.gray[100]};
+  height: 120px;
+  width: 100%;
 `;
 
 export const RecommendationContent = styled.View`
@@ -153,17 +152,17 @@ export const RecommendationContent = styled.View`
 `;
 
 export const RecommendationHeader = styled.View`
+  align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 8px;
 `;
 
 export const RecommendationTitle = styled.Text`
-  font-size: 16px;
-  font-weight: 600;
   color: ${theme.colors.primary[600]};
   flex: 1;
+  font-size: 16px;
+  font-weight: 600;
   margin-right: 8px;
 `;
 
@@ -174,54 +173,54 @@ export const RecommendationBadge = styled.View`
 `;
 
 export const RecommendationBadgeText = styled.Text`
+  color: ${theme.colors.white};
   font-size: 10px;
   font-weight: 600;
-  color: ${theme.colors.white};
   text-transform: uppercase;
 `;
 
 export const RecommendationDescription = styled.Text`
-  font-size: 14px;
   color: ${theme.colors.text.secondary};
+  font-size: 14px;
   line-height: 20px;
   margin-bottom: 8px;
 `;
 
 export const RecommendationFooter = styled.View`
+  align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
 `;
 
 export const RecommendationRating = styled.View`
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
 `;
 
 export const RatingText = styled.Text`
+  color: ${theme.colors.primary[600]};
   font-size: 14px;
   font-weight: 600;
-  color: ${theme.colors.primary[600]};
   margin-left: 4px;
 `;
 
 export const RecommendationPrice = styled.Text`
+  color: ${theme.colors.secondary[600]};
   font-size: 14px;
   font-weight: 600;
-  color: ${theme.colors.secondary[600]};
 `;
 
 export const LoadingContainer = styled.View`
-  flex: 1;
-  justify-content: center;
   align-items: center;
   background-color: ${theme.colors.white};
+  flex: 1;
+  justify-content: center;
   min-height: 200px;
 `;
 
 export const LoadingText = styled.Text`
-  font-size: 16px;
   color: ${theme.colors.text.secondary};
+  font-size: 16px;
   margin-top: 12px;
 `;
 
@@ -229,8 +228,8 @@ export const ErrorContainer = styled.View`
   background-color: ${theme.colors.error[50]};
   border: 1px solid ${theme.colors.error[200]};
   border-radius: 8px;
-  padding: 16px;
   margin: 16px 0;
+  padding: 16px;
 `;
 
 export const ErrorText = styled.Text`
@@ -240,11 +239,11 @@ export const ErrorText = styled.Text`
 `;
 
 export const RetryButton = styled.TouchableOpacity`
+  align-self: center;
   background-color: ${theme.colors.secondary[500]};
   border-radius: 8px;
-  padding: 12px 24px;
   margin-top: 12px;
-  align-self: center;
+  padding: 12px 24px;
 `;
 
 export const RetryButtonText = styled.Text`

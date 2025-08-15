@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { HomeScreen } from '../../../../modules/mod-home/presentation/components/HomeScreen';
 import { NotificationsScreen } from '../../../../modules/mod-notification/presentation/components/NotificationsScreen';
-import { PagosScreen } from '../../../../modules/mod-payments/presentation/components/PagosScreen';
+import { PaymentsScreen } from '../../../../modules/mod-payments/presentation/components/PaymentsScreen';
 import { ReservationScreen } from '../../../../modules/mod-reservation/presentation/components/ReservationScreen';
 import { ServiceScreen } from '../../../../modules/mod-services/presentation/components/ServiceScreen';
 import { TabParamList } from '../types';
@@ -139,7 +139,7 @@ export const HomeTabs: React.FC = () => {
         }}
       />
       <Tab.Screen
-        component={PagosScreen}
+        component={PaymentsScreen}
         name='Payments'
         options={{
           headerTitle: 'Mis Pagos',

@@ -17,7 +17,7 @@ export const MainStack: React.FC = () => {
       <Stack.Screen
         component={ServiceDetailScreen}
         name='ServiceDetail'
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         component={ReservationDetailScreen}

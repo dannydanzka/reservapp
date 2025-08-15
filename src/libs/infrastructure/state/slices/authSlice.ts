@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { authService } from '@auth/authService';
-import { clearSession, saveAuthToken, saveSession } from '../../services/core/utils/sessionStorage';
 import { LoginCredentials, LoginSession, RegisterData, User } from '@shared/types';
+
+import { clearSession, saveAuthToken, saveSession } from '../../services/core/utils/sessionStorage';
 
 interface AuthState {
   user: User | null;

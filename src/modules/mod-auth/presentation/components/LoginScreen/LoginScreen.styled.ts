@@ -3,8 +3,8 @@ import styled from 'styled-components/native';
 import { theme } from '../../../../../libs/presentation/styles/theme';
 
 export const Container = styled.View`
-  flex: 1;
   background-color: ${theme.colors.white};
+  flex: 1;
 `;
 
 export const ScrollContainer = styled.ScrollView`
@@ -12,9 +12,9 @@ export const ScrollContainer = styled.ScrollView`
 `;
 
 export const LogoSection = styled.View`
+  align-items: center;
   flex: 1;
   justify-content: center;
-  align-items: center;
   min-height: 300px;
 `;
 
@@ -23,26 +23,26 @@ export const LogoContainer = styled.View`
 `;
 
 export const AppLogo = styled.Image`
-  width: 200px;
   height: 200px;
+  width: 200px;
 `;
 
 export const TaglineText = styled.Text`
-  font-size: 17px;
   color: ${theme.colors.gray[600]};
-  text-align: center;
+  font-size: 17px;
   font-weight: 500;
   letter-spacing: 0.3px;
+  text-align: center;
 `;
 
 export const FormSection = styled.View`
+  background-color: ${theme.colors.white};
   flex: 1.2;
   justify-content: flex-start;
+  min-height: 420px;
+  padding-bottom: 40px;
   padding-horizontal: 32px;
   padding-top: 32px;
-  padding-bottom: 40px;
-  min-height: 420px;
-  background-color: ${theme.colors.white};
 `;
 
 export const InputContainer = styled.View`
@@ -51,18 +51,18 @@ export const InputContainer = styled.View`
 `;
 
 export const InputWrapper = styled.View`
-  flex-direction: row;
   align-items: center;
   background-color: ${theme.colors.white};
-  border-radius: 14px;
-  padding-horizontal: 18px;
-  height: 56px;
   border: 1.5px solid ${theme.colors.gray[200]};
+  border-radius: 14px;
+  elevation: 2;
+  flex-direction: row;
+  height: 56px;
+  padding-horizontal: 18px;
   shadow-color: ${theme.colors.gray[300]};
-  shadow-offset: 0px 2px;
+  shadow-offset: 0 2px;
   shadow-opacity: 0.08;
   shadow-radius: 8px;
-  elevation: 2;
 `;
 
 export const InputIcon = styled.View`
@@ -70,30 +70,30 @@ export const InputIcon = styled.View`
 `;
 
 export const StyledInput = styled.TextInput`
-  flex: 1;
   color: ${theme.colors.text.primary};
+  flex: 1;
   font-size: 16px;
   font-weight: 500;
 `;
 
 export const PasswordToggle = styled.TouchableOpacity`
-  padding: 5px;
   margin-left: 10px;
+  padding: 5px;
 `;
 
 export const LoginButton = styled.TouchableOpacity<{ disabled?: boolean }>`
+  align-items: center;
   background-color: ${(props) =>
     props.disabled ? theme.colors.gray[300] : theme.colors.primary[500]};
-  height: 56px;
   border-radius: 14px;
+  elevation: 4;
+  height: 56px;
   justify-content: center;
-  align-items: center;
   margin-top: 8px;
   shadow-color: ${theme.colors.primary[200]};
-  shadow-offset: 0px 3px;
+  shadow-offset: 0 3px;
   shadow-opacity: 0.2;
   shadow-radius: 6px;
-  elevation: 4;
 `;
 
 export const LoginButtonText = styled.Text<{ disabled?: boolean }>`
@@ -104,43 +104,43 @@ export const LoginButtonText = styled.Text<{ disabled?: boolean }>`
 `;
 
 export const ErrorText = styled.Text`
+  background-color: ${theme.colors.error[50]};
+  border: 1px solid ${theme.colors.error[200]};
+  border-radius: 8px;
   color: ${theme.colors.error[500]};
   font-size: 14px;
-  text-align: center;
-  background-color: ${theme.colors.error[50]};
   padding: 10px;
-  border-radius: 8px;
-  border: 1px solid ${theme.colors.error[200]};
+  text-align: center;
 `;
 
 export const DemoCredentials = styled.View`
   background-color: ${theme.colors.gray[25]};
-  border-radius: 14px;
-  padding: 24px;
   border: 1px solid ${theme.colors.gray[100]};
+  border-radius: 14px;
   margin-top: 16px;
+  padding: 24px;
 `;
 
 export const DemoTitle = styled.Text`
   color: ${theme.colors.gray[700]};
   font-size: 15px;
   font-weight: 600;
+  letter-spacing: 0.2px;
   margin-bottom: 16px;
   text-align: center;
-  letter-spacing: 0.2px;
 `;
 
 export const DemoItem = styled.TouchableOpacity`
   background-color: ${theme.colors.white};
-  padding: 14px 18px;
-  border-radius: 12px;
-  margin-bottom: 8px;
   border: 1px solid ${theme.colors.gray[150]};
+  border-radius: 12px;
+  elevation: 1;
+  margin-bottom: 8px;
+  padding: 14px 18px;
   shadow-color: ${theme.colors.gray[300]};
-  shadow-offset: 0px 1px;
+  shadow-offset: 0 1px;
   shadow-opacity: 0.08;
   shadow-radius: 4px;
-  elevation: 1;
 `;
 
 export const DemoLabel = styled.Text`

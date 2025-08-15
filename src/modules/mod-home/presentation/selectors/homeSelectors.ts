@@ -174,7 +174,13 @@ export const selectUserGreeting = createSelector(
   (dashboardUser, authUser) => {
     const user = dashboardUser || authUser;
     const firstName = user?.firstName;
-    return firstName ? `¡Hola, ${firstName}! 👋` : '¡Hola! 👋';
+    const isPremium = user?.isPremium;
+
+    if (firstName) {
+      return isPremium ? `¡Hola, ${firstName}! 👋 ✨` : `¡Hola, ${firstName}! 👋`;
+    }
+
+    return isPremium ? '¡Hola! 👋 ✨' : '¡Hola! 👋';
   }
 );
 

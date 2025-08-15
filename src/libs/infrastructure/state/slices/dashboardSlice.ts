@@ -20,6 +20,13 @@ export interface DashboardData {
     lastName: string;
     email: string;
     role: string;
+    isPremium: boolean;
+    businessName?: string;
+    businessType?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    phone?: string;
+    isActive?: boolean;
   };
 }
 

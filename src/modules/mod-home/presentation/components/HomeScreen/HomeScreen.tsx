@@ -110,17 +110,11 @@ export const HomeScreen: React.FC = () => {
 
   const handleQuickAction = (action: string) => {
     switch (action) {
-      case 'search':
-        navigation.navigate('Discover');
+      case 'services':
+        navigation.navigate('Services');
         break;
       case 'reservations':
         navigation.navigate('Reservations');
-        break;
-      case 'venues':
-        navigation.navigate('Discover');
-        break;
-      case 'favorites':
-        navigation.navigate('Discover');
         break;
       default:
         break;
@@ -193,7 +187,7 @@ export const HomeScreen: React.FC = () => {
         <QuickActionsSection>
           <SectionTitle>Acciones Rápidas</SectionTitle>
           <ActionsGrid>
-            <ActionCard onPress={() => handleQuickAction('search')}>
+            <ActionCard onPress={() => handleQuickAction('services')}>
               <ActionIconContainer>
                 <Search color='#ffffff' size={24} />
               </ActionIconContainer>
@@ -207,22 +201,6 @@ export const HomeScreen: React.FC = () => {
               </ActionIconContainer>
               <ActionTitle>Mis Reservaciones</ActionTitle>
               <ActionSubtitle>Ver y gestionar reservas</ActionSubtitle>
-            </ActionCard>
-
-            <ActionCard onPress={() => handleQuickAction('venues')}>
-              <ActionIconContainer>
-                <MapPin color='#ffffff' size={24} />
-              </ActionIconContainer>
-              <ActionTitle>Explorar</ActionTitle>
-              <ActionSubtitle>Descubre nuevos lugares</ActionSubtitle>
-            </ActionCard>
-
-            <ActionCard onPress={() => handleQuickAction('favorites')}>
-              <ActionIconContainer>
-                <Star color='#ffffff' size={24} />
-              </ActionIconContainer>
-              <ActionTitle>Favoritos</ActionTitle>
-              <ActionSubtitle>Tus lugares preferidos</ActionSubtitle>
             </ActionCard>
           </ActionsGrid>
         </QuickActionsSection>

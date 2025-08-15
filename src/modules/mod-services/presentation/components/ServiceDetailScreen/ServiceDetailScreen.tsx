@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 
-import { ActivityIndicator, Alert, ScrollView } from 'react-native';
-import { ArrowLeft, Calendar, Clock, MapPin, Star, Users } from 'lucide-react-native';
+import { ActivityIndicator, Alert, ScrollView, Text } from 'react-native';
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Image as ImageIcon,
+  MapPin,
+  Star,
+  Users,
+} from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
   fetchServiceDetails,
   setSelectedService,
 } from '../../../../../libs/infrastructure/state/slices/servicesSlice';
+import { getCategoryColor, getCategoryLabel } from '../../../../../libs/shared/utils/categoryUtils';
 import { Service } from '../../../../../libs/shared/types';
 import { useAppDispatch, useAppSelector } from '../../../../../libs/infrastructure/store/hooks';
 
@@ -26,6 +35,8 @@ import {
   InfoContainer,
   LoadingContainer,
   LoadingText,
+  PlaceholderContainer,
+  PlaceholderText,
   PriceText,
   ServiceCategory,
   ServiceDescription,
@@ -70,30 +81,42 @@ export const ServiceDetailScreen: React.FC = () => {
   const handleBookService = () => {
     if (!selectedService) return;
 
-    navigation.navigate('BookingFlow', {
+    navigation.navigate('ReservationFlow', {
       service: selectedService,
       serviceId: selectedService.id,
     });
   };
 
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number | string) => {
+    const numericPrice = typeof price === 'string' ? parseFloat(price) : price;
     return new Intl.NumberFormat('es-MX', {
       currency: 'MXN',
       style: 'currency',
-    }).format(price);
+    }).format(numericPrice || 0);
   };
 
-  const getCategoryLabel = (category: string) => {
-    const categories: Record<string, string> = {
-      ACCOMMODATION: 'Alojamiento',
-      DINING: 'Gastronomía',
-      ENTERTAINMENT: 'Entretenimiento',
-      EVENT_MEETING: 'Eventos',
-      SPA_WELLNESS: 'Spa y Bienestar',
-      TOUR_EXPERIENCE: 'Tours y Experiencias',
-      TRANSPORTATION: 'Transporte',
-    };
-    return categories[category] || category;
+  const getServicePrice = (service: any) => {
+    // Handle both basePrice (interface) and price (real API)
+    return service.price || service.basePrice || 0;
+  };
+
+  const formatDuration = (minutes: number) => {
+    if (!minutes) return '1 día';
+
+    // Convertir minutos a días (asumiendo 8 horas por día de servicio)
+    const hoursPerDay = 8;
+    const minutesPerDay = hoursPerDay * 60; // 480 minutos
+
+    if (minutes < 60) {
+      return `${minutes} minutos`;
+    } else if (minutes < minutesPerDay) {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours} horas`;
+    } else {
+      const days = Math.ceil(minutes / minutesPerDay);
+      return `${days} ${days === 1 ? 'día' : 'días'}`;
+    }
   };
 
   if (isLoading) {
@@ -109,6 +132,16 @@ export const ServiceDetailScreen: React.FC = () => {
     return (
       <LoadingContainer>
         <LoadingText>Error al cargar el servicio</LoadingText>
+        <BookButton
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main' }],
+            })
+          }
+        >
+          <BookButtonText>Ir a Inicio</BookButtonText>
+        </BookButton>
       </LoadingContainer>
     );
   }
@@ -120,8 +153,13 @@ export const ServiceDetailScreen: React.FC = () => {
           <ArrowLeft color='#000' size={24} />
         </BackButton>
 
-        {selectedService.images && selectedService.images.length > 0 && (
+        {selectedService.images && selectedService.images.length > 0 ? (
           <HeaderImage source={{ uri: selectedService.images[imageIndex] }} />
+        ) : (
+          <PlaceholderContainer>
+            <ImageIcon color='#6c757d' size={48} />
+            <PlaceholderText>Sin imagen disponible</PlaceholderText>
+          </PlaceholderContainer>
         )}
       </HeaderContainer>
 
@@ -132,21 +170,25 @@ export const ServiceDetailScreen: React.FC = () => {
             {selectedService.rating && (
               <ServiceRating>
                 <Star color='#FFD700' fill='#FFD700' size={20} />
-                <ServiceRating>{selectedService.rating.toFixed(1)}</ServiceRating>
+                <Text style={{ color: '#FF8A00', fontSize: 14, fontWeight: '600', marginLeft: 4 }}>
+                  {selectedService.rating.toFixed(1)}
+                </Text>
               </ServiceRating>
             )}
           </ServiceHeader>
 
           <ServiceLocation>
             <MapPin color='#666' size={16} />
-            <ServiceLocation>
+            <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>
               {selectedService.location?.address ||
                 selectedService.location?.city ||
                 'Ubicación no disponible'}
-            </ServiceLocation>
+            </Text>
           </ServiceLocation>
 
-          <ServiceCategory>{getCategoryLabel(selectedService.category)}</ServiceCategory>
+          <ServiceCategory categoryColor={getCategoryColor(selectedService.category)}>
+            {getCategoryLabel(selectedService.category)}
+          </ServiceCategory>
 
           <ServiceDescription>{selectedService.description}</ServiceDescription>
 
@@ -155,15 +197,15 @@ export const ServiceDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>
                 <Clock color='#666' size={16} />
-                <DetailsItemLabel>Duración</DetailsItemLabel>
+                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Duración</Text>
               </DetailsItemLabel>
-              <DetailsItemValue>{selectedService.duration || 60} minutos</DetailsItemValue>
+              <DetailsItemValue>{formatDuration(selectedService.duration || 60)}</DetailsItemValue>
             </DetailsItem>
 
             <DetailsItem>
               <DetailsItemLabel>
                 <Users color='#666' size={16} />
-                <DetailsItemLabel>Capacidad</DetailsItemLabel>
+                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Capacidad</Text>
               </DetailsItemLabel>
               <DetailsItemValue>{selectedService.capacity || 1} personas</DetailsItemValue>
             </DetailsItem>
@@ -171,7 +213,7 @@ export const ServiceDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>
                 <Calendar color='#666' size={16} />
-                <DetailsItemLabel>Disponibilidad</DetailsItemLabel>
+                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Disponibilidad</Text>
               </DetailsItemLabel>
               <DetailsItemValue>
                 {selectedService.isActive ? 'Disponible' : 'No disponible'}
@@ -193,7 +235,7 @@ export const ServiceDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>Precio base</DetailsItemLabel>
               <DetailsItemValue>
-                {formatPrice(selectedService.basePrice)}
+                {formatPrice(getServicePrice(selectedService))}
                 {selectedService.priceType === 'PER_PERSON' && ' por persona'}
               </DetailsItemValue>
             </DetailsItem>
@@ -208,14 +250,13 @@ export const ServiceDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>Total estimado</DetailsItemLabel>
               <PriceText>
-                {formatPrice(selectedService.basePrice + (selectedService.taxes || 0))}
+                {formatPrice(getServicePrice(selectedService) + (selectedService.taxes || 0))}
               </PriceText>
             </DetailsItem>
           </DetailsCard>
         </InfoContainer>
       </ScrollView>
 
-      {/* Footer with booking button */}
       <FooterContainer>
         <BookButton disabled={!selectedService.isActive} onPress={handleBookService}>
           <BookButtonText>

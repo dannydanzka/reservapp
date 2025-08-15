@@ -17,7 +17,7 @@ import { DrawerParamList } from '../types';
 import { getProfile, logout } from '../../../infrastructure/state/slices/authSlice';
 import { HomeTabs } from '../tabs/HomeTabs';
 import { NotificationsScreen } from '../../../../modules/mod-notification/presentation/components/NotificationsScreen';
-import { PagosScreen } from '../../../../modules/mod-payments/presentation/components/PagosScreen';
+import { PaymentsScreen } from '../../../../modules/mod-payments/presentation/components/PaymentsScreen';
 import { ProfileScreen } from '../../../../modules/mod-profile/presentation/components/ProfileScreen';
 import { ReservationScreen } from '../../../../modules/mod-reservation/presentation/components/ReservationScreen';
 import { useAppDispatch, useAppSelector } from '../../../infrastructure/store/hooks';
@@ -173,7 +173,7 @@ export const MainDrawer: React.FC = () => {
         }}
       />
       <Drawer.Screen
-        component={PagosScreen}
+        component={PaymentsScreen}
         name='Pagos'
         options={{
           drawerIcon: ({ color, size }) => <CreditCard color={color} size={size} />,
