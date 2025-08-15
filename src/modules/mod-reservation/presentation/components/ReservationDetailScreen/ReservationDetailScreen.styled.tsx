@@ -1,36 +1,36 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
+  background-color: #fff;
   flex: 1;
-  background-color: #ffffff;
 `;
 
 export const HeaderContainer = styled.View`
-  position: relative;
   height: 300px;
+  position: relative;
 `;
 
 export const BackButton = styled.TouchableOpacity`
+  background-color: rgb(255 255 255 / 0.9);
+  border-radius: 20px;
+  left: 16px;
+  padding: 8px;
   position: absolute;
   top: 50px;
-  left: 16px;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  padding: 8px;
 `;
 
 export const HeaderImage = styled.Image`
-  width: 100%;
   height: 100%;
+  width: 100%;
 `;
 
 export const HeaderImagePlaceholder = styled.View`
-  width: 100%;
-  height: 100%;
-  background-color: #f0f0f0;
-  justify-content: center;
   align-items: center;
+  background-color: #f0f0f0;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
 `;
 
 export const InfoContainer = styled.View`
@@ -39,48 +39,54 @@ export const InfoContainer = styled.View`
 `;
 
 export const ServiceHeader = styled.View`
+  align-items: flex-start;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
   margin-bottom: 12px;
 `;
 
 export const ServiceTitle = styled.Text`
-  font-size: 24px;
-  font-weight: bold;
   color: #212529;
   flex: 1;
+  font-size: 24px;
+  font-weight: bold;
   margin-right: 12px;
 `;
 
 export const ServiceRating = styled.View`
-  flex-direction: row;
   align-items: center;
   background-color: #fff5f0;
-  padding: 6px 12px;
   border-radius: 8px;
+  flex-direction: row;
+  padding: 6px 12px;
 `;
 
 export const ServiceLocation = styled.View`
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
   margin-bottom: 12px;
 `;
 
+export const ServiceLocationText = styled.Text`
+  color: #666;
+  font-size: 14px;
+  margin-left: 8px;
+`;
+
 export const ServiceCategory = styled.Text`
+  align-self: flex-start;
   background-color: #e9ecef;
+  border-radius: 6px;
   color: #495057;
   font-size: 14px;
   font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 6px;
-  align-self: flex-start;
   margin-bottom: 16px;
+  padding: 6px 12px;
 `;
 
 export const ServiceDescription = styled.Text`
-  font-size: 16px;
   color: #6c757d;
+  font-size: 16px;
   line-height: 24px;
   margin-bottom: 24px;
 `;
@@ -88,83 +94,88 @@ export const ServiceDescription = styled.Text`
 export const DetailsCard = styled.View`
   background-color: #f8f9fa;
   border-radius: 12px;
-  padding: 16px;
   margin-bottom: 20px;
+  padding: 16px;
 `;
 
 export const DetailsItem = styled.View`
+  align-items: center;
+  border-bottom-color: #e9ecef;
+  border-bottom-width: 1px;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   padding: 8px 0;
-  border-bottom-width: 1px;
-  border-bottom-color: #e9ecef;
 `;
 
 export const DetailsItemLabel = styled.View`
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
+`;
+
+export const DetailsItemLabelText = styled.Text`
+  color: #666;
+  font-size: 14px;
+  margin-left: 8px;
 `;
 
 export const DetailsItemValue = styled.Text`
-  font-size: 16px;
   color: #212529;
+  font-size: 16px;
   font-weight: 500;
 `;
 
 export const ServiceFeatures = styled.View`
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   margin-bottom: 20px;
 `;
 
 export const ServiceFeature = styled.Text`
   background-color: #fff5f0;
+  border-radius: 6px;
   color: #ff8a00;
   font-size: 14px;
   font-weight: 500;
-  padding: 6px 12px;
-  border-radius: 6px;
-  margin-right: 8px;
   margin-bottom: 8px;
+  margin-right: 8px;
+  padding: 6px 12px;
 `;
 
 export const PriceText = styled.Text`
+  color: #ff8a00;
   font-size: 20px;
   font-weight: bold;
-  color: #ff8a00;
 `;
 
 export const FooterContainer = styled.View`
-  padding: 20px;
-  border-top-width: 1px;
+  background-color: #fff;
   border-top-color: #e9ecef;
-  background-color: #ffffff;
+  border-top-width: 1px;
+  padding: 20px;
 `;
 
 export const BookButton = styled.TouchableOpacity<{ disabled?: boolean }>`
+  align-items: center;
   background-color: ${(props: { disabled?: boolean }) => (props.disabled ? '#6c757d' : '#ff8a00')};
   border-radius: 12px;
-  padding: 16px;
-  align-items: center;
   opacity: ${(props: { disabled?: boolean }) => (props.disabled ? 0.6 : 1)};
+  padding: 16px;
 `;
 
 export const BookButtonText = styled.Text`
-  color: #ffffff;
+  color: #fff;
   font-size: 18px;
   font-weight: bold;
 `;
 
 export const LoadingContainer = styled.View`
+  align-items: center;
+  background-color: #fff;
   flex: 1;
   justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
 `;
 
 export const LoadingText = styled.Text`
-  margin-top: 16px;
   color: #6c757d;
   font-size: 16px;
+  margin-top: 16px;
 `;

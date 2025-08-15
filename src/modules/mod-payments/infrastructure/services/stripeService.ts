@@ -180,7 +180,7 @@ class StripeService {
   async createPaymentIntent(data: CreatePaymentIntentData): Promise<PaymentIntent> {
     console.log('🔄 Creating payment intent with data:', data);
     console.log('🌐 Request URL:', `${this.baseUrl}${API_ENDPOINTS.PAYMENTS.CREATE_INTENT}`);
-    
+
     try {
       const response = await handleRequest<ApiResponse<PaymentIntent>>({
         body: data,

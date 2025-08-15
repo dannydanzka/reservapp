@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authSlice } from '../state/slices/authSlice';
 import { dashboardReducer } from '../state/slices/dashboardSlice';
 import { notificationsReducer, notificationsSlice } from '../state/slices/notificationsSlice';
+import { paymentsReducer } from '../../../modules/mod-payments/infrastructure/state/paymentsSlice';
 import { reservationReducer, reservationSlice } from '../state/slices/reservationSlice';
 import { reservationsReducer, reservationsSlice } from '../state/slices/reservationsSlice';
 import { servicesReducer, servicesSlice } from '../state/slices/servicesSlice';
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authSlice.reducer),
   dashboard: dashboardReducer,
   notifications: notificationsReducer,
+  payments: paymentsReducer,
   reservation: persistReducer(reservationPersistConfig, reservationReducer),
   reservations: persistReducer(reservationsPersistConfig, reservationsReducer),
   services: servicesReducer,

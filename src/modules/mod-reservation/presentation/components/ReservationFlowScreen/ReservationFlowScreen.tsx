@@ -8,6 +8,7 @@ import { createReservation } from '../../../../../libs/infrastructure/state/slic
 import { CreateReservationData, Service } from '../../../../../libs/shared/types';
 import { CustomWheelPicker } from '../../../../../components/DateTimePicker';
 import { useAppDispatch, useAppSelector } from '../../../../../libs/infrastructure/store/hooks';
+import { useRefreshUserData } from '../../../../../hooks/useRefreshUserData';
 
 import {
   BackButton,
@@ -47,6 +48,7 @@ export const ReservationFlowScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
   const dispatch = useAppDispatch();
+  const { refreshUserData } = useRefreshUserData();
   const { service, serviceId } = route.params as RouteParams;
 
   // Redux state
@@ -57,6 +59,7 @@ export const ReservationFlowScreen: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>('datetime');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [isCreatingReservation, setIsCreatingReservation] = useState(false);
   const [formData, setFormData] = useState({
     guestEmail: user?.email || '',
     guestName: user?.firstName || '',
@@ -188,6 +191,7 @@ export const ReservationFlowScreen: React.FC = () => {
   };
 
   const handleCreateReservation = async () => {
+    setIsCreatingReservation(true);
     try {
       const [firstName, ...lastNameParts] = formData.guestName.split(' ');
       const lastName = lastNameParts.join(' ') || '';
@@ -205,9 +209,7 @@ export const ReservationFlowScreen: React.FC = () => {
         : '';
 
       const reservationData: any = {
-        // ¡Esto faltaba!
         checkInDate: selectedDate ? formatDateForAPI(selectedDate) : '',
-
         checkInTime: selectedTime ? formatTimeForAPI(selectedTime) : '',
         checkOutDate: endDate,
         checkOutTime: endTime,
@@ -220,14 +222,32 @@ export const ReservationFlowScreen: React.FC = () => {
         guests: formData.guests,
         paymentInfo: {
           method: 'STRIPE',
-          paymentMethodId: 'pm_card_visa_test', // Sandbox
+          paymentMethodId: 'pm_card_visa',
         },
         serviceId: service.id,
         specialRequests: formData.notes,
         venueId: service.venueId,
       };
 
+      console.log('🚀 Creating reservation with data:', JSON.stringify(reservationData, null, 2));
+      console.log('📅 Selected Date:', selectedDate);
+      console.log('⏰ Selected Time:', selectedTime);
+      console.log('🏨 Service ID:', service.id);
+      console.log('🏢 Venue ID:', service.venueId);
+
       await dispatch(createReservation(reservationData)).unwrap();
+
+      console.log('✅ Reservation created successfully!');
+
+      // Actualizar todos los datos relevantes después de crear la reserva
+      await refreshUserData({
+        includeDashboard: true,
+        includeNotifications: true,
+        includePayments: true,
+        includeReceipts: true,
+        includeReservations: true,
+        silent: false, // Mostrar errores en consola para debugging
+      });
 
       Alert.alert('Reservación Exitosa', 'Tu reservación ha sido creada exitosamente', [
         {
@@ -246,7 +266,20 @@ export const ReservationFlowScreen: React.FC = () => {
         },
       ]);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo crear la reservación. Intenta de nuevo.');
+      console.error('❌ Error creating reservation:', error);
+      console.error('❌ Error type:', typeof error);
+      console.error('❌ Error message:', error?.message || 'No message');
+      console.error(
+        '❌ Full error object:',
+        JSON.stringify(error, Object.getOwnPropertyNames(error))
+      );
+
+      Alert.alert(
+        'Error',
+        `No se pudo crear la reservación. Error: ${error?.message || 'Error desconocido'}`
+      );
+    } finally {
+      setIsCreatingReservation(false);
     }
   };
 
@@ -278,6 +311,9 @@ export const ReservationFlowScreen: React.FC = () => {
   };
 
   const formatPrice = (price: number) => {
+    if (typeof price !== 'number' || isNaN(price)) {
+      return '$0.00';
+    }
     return new Intl.NumberFormat('es-MX', {
       currency: 'MXN',
       style: 'currency',
@@ -313,9 +349,11 @@ export const ReservationFlowScreen: React.FC = () => {
             <FormField>
               <FormLabel>
                 Número de huéspedes (máx.{' '}
-                {typeof service.capacity === 'object'
-                  ? service.capacity.max
-                  : service.maxCapacity || 10}
+                <Text>
+                  {typeof service.capacity === 'object'
+                    ? service.capacity.max
+                    : service.maxCapacity || 10}
+                </Text>
                 )
               </FormLabel>
               <FormInput
@@ -538,10 +576,12 @@ export const ReservationFlowScreen: React.FC = () => {
         {steps.map((step, index) => (
           <StepContainer active={step.key === currentStep} key={step.key}>
             <StepIndicator active={step.key === currentStep} completed={isStepCompleted(step.key)}>
-              <StepIcon
-                color={step.key === currentStep || isStepCompleted(step.key) ? '#fff' : '#666'}
-                size={20}
-              />
+              <StepIcon>
+                <step.icon
+                  color={step.key === currentStep || isStepCompleted(step.key) ? '#fff' : '#666'}
+                  size={20}
+                />
+              </StepIcon>
             </StepIndicator>
             <StepTitle active={step.key === currentStep}>{step.title}</StepTitle>
           </StepContainer>
@@ -555,14 +595,21 @@ export const ReservationFlowScreen: React.FC = () => {
         {renderStepContent()}
       </ScrollView>
 
-      <ContinueButton onPress={handleContinue}>
-        <ContinueButtonText>
-          {currentStep === 'confirmation'
-            ? 'Confirmar Reservación'
-            : currentStep === 'payment'
-            ? 'Procesar Pago'
-            : 'Continuar'}
-        </ContinueButtonText>
+      <ContinueButton disabled={isCreatingReservation} onPress={handleContinue}>
+        {isCreatingReservation && currentStep === 'confirmation' ? (
+          <>
+            <ActivityIndicator color='#fff' size='small' style={{ marginRight: 8 }} />
+            <ContinueButtonText>Creando reservación...</ContinueButtonText>
+          </>
+        ) : (
+          <ContinueButtonText>
+            {currentStep === 'confirmation'
+              ? 'Confirmar Reservación'
+              : currentStep === 'payment'
+              ? 'Procesar Pago'
+              : 'Continuar'}
+          </ContinueButtonText>
+        )}
       </ContinueButton>
     </Container>
   );

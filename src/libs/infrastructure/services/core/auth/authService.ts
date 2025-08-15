@@ -269,6 +269,7 @@ class AuthService {
             email: validCredential.email,
             id: Math.random().toString(),
             isActive: true,
+            isPremium: false,
             name: validCredential.name,
             role: validCredential.role as User['role'],
             updatedAt: new Date().toISOString(),

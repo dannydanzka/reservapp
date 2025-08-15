@@ -5,6 +5,7 @@ import { MapPin, Star } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { fetchServices } from '../../../../../libs/infrastructure/state/slices/servicesSlice';
+import { getCategoryColor, getCategoryLabel } from '../../../../../libs/shared/utils/categoryUtils';
 import { Service } from '../../../../../libs/shared/types';
 import { useAppDispatch, useAppSelector } from '../../../../../libs/infrastructure/store/hooks';
 
@@ -102,7 +103,7 @@ export const ServiceScreen: React.FC = () => {
   };
 
   const handleServicePress = (service: Service) => {
-    navigation.navigate('ReservationDetails', { serviceId: service.id });
+    navigation.navigate('ServiceDetail', { serviceId: service.id });
   };
 
   const formatPrice = (price: number | string) => {
@@ -111,19 +112,6 @@ export const ServiceScreen: React.FC = () => {
       currency: 'MXN',
       style: 'currency',
     }).format(numericPrice || 0);
-  };
-
-  const getCategoryLabel = (category: string) => {
-    const categories: Record<string, string> = {
-      ACCOMMODATION: 'Alojamiento',
-      DINING: 'Gastronomía',
-      ENTERTAINMENT: 'Entretenimiento',
-      EVENT_MEETING: 'Eventos',
-      SPA_WELLNESS: 'Spa y Bienestar',
-      TOUR_EXPERIENCE: 'Tours y Experiencias',
-      TRANSPORTATION: 'Transporte',
-    };
-    return categories[category] || category;
   };
 
   const renderServiceCard = ({ item: service }: { item: Service }) => (
@@ -154,7 +142,9 @@ export const ServiceScreen: React.FC = () => {
             </Text>
           </ServiceLocation>
 
-          <ServiceCategory>{getCategoryLabel(service.category)}</ServiceCategory>
+          <ServiceCategory categoryColor={getCategoryColor(service.category)}>
+            {getCategoryLabel(service.category)}
+          </ServiceCategory>
 
           <ServicePrice>
             {/* Handle both basePrice (current interface) and price (real API) */}

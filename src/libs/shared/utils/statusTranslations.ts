@@ -14,6 +14,7 @@ export const reservationStatusTranslations: Record<string, string> = {
 };
 
 export const getReservationStatusInSpanish = (status: string): string => {
+  if (!status) return 'Sin estado';
   return reservationStatusTranslations[status.toUpperCase()] || status;
 };
 
@@ -29,5 +30,6 @@ export const reservationStatusColors: Record<string, string> = {
 };
 
 export const getReservationStatusColor = (status: string): string => {
+  if (!status) return '#666666';
   return reservationStatusColors[status.toUpperCase()] || '#666666';
 };

@@ -5,12 +5,14 @@ import { ArrowLeft, Calendar, Clock, ImageIcon, MapPin, Star, Users } from 'luci
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
+  cancelReservation,
   fetchReservationDetails,
   setSelectedReservation,
 } from '../../../../../libs/infrastructure/state/slices/reservationsSlice';
 import { getReservationStatusInSpanish } from '../../../../../libs/shared/utils/statusTranslations';
 import { Reservation } from '../../../../../libs/shared/types';
 import { useAppDispatch, useAppSelector } from '../../../../../libs/infrastructure/store/hooks';
+import { useRefreshUserData } from '../../../../../hooks/useRefreshUserData';
 
 import {
   BackButton,
@@ -20,6 +22,7 @@ import {
   DetailsCard,
   DetailsItem,
   DetailsItemLabel,
+  DetailsItemLabelText,
   DetailsItemValue,
   FooterContainer,
   HeaderContainer,
@@ -35,6 +38,7 @@ import {
   ServiceFeatures,
   ServiceHeader,
   ServiceLocation,
+  ServiceLocationText,
   ServiceRating,
   ServiceTitle,
 } from './ReservationDetailScreen.styled';
@@ -47,6 +51,7 @@ export const ReservationDetailScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
   const dispatch = useAppDispatch();
+  const { refreshUserData } = useRefreshUserData();
   const { reservationId } = route.params as RouteParams;
 
   // Redux state
@@ -75,9 +80,35 @@ export const ReservationDetailScreen: React.FC = () => {
     Alert.alert('Cancelar Reservación', '¿Estás seguro de que quieres cancelar esta reservación?', [
       { style: 'cancel', text: 'No' },
       {
-        onPress: () => {
-          // Aquí iría la lógica de cancelación
-          console.log('Cancelar reservación:', selectedReservation.id);
+        onPress: async () => {
+          try {
+            // Cancelar la reservación
+            await dispatch(
+              cancelReservation({
+                reason: 'Cancelada por el usuario',
+                reservationId: selectedReservation.id,
+              })
+            ).unwrap();
+
+            // Actualizar todos los datos del usuario después de cancelar
+            await refreshUserData({
+              includeDashboard: true,
+              includeNotifications: true,
+              includePayments: true,
+              includeReceipts: true,
+              includeReservations: true,
+              silent: false,
+            });
+
+            Alert.alert('Cancelación Exitosa', 'Tu reservación ha sido cancelada exitosamente', [
+              {
+                onPress: () => navigation.goBack(),
+                text: 'OK',
+              },
+            ]);
+          } catch (error) {
+            Alert.alert('Error', 'No se pudo cancelar la reservación. Intenta de nuevo.');
+          }
         },
         style: 'destructive',
         text: 'Sí, cancelar',
@@ -141,6 +172,13 @@ export const ReservationDetailScreen: React.FC = () => {
     return result;
   };
 
+  // Verificar si la reservación se puede cancelar
+  const canCancelReservation = (status: string) => {
+    // Solo permitir cancelación en estados PENDING e IN_PROGRESS
+    const cancellableStates = ['PENDING', 'IN_PROGRESS'];
+    return cancellableStates.includes(status.toUpperCase());
+  };
+
   if (isLoading) {
     return (
       <LoadingContainer>
@@ -154,6 +192,16 @@ export const ReservationDetailScreen: React.FC = () => {
     return (
       <LoadingContainer>
         <LoadingText>Error al cargar la reservación</LoadingText>
+        <BookButton
+          onPress={() =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Main' }],
+            })
+          }
+        >
+          <BookButtonText>Ir a Inicio</BookButtonText>
+        </BookButton>
       </LoadingContainer>
     );
   }
@@ -184,9 +232,7 @@ export const ReservationDetailScreen: React.FC = () => {
 
           <ServiceLocation>
             <MapPin color='#666' size={16} />
-            <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>
-              {venue?.name || 'Venue no disponible'}
-            </Text>
+            <ServiceLocationText>{venue?.name || 'Venue no disponible'}</ServiceLocationText>
           </ServiceLocation>
 
           <ServiceCategory>{service?.name || 'Servicio no disponible'}</ServiceCategory>
@@ -198,7 +244,7 @@ export const ReservationDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>
                 <Clock color='#666' size={16} />
-                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Fecha Check-in</Text>
+                <DetailsItemLabelText>Fecha Check-in</DetailsItemLabelText>
               </DetailsItemLabel>
               <DetailsItemValue>
                 {reservation.checkInDate
@@ -210,7 +256,7 @@ export const ReservationDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>
                 <Users color='#666' size={16} />
-                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Huéspedes</Text>
+                <DetailsItemLabelText>Huéspedes</DetailsItemLabelText>
               </DetailsItemLabel>
               <DetailsItemValue>{reservation.guests || 0} personas</DetailsItemValue>
             </DetailsItem>
@@ -218,7 +264,7 @@ export const ReservationDetailScreen: React.FC = () => {
             <DetailsItem>
               <DetailsItemLabel>
                 <Calendar color='#666' size={16} />
-                <Text style={{ color: '#666', fontSize: 14, marginLeft: 8 }}>Estado</Text>
+                <DetailsItemLabelText>Estado</DetailsItemLabelText>
               </DetailsItemLabel>
               <DetailsItemValue>
                 {getReservationStatusInSpanish(reservation.status)}
@@ -230,7 +276,7 @@ export const ReservationDetailScreen: React.FC = () => {
           <DetailsCard>
             <DetailsItem>
               <DetailsItemLabel>
-                <Text style={{ color: '#666', fontSize: 14 }}>Total Pagado</Text>
+                <DetailsItemLabelText>Total Pagado</DetailsItemLabelText>
               </DetailsItemLabel>
               <PriceText>
                 {formatPrice(parseFloat(reservation.totalAmount) || 0)}{' '}
@@ -241,11 +287,13 @@ export const ReservationDetailScreen: React.FC = () => {
         </InfoContainer>
       </ScrollView>
 
-      <FooterContainer>
-        <BookButton onPress={handleCancelReservation}>
-          <BookButtonText>Cancelar Reservación</BookButtonText>
-        </BookButton>
-      </FooterContainer>
+      {canCancelReservation(reservation.status) && (
+        <FooterContainer>
+          <BookButton onPress={handleCancelReservation}>
+            <BookButtonText>Cancelar Reservación</BookButtonText>
+          </BookButton>
+        </FooterContainer>
+      )}
     </Container>
   );
 };
