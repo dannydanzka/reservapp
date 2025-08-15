@@ -12,15 +12,15 @@ export interface AuthApiConfig {
   };
 }
 
-export interface BookingApiConfig {
+export interface ReservationApiConfig {
   URL: string;
   ENDPOINTS: {
     GET_SERVICES: string;
     GET_SERVICE_DETAILS: string;
-    CREATE_BOOKING: string;
-    GET_BOOKINGS: string;
-    GET_BOOKING_DETAILS: string;
-    CANCEL_BOOKING: string;
+    CREATE_RESERVATION: string;
+    GET_RESERVATIONS: string;
+    GET_RESERVATION_DETAILS: string;
+    CANCEL_RESERVATION: string;
     GET_AVAILABILITY: string;
   };
 }
@@ -49,7 +49,7 @@ export interface AppConfig {
   ENVIRONMENT: string;
   API_TIMEOUT: number;
   AUTH_API: AuthApiConfig;
-  BOOKING_API: BookingApiConfig;
+  RESERVATION_API: ReservationApiConfig;
   VENUE_API: VenueApiConfig;
   PAYMENT_API: PaymentApiConfig;
 }

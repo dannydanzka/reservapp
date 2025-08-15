@@ -23,10 +23,13 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Authentication endpoints - ReservApp Web API
   AUTH: {
+    CHANGE_PASSWORD: '/auth/change-password',
+    FORGOT_PASSWORD: '/auth/forgot-password',
     LOGIN: '/auth/login',
     LOGOUT: '/auth/logout',
     PROFILE: '/auth/profile',
     REGISTER: '/auth/register',
+    RESET_PASSWORD: '/auth/reset-password',
   },
 
   // Notifications system - Real API endpoints
@@ -57,21 +60,21 @@ export const API_ENDPOINTS = {
 
   // Reservations management - Real API endpoints
   RESERVATIONS: {
+    CANCEL: (id: string) => `/reservations/${id}/cancel`,
+    CHECKIN: (id: string) => `/reservations/${id}/checkin`,
+    CHECKOUT: (id: string) => `/reservations/${id}/checkout`,
     CREATE: '/reservations',
     DELETE: (id: string) => `/reservations/${id}`,
-    CANCEL: (id: string) => `/reservations/${id}/cancel`,
     DETAILS: (id: string) => `/reservations/${id}`,
-    CHECKIN: (id: string) => `/reservations/${id}/checkin`,
     LIST: '/reservations',
-    CHECKOUT: (id: string) => `/reservations/${id}/checkout`,
     UPDATE: (id: string) => `/reservations/${id}`,
   },
 
   // Services catalog - Real API endpoints
   SERVICES: {
+    AVAILABLE: '/services/available',
     CREATE: '/services',
     DELETE: (id: string) => `/services/${id}`,
-    AVAILABLE: '/services/available',
     DETAILS: (id: string) => `/services/${id}`,
     LIST: '/services',
     UPDATE: (id: string) => `/services/${id}`,
@@ -96,19 +99,19 @@ export const API_ENDPOINTS = {
 
   // Venues management - Real API endpoints
   VENUES: {
-    CREATE: '/venues',
-    DETAILS: (id: string) => `/venues/${id}`,
-    DELETE: (id: string) => `/venues/${id}`,
-    FAVORITES: '/venues/favorites',
     ADD_FAVORITE: '/venues/favorites',
-    REMOVE_FAVORITE: (id: string) => `/venues/favorites/${id}`,
+    CREATE: '/venues',
+    DELETE: (id: string) => `/venues/${id}`,
+    DETAILS: (id: string) => `/venues/${id}`,
+    FAVORITES: '/venues/favorites',
     IS_FAVORITE: (id: string) => `/venues/${id}/favorite`,
     LIST: '/venues',
     NEARBY: '/venues/nearby',
     POPULAR: '/venues/popular',
-    UPDATE: (id: string) => `/venues/${id}`,
+    REMOVE_FAVORITE: (id: string) => `/venues/favorites/${id}`,
     REVIEWS: (id: string) => `/venues/${id}/reviews`,
     REVIEWS_SUMMARY: (id: string) => `/venues/${id}/reviews/summary`,
     STATS: '/venues/stats',
+    UPDATE: (id: string) => `/venues/${id}`,
   },
 };

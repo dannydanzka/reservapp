@@ -38,6 +38,18 @@ export const API_ENDPOINTS = {
     REGISTER: '/auth/register',
   },
 
+  // Email services
+  EMAILS: {
+    CHECKIN_REMINDER: '/emails/checkin-reminder',
+    PAYMENT_CONFIRMATION: '/emails/payment-confirmation',
+    RESERVATION_CANCELLATION: '/emails/reservation-cancellation',
+    RESERVATION_CONFIRMATION: '/emails/reservation-confirmation',
+    SEND: '/emails/send',
+  },
+
+  // Health check
+  HEALTH: '/health',
+
   // Notifications system
   NOTIFICATIONS: {
     DETAILS: (id: string) => `/notifications/${id}`,
@@ -49,36 +61,36 @@ export const API_ENDPOINTS = {
 
   // Payments
   PAYMENTS: {
-    CREATE_INTENT: '/payments/create-intent',
-    DETAILS: (id: string) => `/payments/${id}`,
     CONFIRM: '/payments/confirm',
-    LIST: '/payments',
+    CREATE_INTENT: '/payments/create-intent',
     CUSTOMERS: '/payments/customers',
-    RECEIPT: (id: string) => `/payments/${id}/receipt`,
     CUSTOMER_DETAILS: (id: string) => `/payments/customers/${id}`,
-    REFUND_PAYMENT: (id: string) => `/payments/${id}/refund`,
+    DETAILS: (id: string) => `/payments/${id}`,
+    LIST: '/payments',
+    RECEIPT: (id: string) => `/payments/${id}/receipt`,
     REFUND: '/payments/refund',
+    REFUND_PAYMENT: (id: string) => `/payments/${id}/refund`,
     STATS: '/payments/stats',
     SUBSCRIPTION: '/payments/subscription',
     WEBHOOK: '/payments/webhook',
-  },
-
-  // Reservations management
-  RESERVATIONS: {
-    CREATE: '/reservations',
-    CANCEL: (id: string) => `/reservations/${id}/cancel`,
-    DELETE: (id: string) => `/reservations/${id}`,
-    CHECKIN: (id: string) => `/reservations/${id}/checkin`,
-    DETAILS: (id: string) => `/reservations/${id}`,
-    CHECKOUT: (id: string) => `/reservations/${id}/checkout`,
-    LIST: '/reservations',
-    UPDATE: (id: string) => `/reservations/${id}`,
   },
 
   // Public API (no authentication required)
   PUBLIC: {
     SERVICES: '/public/services',
     VENUES: '/public/venues',
+  },
+
+  // Reservations management
+  RESERVATIONS: {
+    CANCEL: (id: string) => `/reservations/${id}/cancel`,
+    CHECKIN: (id: string) => `/reservations/${id}/checkin`,
+    CHECKOUT: (id: string) => `/reservations/${id}/checkout`,
+    CREATE: '/reservations',
+    DELETE: (id: string) => `/reservations/${id}`,
+    DETAILS: (id: string) => `/reservations/${id}`,
+    LIST: '/reservations',
+    UPDATE: (id: string) => `/reservations/${id}`,
   },
 
   // Reviews & ratings
@@ -90,48 +102,22 @@ export const API_ENDPOINTS = {
     UPDATE: (id: string) => `/reviews/${id}`,
   },
 
-  // Email services
-  EMAILS: {
-    CHECKIN_REMINDER: '/emails/checkin-reminder',
-    PAYMENT_CONFIRMATION: '/emails/payment-confirmation',
-    RESERVATION_CANCELLATION: '/emails/reservation-cancellation',
-    RESERVATION_CONFIRMATION: '/emails/reservation-confirmation',
-    SEND: '/emails/send',
-  },
   // Services catalog
   SERVICES: {
-    CREATE: '/services',
-    DETAILS: (id: string) => `/services/${id}`,
-    DELETE: (id: string) => `/services/${id}`,
-    LIST: '/services',
     AVAILABLE: '/services/available',
+    CREATE: '/services',
+    DELETE: (id: string) => `/services/${id}`,
+    DETAILS: (id: string) => `/services/${id}`,
+    LIST: '/services',
     REVIEWS: (id: string) => `/services/${id}/reviews`,
-    UPDATE: (id: string) => `/services/${id}`,
     REVIEWS_SUMMARY: (id: string) => `/services/${id}/reviews/summary`,
+    UPDATE: (id: string) => `/services/${id}`,
   },
-
-  // Health check
-  HEALTH: '/health',
 
   // User settings
   SETTINGS: {
     NOTIFICATIONS: '/settings/notifications',
     PROFILE: '/settings/profile',
-  },
-
-  // Venues management
-  VENUES: {
-    CREATE: '/venues',
-    LIST: '/venues',
-    DETAILS: (id: string) => `/venues/${id}`,
-    DELETE: (id: string) => `/venues/${id}`,
-    UPDATE: (id: string) => `/venues/${id}`,
-    NEARBY: '/venues/nearby',
-    POPULAR: '/venues/popular',
-    REVIEWS: (id: string) => `/venues/${id}/reviews`,
-    STATS: '/venues/stats',
-    REVIEWS_SUMMARY: (id: string) => `/venues/${id}/reviews/summary`,
-    VENUE_STATS: (id: string) => `/venues/${id}/stats`,
   },
 
   // File upload
@@ -149,6 +135,21 @@ export const API_ENDPOINTS = {
     SUBSCRIPTION_STATUS: '/users/subscription-status',
     UPDATE: (id: string) => `/users/${id}`,
     UPGRADE: '/users/upgrade',
+  },
+
+  // Venues management
+  VENUES: {
+    CREATE: '/venues',
+    DELETE: (id: string) => `/venues/${id}`,
+    DETAILS: (id: string) => `/venues/${id}`,
+    LIST: '/venues',
+    NEARBY: '/venues/nearby',
+    POPULAR: '/venues/popular',
+    REVIEWS: (id: string) => `/venues/${id}/reviews`,
+    REVIEWS_SUMMARY: (id: string) => `/venues/${id}/reviews/summary`,
+    STATS: '/venues/stats',
+    UPDATE: (id: string) => `/venues/${id}`,
+    VENUE_STATS: (id: string) => `/venues/${id}/stats`,
   },
 } as const;
 

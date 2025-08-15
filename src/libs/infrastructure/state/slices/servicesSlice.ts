@@ -8,7 +8,10 @@ import {
   ServiceFilters,
   ServiceType,
 } from '@shared/types';
-import { servicesService, type ServiceStats } from '@modules/mod-services/infrastructure/services/servicesService';
+import {
+  servicesService,
+  type ServiceStats,
+} from '@modules/mod-services/infrastructure/services/servicesService';
 
 export interface ServicesState {
   services: Service[];
@@ -217,7 +220,7 @@ export const fetchServicesByPriceRange = createAsyncThunk(
   ) => {
     try {
       const response = await servicesService.getServices(
-        { ...params.filters, minPrice: params.minPrice, maxPrice: params.maxPrice },
+        { ...params.filters, maxPrice: params.maxPrice, minPrice: params.minPrice },
         params.pagination
       );
       return response;
@@ -300,33 +303,33 @@ export const fetchPublicServices = createAsyncThunk(
 const initialState: ServicesState = {
   availability: null,
   availableServices: [],
+  error: null,
   filters: {
-    category: undefined,
-    maxPrice: undefined,
-    search: undefined,
-    capacity: undefined,
-    venueId: undefined,
     available: undefined,
-    minPrice: undefined,
+    capacity: undefined,
+    category: undefined,
     duration: undefined,
+    maxPrice: undefined,
+    minPrice: undefined,
+    search: undefined,
     type: undefined,
+    venueId: undefined,
   },
   isLoading: false,
   isLoadingDetails: false,
-  popularServices: [],
-  error: null,
   isLoadingReviews: false,
-  searchQuery: '',
   pagination: {
     hasMore: false,
     limit: 10,
     page: 1,
     total: 0,
   },
-  services: [],
+  popularServices: [],
   reviews: [],
+  searchQuery: '',
   selectedCategory: null,
   selectedService: null,
+  services: [],
 };
 
 // Slice

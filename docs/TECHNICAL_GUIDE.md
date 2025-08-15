@@ -29,7 +29,7 @@ src/
 │   ├── main/           # Main app screens
 │   ├── drawer/         # Drawer navigation screens
 │   ├── tabs/           # Tab navigation screens
-│   └── booking/        # Booking flow screens
+│   └── reservation/        # Reservation flow screens
 ├── hooks/              # Business Logic Hooks
 │   ├── useI18n.ts      # Internationalization
 │   ├── useFontScaling.ts # Dynamic font scaling
@@ -45,7 +45,7 @@ src/
 │   ├── services/       # External Services Layer
 │   │   ├── auth/       # Authentication services
 │   │   ├── venues/     # Venue management
-│   │   ├── reservations/ # Booking operations
+│   │   ├── reservations/ # Reservation operations
 │   │   ├── notifications/ # Notification system
 │   │   ├── payments/   # Stripe integration
 │   │   └── config/     # HTTP client setup
@@ -82,7 +82,7 @@ src/
 
 ### Navigation & UI
 - **React Navigation 6**: Navigation library nativa
-  - Stack Navigator: Flows lineales (Auth, Booking)
+  - Stack Navigator: Flows lineales (Auth, Reservation)
   - Drawer Navigator: Navegación lateral
   - Tab Navigator: Navegación principal
   - Deep Linking: URLs customizadas
@@ -130,7 +130,7 @@ src/
 interface RootState {
   auth: AuthState;           // Usuario y autenticación
   ui: UIState;              // Estado de UI (modals, loading)
-  booking: BookingState;    // Flow de reservas
+  reservation: ReservationState;    // Flow de reservas
   venues: VenuesState;      // Venues y filtros
   reservations: ReservationsState; // Gestión de reservas
   services: ServicesState;  // Catálogo de servicios
@@ -225,9 +225,9 @@ RootNavigator
     ├── TabNavigator
     │   ├── HomeScreen
     │   ├── DiscoverStack
-    │   ├── BookingsScreen
+    │   ├── ReservationsScreen
     │   └── ProfileScreen
-    └── BookingFlow
+    └── ReservationFlow
         ├── ServiceSelectionScreen
         ├── DateTimeSelectionScreen
         ├── GuestInfoScreen

@@ -32,7 +32,7 @@ module.exports = {
     metadata: {
       category: 'LIFESTYLE',
       contentRating: '4+',
-      keywords: ['reservations', 'booking', 'restaurant', 'hotel', 'events'],
+      keywords: ['reservations', 'reservation', 'restaurant', 'hotel', 'events'],
       subtitle: 'Your Reservation Assistant',
       description: 'Book restaurants, hotels, and events with ease',
     },
@@ -81,7 +81,7 @@ module.exports = {
     metadata: {
       category: 'LIFESTYLE',
       contentRating: 'Everyone',
-      tags: ['reservations', 'booking', 'restaurant', 'hotel', 'events'],
+      tags: ['reservations', 'reservation', 'restaurant', 'hotel', 'events'],
       shortDescription: 'Your Reservation Assistant',
       fullDescription: 'Book restaurants, hotels, and events with ease using ReservApp',
     },

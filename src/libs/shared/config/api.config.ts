@@ -32,8 +32,8 @@ export const API_CONFIG = {
     // Payments
     PAYMENTS: {
       CONFIRM: '/payments/confirm',
-      INTENT: '/payments/intent',
       HISTORY: '/payments/history',
+      INTENT: '/payments/intent',
       METHODS: '/payments/methods',
     },
 

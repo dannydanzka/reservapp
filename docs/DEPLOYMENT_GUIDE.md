@@ -650,13 +650,13 @@ echo "✅ Pre-build tests completed!"
 - [ ] Session restoration
 - [ ] Logout functionality
 
-**Booking Flow**
+**Reservation Flow**
 - [ ] Venue discovery and search
 - [ ] Service selection
 - [ ] Date/time selection
 - [ ] Guest information
 - [ ] Payment process
-- [ ] Booking confirmation
+- [ ] Reservation confirmation
 
 **Profile Management**
 - [ ] View profile information

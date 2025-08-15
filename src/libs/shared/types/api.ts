@@ -42,7 +42,7 @@ export interface PaginatedResponse<T> {
 // AUTHENTICATION TYPES
 // =============================================================================
 
-export type UserRole = 'USER' | 'EMPLOYEE' | 'MANAGER' | 'ADMIN';
+export type UserRole = 'USER' | 'MANAGER' | 'ADMIN' | 'SUPER_ADMIN';
 
 export interface User {
   id: string;
@@ -53,6 +53,10 @@ export interface User {
   phone?: string;
   role: UserRole;
   isActive: boolean;
+  stripeCustomerId?: string;
+  businessName?: string;
+  businessType?: string;
+  address?: string;
   createdAt: string;
   updatedAt: string;
   settings?: UserSettings;
@@ -61,16 +65,17 @@ export interface User {
 export interface LoginCredentials {
   email: string;
   password: string;
+  [key: string]: any;
 }
 
 export interface RegisterData {
   email: string;
   password: string;
-  name: string;
-  confirmPassword?: string;
-  businessName?: string;
-  phone?: string;
-  address?: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role?: UserRole;
+  [key: string]: any;
 }
 
 export interface LoginSession {
@@ -84,6 +89,7 @@ export interface ChangePasswordData {
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
+  [key: string]: any;
 }
 
 // =============================================================================
@@ -284,7 +290,7 @@ export interface TimeSlot {
   endTime: string;
   available: boolean;
   capacity: number;
-  booked: number;
+  reserved: number;
   price?: number;
 }
 
@@ -309,7 +315,7 @@ export interface Reservation {
   serviceId: string;
   service?: Service;
   status: ReservationStatus;
-  bookingReference: string;
+  reservationReference: string;
   guestInfo: GuestInfo;
   dateTime: {
     startDate: string;
@@ -362,6 +368,7 @@ export interface CreateReservationData {
   guestInfo: GuestInfo;
   specialRequests?: string;
   paymentMethodId?: string;
+  [key: string]: any;
 }
 
 export interface ReservationFilters {

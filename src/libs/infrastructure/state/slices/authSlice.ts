@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { authService } from '@auth/authService';
-import { clearSession } from '@core/utils/sessionStorage';
+// import { clearSession } from '@core/utils/sessionStorage'; // TODO: implement sessionStorage utils
 import { LoginCredentials, LoginSession, RegisterData, User } from '@shared/types';
 
 interface AuthState {
@@ -76,7 +76,53 @@ export const logoutUser = createAsyncThunk(
       }
     }
     // Siempre limpiamos la sesión local
-    await clearSession();
+    // await clearSession(); // TODO: implement clearSession
+  }
+);
+
+// Async thunk para forgot password
+export const forgotPassword = createAsyncThunk(
+  'auth/forgotPassword',
+  async (email: string, { rejectWithValue }) => {
+    try {
+      await authService.forgotPassword(email);
+      return { message: 'Email de recuperación enviado exitosamente' };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Error al enviar email de recuperación';
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Async thunk para reset password
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async (data: { token: string; newPassword: string }, { rejectWithValue }) => {
+    try {
+      await authService.resetPassword(data.token, data.newPassword);
+      return { message: 'Contraseña restablecida exitosamente' };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error al restablecer contraseña';
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Async thunk para change password
+export const changePassword = createAsyncThunk(
+  'auth/changePassword',
+  async (
+    data: { currentPassword: string; newPassword: string; confirmPassword: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      await authService.changePassword(data);
+      return { message: 'Contraseña cambiada exitosamente' };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Error al cambiar contraseña';
+      return rejectWithValue(message);
+    }
   }
 );
 

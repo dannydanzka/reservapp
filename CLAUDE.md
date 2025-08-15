@@ -1,12 +1,37 @@
 # CLAUDE.md
 
-Quick reference guide for Claude Code when working with ReservApp Mobile.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Business Context
+## 🎯 Contexto del Proyecto ReservApp
 
-**ReservApp Mobile** is the end-user mobile application for the ReservApp ecosystem. Built with React Native 0.80 + React 19, it allows users to discover, book, and manage reservations for venues like restaurants, spas, hotels, tours, and events.
+**ReservApp** es una plataforma integral de reservaciones que conecta pequeños hoteles y venues de servicios con huéspedes premium. Es el **ecosistema estratégico completo** que va más allá de las reservas tradicionales, ofreciendo comisiones ultra-competitivas (5% vs 15-25% competencia), pagos semanales automáticos y herramientas de gestión empresarial avanzadas.
 
-📖 **Complete Context**: See [`docs/BUSINESS_MODEL.md`](docs/BUSINESS_MODEL.md)
+### 📱 App Móvil en Desarrollo
+Esta es la **aplicación móvil nativa React Native** del ecosistema ReservApp, diseñada para usuarios finales que buscan experiencias auténticas y reservas instantáneas. La app se conecta a una **API REST completa ya existente** con 25+ endpoints funcionando en producción.
+
+### 🌐 Plataforma Web en Producción
+**URL Live**: https://reservapp-web.vercel.app
+- ✅ **Dashboard administrativo completo** con 7 módulos funcionales
+- ✅ **Sistema de pagos Stripe** completamente integrado
+- ✅ **API-First Architecture** con 25+ endpoints REST documentados
+- ✅ **4 roles de usuario**: SUPER_ADMIN, ADMIN, MANAGER, USER
+- ✅ **Cuentas demo disponibles** con datos realistas de 6 meses
+
+### 🏢 6 Categorías de Venues (Mercado Expandido)
+1. **🏨 Alojamiento** - Hoteles boutique, suites, cabañas
+2. **🍽️ Gastronomía** - Restaurantes, experiencias culinarias privadas  
+3. **💆 Bienestar y Belleza** - Spas, tratamientos, terapias
+4. **🎯 Tours y Experiencias** - Actividades locales, tours culturales
+5. **🎉 Eventos** - Salones, venues para celebraciones
+6. **🎪 Entretenimiento** - Espectáculos, actividades nocturnas
+
+### 💰 Modelo de Negocio Disruptivo
+- **Comisión ultra-baja**: 5% primer año, 10-12% estándar (vs 15-25% competencia)
+- **Pagos semanales** automáticos vs 30 días de competencia
+- **Ahorro comprobado**: Hasta $18,000 MXN mensuales por venue
+- **Foco en pequeños negocios** locales vs grandes cadenas
+
+📖 **Contexto Completo**: Ver [`docs/BUSINESS_MODEL.md`](docs/BUSINESS_MODEL.md) y [`docs/FEATURE_PRODUCT.md`](docs/FEATURE_PRODUCT.md)
 
 ## Essential Commands
 
@@ -25,9 +50,11 @@ Quick reference guide for Claude Code when working with ReservApp Mobile.
 - `yarn pods:update` - Update iOS CocoaPods dependencies
 
 **Database & Services:**
-- Backend API runs on ReservApp Web project (separate repository)
-- **PRODUCTION READY**: All services connect to https://reservapp-web.vercel.app/api
-- **Code Quality**: Zero ESLint warnings, clean codebase with custom rules
+- **Backend API**: Conecta a ReservApp Web (repositorio separado)
+- **PRODUCTION READY**: https://reservapp-web.vercel.app/api (25+ endpoints)
+- **Code Quality**: Zero ESLint warnings, codebase enterprise-ready
+- **Import Management**: Scripts automatizados de organización de imports
+- **Debugging**: Comandos específicos para diagnóstico de performance
 
 ## Quick Architecture Reference
 
@@ -42,10 +69,11 @@ Quick reference guide for Claude Code when working with ReservApp Mobile.
 **Storage:** AsyncStorage, Redux Persist
 **i18n:** react-i18next, i18next with dynamic language switching
 **Payments:** Stripe integration with complete payment management
-**APIs:** Real backend integration (https://reservapp-web.vercel.app/api)
-**Development:** ESLint, Prettier, TypeScript strict mode
+**APIs:** Integración real con backend (https://reservapp-web.vercel.app/api)
+**Development:** ESLint custom rules, Prettier, TypeScript strict mode
 
-📚 **Complete Stack Details**: [`docs/TECHNICAL_GUIDE.md`](docs/TECHNICAL_GUIDE.md) - Complete technical architecture and Redux state alignment
+📚 **Stack Completo**: [`docs/TECHNICAL_GUIDE.md`](docs/TECHNICAL_GUIDE.md)
+📡 **APIs Documentadas**: [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md) - 25+ endpoints REST
 
 ### Project Structure
 
@@ -81,7 +109,7 @@ src/
     ├── services/         # External services and APIs (REAL APIS)
     │   ├── auth/         # Authentication services (JWT + password recovery)
     │   ├── venues/       # Venues management (search, favorites, details)
-    │   ├── services/     # Services catalog and booking
+    │   ├── services/     # Services catalog and reservation
     │   ├── reservations/ # Reservations CRUD operations
     │   ├── notifications/# Notifications system (real-time)
     │   ├── payments/     # Stripe payment integration
@@ -110,8 +138,8 @@ src/
 - **Mark as read functionality** with instant UI updates
 - **Professional loading states** with skeleton screens
 
-### 📋 Complete Booking System (REAL API)
-- **BookingFlowScreen** with 5-step process (DateTime, Guests, Details, Payment, Confirmation)
+### 📋 Complete Reservation System (REAL API)
+- **ReservationFlowScreen** with 5-step process (DateTime, Guests, Details, Payment, Confirmation)
 - **Form validation** with custom useFormValidation hook
 - **Price calculations** with taxes and discounts
 - **Real reservation creation** via reservationsService API
@@ -163,7 +191,7 @@ src/
 ### 🏗️ State Management
 - **Redux Toolkit** with createAsyncThunk for all async operations
 - **Redux Persist** with selective persistence (auth, reservations, notifications)
-- **7 Redux slices**: auth, ui, booking, venues, reservations, services, notifications
+- **7 Redux slices**: auth, ui, reservation, venues, reservations, services, notifications
 - **Type-safe selectors** and actions with full TypeScript support
 
 ### 🚀 Navigation & Routing
@@ -186,7 +214,7 @@ src/
 interface RootState {
   auth: AuthState;           // ✅ User authentication & session
   ui: UIState;              // ✅ UI state (modals, loading, etc.)  
-  booking: BookingState;    // ✅ Booking flow state
+  reservation: ReservationState;    // ✅ Reservation flow state
   venues: VenuesState;      // ✅ Venue search & filters
   reservations: ReservationsState; // ✅ User reservations CRUD
   services: ServicesState;  // ✅ Services catalog & promotions
@@ -213,16 +241,16 @@ interface RootState {
 - **RegisterScreen** ✅ - Complete user registration flow
 
 ### 🏠 Main Application Screens
-- **HomeScreen** ✅ - Dashboard with real stats, recent bookings, quick actions
+- **HomeScreen** ✅ - Dashboard with real stats, recent reservations, quick actions
 - **SettingsScreen** ✅ - i18n, font scaling, notifications, with live demo
 - **SplashScreen** ✅ - Animated with session restoration
 
 ### 🔔 Notifications System
 - **NotificationsScreen** ✅ - Tabs, filtering, pagination, real API data
 
-### 📋 Booking & Reservations
-- **BookingFlowScreen** ✅ - Complete 5-step booking process with real API
-- **MyBookingsScreen** ✅ - User reservations management (drawer)
+### 📋 Reservation & Reservations
+- **ReservationFlowScreen** ✅ - Complete 5-step reservation process with real API
+- **MyReservationsScreen** ✅ - User reservations management (drawer)
 
 ### 👤 User Management  
 - **UserProfileScreen** ✅ - Complete profile management with 3 tabs
@@ -240,7 +268,7 @@ interface RootState {
 - **RootNavigator** ✅ - Session restore, type-safe routing with real data
 - **AuthStack** ✅ - Complete authentication flow
 - **MainDrawer** ✅ - Drawer navigation with all screens implemented
-- **TabNavigator** ✅ - Tab navigation with Discover, Search, Bookings, Account
+- **TabNavigator** ✅ - Tab navigation with Discover, Search, Reservations, Account
 
 ## Development Workflow
 
@@ -270,7 +298,7 @@ interface RootState {
 1. **🔥 API Real Integration** - All services connected to real ReservApp Web API
 2. **🔐 Complete Authentication System** - Login, password recovery, JWT management
 3. **🔔 Notifications System** - Real-time notifications with API integration
-4. **📋 Complete Booking System** - 5-step booking flow with real reservations
+4. **📋 Complete Reservation System** - 5-step reservation flow with real reservations
 5. **👤 User Profile Management** - Full profile editing with preferences
 6. **🏢 Venue Exploration** - Discovery, details, listing with real data
 7. **💳 Stripe Payment Integration** - Complete payment management system
@@ -286,10 +314,10 @@ interface RootState {
 
 ### ✅ USER EXPERIENCE SCREENS COMPLETED (100%)
 17. **🏢 VenueListScreen** - Complete venue discovery with filters, search, and pagination
-18. **🛍️ ServiceSelectionScreen** - Full service catalog with category filtering and booking integration  
+18. **🛍️ ServiceSelectionScreen** - Full service catalog with category filtering and reservation integration  
 19. **🔔 NotificationsScreen** - Complete notifications center with filtering and real-time updates
 20. **👤 ProfileScreen** - Full profile management with editing, image upload, and navigation menu
-21. **📋 MyBookingsScreen** - Comprehensive reservation management with cancellation and status tracking
+21. **📋 MyReservationsScreen** - Comprehensive reservation management with cancellation and status tracking
 22. **💰 WalletScreen** - Complete wallet management with transactions, payment methods, and balance
 23. **🏠 TabNavigator** - Full implementation with all 5 tabs (Home, Services, Reservations, Wallet, Settings)
 
@@ -412,17 +440,37 @@ export default new ServiceName();
 - **Play Store Guidelines**: Compliant with Google Play Store requirements
 - **Metadata**: App descriptions, screenshots, keywords prepared
 
-## 📡 API Integration & Services
+## 📡 API Integration & Services - PRODUCCIÓN COMPLETA
 
-**Base URL**: `https://reservapp-web.vercel.app/api` (PRODUCTION READY)
-**Architecture**: Clean Architecture with HTTP Services + Redux Toolkit
-**Documentation**: See [`docs/API_SERVICES_MOBILE.md`](docs/API_SERVICES_MOBILE.md) for complete API reference
+**Base URL**: `https://reservapp-web.vercel.app/api` ✅ **LIVE EN PRODUCCIÓN**
+**Architecture**: Clean Architecture + HTTP Services + Redux Toolkit
+**Documentación**: Ver [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md) - Documentación completa de 25+ endpoints
 
-### Mobile-Specific Context
-- **User-focused**: Only endpoints needed for mobile user experience
-- **No Admin APIs**: Venue creation, user management handled by web platform
-- **Real-time Ready**: Polling-based notifications with WebSocket-ready architecture
-- **Offline-Ready Structure**: Service layer prepared for caching strategies
+### 🎯 Endpoints Principales para Móvil
+**Autenticación** (✅ Funcionando):
+- `POST /api/auth/login` - JWT authentication
+- `POST /api/auth/register` - Registro de usuarios  
+- `GET /api/auth/profile` - Validación de token + perfil
+
+**Venues** (✅ API Pública):
+- `GET /api/venues` - Catálogo con filtros y paginación
+- `GET /api/venues/[id]` - Detalles específicos
+- Filtros: categoría, ciudad, precio, calificación
+
+**Reservas** (✅ Con Stripe):
+- `POST /api/reservations` - Crear reserva + pago automático
+- `GET /api/reservations` - Mis reservas
+- `PUT /api/reservations/[id]` - Actualizar/cancelar
+
+**Pagos** (✅ Stripe Production):
+- `POST /api/payments/subscription` - Procesar pago
+- Webhooks automáticos para confirmación
+
+### 📱 Contexto Móvil Específico
+- **User-centric**: Solo endpoints necesarios para experiencia móvil
+- **Sin APIs Admin**: Creación de venues en plataforma web
+- **Real-time Ready**: Arquitectura preparada para WebSockets
+- **Offline-Ready**: Service layer preparado para estrategias de cache
 
 ## Services Architecture (REAL API INTEGRATION)
 
@@ -496,13 +544,35 @@ export default new ServiceName();
 
 ---
 
-**📋 Documentation Index:**
-- [`docs/TECHNICAL_GUIDE.md`](docs/TECHNICAL_GUIDE.md) - Complete technical architecture, Redux state alignment, and stack details
-- [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMENT_GUIDE.md) - Complete deployment guide including Fastlane, CI/CD, and scripts reference
-- [`docs/API_SERVICES_MOBILE.md`](docs/API_SERVICES_MOBILE.md) - Complete API services documentation for mobile
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - Clean architecture implementation details
-- [`docs/PROJECT_GUIDE.md`](docs/PROJECT_GUIDE.md) - Project overview and development workflow
-- [`docs/FINAL_PROJECT_SUMMARY.md`](docs/FINAL_PROJECT_SUMMARY.md) - Complete project summary and achievements
+## 📚 Documentación Completa del Ecosistema
 
-**🎯 STATUS: CORE FUNCTIONALITY COMPLETED - READY FOR TESTING AND REFINEMENT**
-**💯 All constraints respected, real API integration complete, production-ready mobile application**
+### 📋 Índice de Documentación
+- [`docs/API_DOCUMENTATION.md`](docs/API_DOCUMENTATION.md) - **API REST completa** - 25+ endpoints documentados
+- [`docs/BUSINESS_MODEL.md`](docs/BUSINESS_MODEL.md) - **Modelo de negocio** - Contexto estratégico y competencia
+- [`docs/FEATURE_PRODUCT.md`](docs/FEATURE_PRODUCT.md) - **Guía del producto** - Funcionalidades y UX completo
+- [`docs/COMPLETE_DEVELOPER.md`](docs/COMPLETE_DEVELOPER.md) - **Guía técnica** - Stack y desarrollo completo
+- [`docs/ROUTES_AND_SITEMAP.md`](docs/ROUTES_AND_SITEMAP.md) - **Rutas y navegación** - Sitemap completo
+- [`docs/TECHNICAL_GUIDE.md`](docs/TECHNICAL_GUIDE.md) - **Arquitectura técnica** - Redux y stack details
+- [`docs/DEPLOYMENT_GUIDE.md`](docs/DEPLOYMENT_GUIDE.md) - **CI/CD y deployment** - Fastlane y scripts
+
+### 🌐 Cuentas Demo Disponibles (password: `password123`)
+```bash
+# Sistema Administrador (Ve TODO)
+admin@reservapp.com - SUPER_ADMIN 🔥
+
+# Propietarios de Negocios  
+admin.salazar@reservapp.com - ADMIN (Hotel Boutique) 🏨
+admin.restaurant@reservapp.com - ADMIN (Restaurante) 🍽️
+
+# Gestores/Managers
+gestor.salazar@reservapp.com - MANAGER (Carlos Mendoza) 👤
+gestor.restaurant@reservapp.com - MANAGER (Ana García) 👤
+
+# Clientes Finales
+juan.perez@gmail.com - USER (Juan Carlos) 🧑‍💼
+maria.lopez@gmail.com - USER (María Elena) 🧑‍💼
+```
+
+**🎯 STATUS: APLICACIÓN MÓVIL EN DESARROLLO**
+**🚀 Backend API Completo en Producción - Mobile App con Redux + React Native 0.80**
+**💯 Clean Architecture, TypeScript strict, Zero ESLint warnings**

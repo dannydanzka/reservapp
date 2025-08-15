@@ -1,4 +1,4 @@
-import { getAuthToken } from '@core/utils/sessionStorage';
+import { getAuthToken } from '../../../../shared/utils/sessionStorage';
 
 const injectAuthorizationHeader = async (
   headers: Record<string, string> = {},

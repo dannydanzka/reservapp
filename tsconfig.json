@@ -22,7 +22,7 @@
       "@shared/*": ["./src/libs/shared/*"],
       "@presentation/*": ["./src/libs/presentation/*"],
       "@infrastructure/*": ["./src/libs/infrastructure/*"],
-      
+
       // Subcapas específicas
       "@components/*": ["./src/libs/presentation/components/*"],
       "@components": ["./src/libs/presentation/components"],
@@ -31,7 +31,7 @@
       "@providers/*": ["./src/libs/presentation/providers/*"],
       "@layouts/*": ["./src/libs/presentation/layouts/*"],
       "@styles/*": ["./src/libs/presentation/styles/*"],
-      
+
       // Infrastructure
       "@services/*": ["./src/libs/infrastructure/services/*"],
       "@libs/services/*": ["./src/libs/infrastructure/services/*"],
@@ -39,7 +39,7 @@
       "@repositories/*": ["./src/libs/infrastructure/repositories/*"],
       "@store/*": ["./src/libs/infrastructure/state/*"],
       "@slices/*": ["./src/libs/infrastructure/state/slices/*"],
-      
+
       // Shared Resources
       "@config/*": ["./src/libs/shared/config/*"],
       "@types/*": ["./src/libs/shared/types/*"],
@@ -48,20 +48,20 @@
       "@utils/*": ["./src/libs/shared/utils/*"],
       "@i18n/*": ["./src/libs/shared/i18n/*"],
       "@assets/*": ["./src/libs/shared/assets/*"],
-      
+
       // Core Services
       "@core/*": ["./src/libs/infrastructure/services/core/*"],
       "@auth/*": ["./src/libs/infrastructure/services/core/auth/*"],
       "@http/*": ["./src/libs/infrastructure/services/core/http/*"],
-      
+
       // Modular Architecture
       "@modules/*": ["./src/modules/*"],
       "@mod-auth/*": ["./src/modules/mod-auth/*"],
-      "@mod-booking/*": ["./src/modules/mod-booking/*"],
+      "@mod-reservation/*": ["./src/modules/mod-reservation/*"],
       "@mod-notification/*": ["./src/modules/mod-notification/*"],
       "@mod-payments/*": ["./src/modules/mod-payments/*"],
       "@mod-profile/*": ["./src/modules/mod-profile/*"],
-      
+
       // Navigation & API
       "@navigation/*": ["./src/navigation/*"],
       "@api/*": ["./src/api/*"]

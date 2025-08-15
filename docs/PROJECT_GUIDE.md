@@ -32,14 +32,14 @@ ReservApp Mobile conecta usuarios finales con venues y servicios de manera simpl
 
 #### Para Usuarios Finales
 - **🔍 Descubrimiento Fácil**: Encuentra venues y servicios cercanos
-- **📱 Reserva Rápida**: Proceso de booking en menos de 3 minutos
+- **📱 Reserva Rápida**: Proceso de reservation en menos de 3 minutos
 - **💰 Pagos Seguros**: Integración con Stripe para transacciones seguras
 - **🔔 Notificaciones Inteligentes**: Nunca perder una cita
 - **📋 Gestión Centralizada**: Todas las reservas en un lugar
 
 #### Para Venues y Socios
 - **👥 Adquisición de Clientes**: Canal directo para atraer usuarios
-- **📊 Gestión de Reservas**: Dashboard completo de bookings
+- **📊 Gestión de Reservas**: Dashboard completo de reservations
 - **💳 Procesamiento de Pagos**: Integración automática con sistemas
 - **📈 Analytics**: Insights sobre comportamiento de usuarios
 - **🎯 Marketing Dirigido**: Promociones personalizadas
@@ -47,7 +47,7 @@ ReservApp Mobile conecta usuarios finales con venues y servicios de manera simpl
 ### 💰 Modelo de Ingresos
 
 #### Ingresos Directos
-1. **Comisión por Reserva**: % de cada booking completado
+1. **Comisión por Reserva**: % de cada reservation completado
 2. **Suscripciones Premium**: Funciones avanzadas para usuarios
 3. **Publicidad Dirigida**: Promociones pagadas de venues
 4. **Servicios Adicionales**: Integración con partners
@@ -143,7 +143,7 @@ ReservApp Mobile conecta usuarios finales con venues y servicios de manera simpl
 ### 🔔 Sistema de Notificaciones
 
 #### Tipos de Notificaciones
-- 📅 **Confirmación de Reserva**: Inmediata tras booking
+- 📅 **Confirmación de Reserva**: Inmediata tras reservation
 - ⏰ **Recordatorio de Cita**: 24 horas antes
 - 💰 **Confirmación de Pago**: Detalles de transacción
 - 🎉 **Promociones**: Ofertas personalizadas
@@ -235,7 +235,7 @@ La aplicación cuenta con 4 secciones principales:
 1. **API Real Integration** - Todas las APIs conectadas
 2. **Complete Authentication System** - Login, recuperación, JWT
 3. **Notifications System** - Centro completo operativo
-4. **Complete Booking System** - Flow de 5 pasos funcional
+4. **Complete Reservation System** - Flow de 5 pasos funcional
 5. **User Profile Management** - Gestión completa de perfil
 6. **Venue Exploration** - Discovery con filtros avanzados
 7. **Stripe Payment Integration** - Sistema completo de pagos
@@ -250,10 +250,10 @@ La aplicación cuenta con 4 secciones principales:
 
 #### 📱 Pantallas de Usuario Completadas (100%)
 16. **VenueListScreen** - Discovery completo con filtros y paginación
-17. **ServiceSelectionScreen** - Catálogo de servicios con booking
+17. **ServiceSelectionScreen** - Catálogo de servicios con reservation
 18. **NotificationsScreen** - Centro de notificaciones con filtros
 19. **ProfileScreen** - Gestión completa de perfil con upload de imágenes
-20. **MyBookingsScreen** - Gestión integral de reservas con cancelación
+20. **MyReservationsScreen** - Gestión integral de reservas con cancelación
 
 ### 🚀 Sistema de CI/CD Completo
 
@@ -306,22 +306,22 @@ La aplicación cuenta con 4 secciones principales:
 - **User Retention**: % de usuarios que regresan
 
 #### Conversion Metrics
-- **Booking Conversion Rate**: % de usuarios que completan reservas
+- **Reservation Conversion Rate**: % de usuarios que completan reservas
 - **Payment Success Rate**: % de transacciones exitosas
 - **Venue Discovery Rate**: % de usuarios que exploran venues
-- **Search to Booking**: % de búsquedas que resultan en booking
+- **Search to Reservation**: % de búsquedas que resultan en reservation
 
 ### 💰 Métricas de Negocio
 
 #### Revenue Metrics
-- **Gross Bookings Volume (GBV)**: Valor total de reservas
+- **Gross Reservations Volume (GBV)**: Valor total de reservas
 - **Commission Revenue**: Ingresos por comisiones
 - **Average Order Value (AOV)**: Valor promedio por reserva
 - **Revenue per User**: Ingresos por usuario activo
 
 #### Operational Metrics
 - **Most Popular Venues**: Venues con más reservas
-- **Peak Booking Hours**: Horarios de mayor demanda
+- **Peak Reservation Hours**: Horarios de mayor demanda
 - **Customer Satisfaction**: Promedio de calificaciones
 - **Cancellation Rate**: % de reservas canceladas
 
@@ -398,7 +398,7 @@ La aplicación cuenta con 4 secciones principales:
    - Reviews sociales
    - Recomendaciones personalizadas
 
-2. **Advanced Booking**
+2. **Advanced Reservation**
    - Reservas grupales
    - Reservas recurrentes
    - Waitlist functionality
@@ -422,7 +422,7 @@ La aplicación cuenta con 4 secciones principales:
 3. **Business Features**
    - Corporate accounts
    - Expense management
-   - Team booking tools
+   - Team reservation tools
 
 #### Q4 2026: Innovation
 1. **AI/ML Features**
@@ -432,7 +432,7 @@ La aplicación cuenta con 4 secciones principales:
 
 2. **Advanced Tech**
    - AR/VR venue previews
-   - Voice booking
+   - Voice reservation
    - Apple Watch/Wear OS apps
 
 ---

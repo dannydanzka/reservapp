@@ -253,7 +253,7 @@ export const checkIsFavorite = createAsyncThunk(
   async (venueId: string, { rejectWithValue }) => {
     try {
       const isFavorite = await venuesService.isFavorite(venueId);
-      return { venueId, isFavorite };
+      return { isFavorite, venueId };
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Error al verificar favorito';
       return rejectWithValue(message);
@@ -263,39 +263,39 @@ export const checkIsFavorite = createAsyncThunk(
 
 // Initial State
 const initialState: VenuesState = {
-  featuredVenues: [],
-  favoriteVenues: [],
+  error: null,
   favoriteIds: [],
+  favoriteVenues: [],
+  featuredVenues: [],
   filters: {
     category: undefined,
     city: undefined,
-    isActive: undefined,
-    minPrice: undefined,
     featured: undefined,
-    search: undefined,
+    isActive: undefined,
     maxPrice: undefined,
+    minPrice: undefined,
     rating: undefined,
+    search: undefined,
   },
   isLoading: false,
   isLoadingDetails: false,
   isLoadingFavorites: false,
-  nearbyVenues: [],
-  error: null,
-  popularVenues: [],
   isLoadingReviews: false,
-  reviews: [],
+  nearbyVenues: [],
   pagination: {
     hasMore: false,
     limit: 10,
     page: 1,
     total: 0,
   },
-  venues: [],
+  popularVenues: [],
+  reviews: [],
   reviewsStats: null,
   searchQuery: '',
   selectedCategory: null,
   selectedVenue: null,
   stats: null,
+  venues: [],
 };
 
 // Slice
@@ -517,7 +517,7 @@ const venuesSlice = createSlice({
       })
       // Check Is Favorite
       .addCase(checkIsFavorite.fulfilled, (state, action) => {
-        const { venueId, isFavorite } = action.payload;
+        const { isFavorite, venueId } = action.payload;
         if (isFavorite) {
           if (!state.favoriteIds.includes(venueId)) {
             state.favoriteIds.push(venueId);
@@ -583,7 +583,8 @@ export const selectVenueReviewsStats = (state: { venues: VenuesState }) =>
   state.venues.reviewsStats;
 export const selectFavoriteVenues = (state: { venues: VenuesState }) => state.venues.favoriteVenues;
 export const selectFavoriteIds = (state: { venues: VenuesState }) => state.venues.favoriteIds;
-export const selectIsLoadingFavorites = (state: { venues: VenuesState }) => state.venues.isLoadingFavorites;
+export const selectIsLoadingFavorites = (state: { venues: VenuesState }) =>
+  state.venues.isLoadingFavorites;
 
 // Helper selector to check if a venue is favorite
 export const selectIsVenueFavorite = (venueId: string) => (state: { venues: VenuesState }) =>
