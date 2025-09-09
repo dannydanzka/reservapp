@@ -73,10 +73,11 @@ export const ReservationScreen: React.FC = () => {
   };
 
   const formatPrice = (price: number) => {
+    const numericPrice = isNaN(price) ? 0 : price;
     return new Intl.NumberFormat('es-MX', {
       currency: 'MXN',
       style: 'currency',
-    }).format(price);
+    }).format(numericPrice);
   };
 
   const formatDate = (dateString: string) => {
@@ -95,20 +96,20 @@ export const ReservationScreen: React.FC = () => {
 
   const renderReservationCard = ({ item: reservation }: { item: any }) => {
     // Extract data using the actual API structure
-    const venueName = reservation.venue?.name || 'Venue no especificado';
-    const serviceName = reservation.service?.name || 'Servicio no especificado';
-    const startDate = reservation.checkInDate || '';
+    const venueName = String(reservation.venue?.name || 'Venue no especificado');
+    const serviceName = String(reservation.service?.name || 'Servicio no especificado');
+    const startDate = String(reservation.checkInDate || '');
     const startTime = ''; // No hay hora específica en esta estructura
-    const totalGuests = reservation.guests || 0;
-    const totalAmount = parseFloat(reservation.totalAmount) || 0;
+    const totalGuests = Number(reservation.guests) || 0;
+    const totalAmount = isNaN(parseFloat(reservation.totalAmount)) ? 0 : parseFloat(reservation.totalAmount);
 
     return (
       <ReservationCard>
         <ReservationHeader>
           <ReservationVenue numberOfLines={1}>{venueName}</ReservationVenue>
-          <StatusBadge color={getReservationStatusColor(reservation.status)}>
+          <StatusBadge color={getReservationStatusColor(reservation.status || '')}>
             <ReservationStatus>
-              {getReservationStatusInSpanish(reservation.status)}
+              {getReservationStatusInSpanish(reservation.status || '')}
             </ReservationStatus>
           </StatusBadge>
         </ReservationHeader>

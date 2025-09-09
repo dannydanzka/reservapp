@@ -1,5 +1,7 @@
 # ReservApp - Guía de Desarrollo Completa
 
+**Autor**: Roberto Ramirez (danny.danzka21@gmail.com)
+
 ## 📋 Información General del Proyecto
 
 **ReservApp** es una plataforma integral de reservaciones diseñada como el **ecosistema estratégico para pequeños hoteles y su ecosistema de servicios**, ofreciendo superior rentabilidad, control y alcance con menores comisiones, pagos rápidos y herramientas de gestión integradas. Más que una plataforma de reservas: **es un socio de crecimiento**.
@@ -130,7 +132,7 @@ Role: SUPER_ADMIN 🔥
 Email: admin.salazar@reservapp.com
 Role: ADMIN (Roberto Salazar - Hotel Boutique) 🏨
 
-Email: admin.restaurant@reservapp.com  
+Email: admin.restaurant@reservapp.com
 Role: ADMIN (Patricia Morales - Restaurante) 🍽️
 
 # Gestores/Managers
@@ -286,10 +288,10 @@ interface Props {
   onClick?: () => void;
 }
 
-export const Button = ({ 
-  variant = 'primary', 
-  disabled = false, 
-  onClick = undefined 
+export const Button = ({
+  variant = 'primary',
+  disabled = false,
+  onClick = undefined
 }: Props) => {
   // Implementación
 };
@@ -350,13 +352,13 @@ export const useContactForm = () => {
     setError(null);
 
     const result = await ContactService.createContact(data);
-    
+
     if (result.success) {
       setSuccess(true);
     } else {
       setError(result.error || 'Error desconocido');
     }
-    
+
     setLoading(false);
     return result;
   }, []);
@@ -539,7 +541,7 @@ interface RefreshTokenPayload {
 // Generación de tokens con metadata
 const generateTokens = async (user: User, sessionId: string) => {
   const permissions = await getUserPermissions(user.role);
-  
+
   const accessTokenPayload = {
     userId: user.id,
     email: user.email,
@@ -549,8 +551,8 @@ const generateTokens = async (user: User, sessionId: string) => {
   };
 
   const accessToken = jwt.sign(
-    accessTokenPayload, 
-    process.env.JWT_SECRET!, 
+    accessTokenPayload,
+    process.env.JWT_SECRET!,
     { expiresIn: '15m' }
   );
 
@@ -581,29 +583,29 @@ const PERMISSIONS = {
   // Dashboard
   'dashboard.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'dashboard.analytics': ['SUPER_ADMIN', 'ADMIN'],
-  
+
   // Usuarios
   'users.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'users.create': ['SUPER_ADMIN', 'ADMIN'],
   'users.edit': ['SUPER_ADMIN', 'ADMIN'],
   'users.delete': ['SUPER_ADMIN'],
-  
+
   // Venues
   'venues.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'venues.create': ['SUPER_ADMIN', 'ADMIN'],
   'venues.edit': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'venues.delete': ['SUPER_ADMIN', 'ADMIN'],
-  
+
   // Reservaciones
   'reservations.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE'],
   'reservations.create': ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE'],
   'reservations.edit': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'reservations.cancel': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
-  
+
   // Pagos
   'payments.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'payments.refund': ['SUPER_ADMIN', 'ADMIN'],
-  
+
   // Reportes
   'reports.view': ['SUPER_ADMIN', 'ADMIN', 'MANAGER'],
   'reports.export': ['SUPER_ADMIN', 'ADMIN'],
@@ -644,14 +646,14 @@ export function middleware(request: NextRequest) {
 // Protección específica para admin
 const handleAdminRoutes = async (request: NextRequest) => {
   const token = extractTokenFromRequest(request);
-  
+
   if (!token) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
-    
+
     // Verificar que el usuario tiene permisos de admin
     if (!['SUPER_ADMIN', 'ADMIN', 'MANAGER'].includes(payload.role)) {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
@@ -703,10 +705,10 @@ export const useAuth = () => {
     if (token) {
       const payload = jwt.decode(token) as JWTPayload;
       const timeUntilExpiry = payload.exp * 1000 - Date.now();
-      
+
       // Refresh 2 minutos antes de expirar
       const refreshTime = Math.max(timeUntilExpiry - 120000, 0);
-      
+
       const timer = setTimeout(() => {
         refreshToken();
       }, refreshTime);
@@ -719,7 +721,7 @@ export const useAuth = () => {
     user,
     loading,
     refreshToken,
-    hasPermission: (permission: string) => 
+    hasPermission: (permission: string) =>
       user?.permissions?.includes(permission) || false,
   };
 };
@@ -868,7 +870,7 @@ const handlePaymentSucceeded = async (paymentIntent: Stripe.PaymentIntent) => {
     // 1. Actualizar estado de pago
     await tx.paymentIntent.update({
       where: { stripePaymentIntentId: paymentIntent.id },
-      data: { 
+      data: {
         status: 'COMPLETED',
         completedAt: new Date(),
         paymentMethodId: paymentIntent.payment_method as string,
@@ -878,7 +880,7 @@ const handlePaymentSucceeded = async (paymentIntent: Stripe.PaymentIntent) => {
     // 2. Confirmar reservación
     await tx.reservation.update({
       where: { id: reservationId },
-      data: { 
+      data: {
         status: 'CONFIRMED',
         confirmedAt: new Date(),
         paymentStatus: 'PAID',
@@ -959,8 +961,8 @@ const paymentStateMachine = {
 ```typescript
 // Procesar reembolso con validaciones
 export const processRefund = async (
-  reservationId: string, 
-  amount?: number, 
+  reservationId: string,
+  amount?: number,
   reason: string = 'requested_by_customer'
 ) => {
   const reservation = await prisma.reservation.findUnique({
@@ -1323,7 +1325,7 @@ class GlobalErrorBoundary extends React.Component {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log to monitoring service
     console.error('Global error:', error, errorInfo);
-    
+
     if (process.env.NODE_ENV === 'production') {
       // Send to monitoring service (Sentry, LogRocket, etc.)
       this.reportError(error, errorInfo);
@@ -1545,7 +1547,7 @@ model Venue {
   checkInTime       String         @default("15:00")
   checkOutTime      String         @default("11:00")
   cancellationHours Int            @default(24)
-  
+
   // Relaciones
   services     Service[]
   reservations Reservation[]
@@ -1574,7 +1576,7 @@ model Service {
   venueId       String
   venue         Venue         @relation(fields: [venueId], references: [id])
   category      ServiceCategory @default(ACCOMMODATION)
-  
+
   // Relaciones
   reservations  Reservation[]
   availability  ServiceAvailability[]
@@ -1592,11 +1594,11 @@ model Reservation {
   currency      String            @default("MXN")
   status        ReservationStatus @default(PENDING)
   paymentStatus PaymentStatus     @default(PENDING)
-  
+
   // Información del huésped
   guestCount    Int               @default(1)
   specialRequests String?
-  
+
   // Relaciones
   userId        String
   user          User              @relation(fields: [userId], references: [id])
@@ -1604,7 +1606,7 @@ model Reservation {
   venue         Venue             @relation(fields: [venueId], references: [id])
   serviceId     String
   service       Service           @relation(fields: [serviceId], references: [id])
-  
+
   // Timestamps
   confirmedAt   DateTime?
   canceledAt    DateTime?
@@ -1629,7 +1631,7 @@ model Payment {
   status                PaymentStatus @default(PENDING)
   paymentMethod         String        // 'STRIPE_CARD', 'BANK_TRANSFER', etc.
   stripePaymentIntentId String?       @unique
-  
+
   // Referencias
   reservationId         String
   reservation           Reservation   @relation(fields: [reservationId], references: [id])
@@ -1637,12 +1639,12 @@ model Payment {
   user                  User          @relation(fields: [userId], references: [id])
   venueId               String
   venue                 Venue         @relation(fields: [venueId], references: [id])
-  
+
   // Metadata y tracking
   metadata              Json?
   refundedAmount        Float?        @default(0)
   refundedAt            DateTime?
-  
+
   // Timestamps
   completedAt           DateTime?
   createdAt             DateTime      @default(now())
@@ -1661,15 +1663,15 @@ model ContactForm {
   subject   String
   message   String
   status    ContactFormStatus @default(PENDING)
-  
+
   // Información del usuario (si está logueado)
   userId    String?
   user      User?             @relation(fields: [userId], references: [id])
-  
+
   // Metadata
   ipAddress String?
   userAgent String?
-  
+
   // Timestamps
   respondedAt DateTime?
   createdAt   DateTime         @default(now())
@@ -1685,16 +1687,16 @@ model AuditLog {
   action     String   // 'CREATE', 'UPDATE', 'DELETE', 'LOGIN', etc.
   entityType String   // 'USER', 'RESERVATION', 'PAYMENT', etc.
   entityId   String
-  
+
   // Usuario que realizó la acción
   userId     String
   user       User     @relation(fields: [userId], references: [id])
-  
+
   // Metadata de la acción
   metadata   Json?    // Cambios específicos, IPs, etc.
   ipAddress  String?
   userAgent  String?
-  
+
   createdAt  DateTime @default(now())
 
   @@index([entityType, entityId])
@@ -1775,25 +1777,25 @@ enum ContactFormStatus {
 export const generateSeedData = async () => {
   // 1. Usuarios con diferentes roles
   const users = await createUsers();
-  
+
   // 2. Venues en Guadalajara (hoteles, restaurantes, spas)
   const venues = await createVenues(users);
-  
+
   // 3. Servicios por venue (habitaciones, mesas, tratamientos)
   const services = await createServices(venues);
-  
+
   // 4. Reservaciones distribuidas en 6 meses
   const reservations = await createReservations(users, services);
-  
+
   // 5. Pagos correspondientes a las reservaciones
   const payments = await createPayments(reservations);
-  
+
   // 6. Formularios de contacto
   const contactForms = await createContactForms(users);
-  
+
   // 7. Logs de auditoría
   await createAuditLogs(users, reservations, payments);
-  
+
   console.log('✅ Seed completed with 6 months of realistic data');
 };
 ```

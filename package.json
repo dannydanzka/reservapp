@@ -2,6 +2,7 @@
   "name": "ReservApp",
   "version": "0.0.1",
   "private": true,
+  "author": "Roberto Ramirez <danny.danzka21@gmail.com>",
   "type": "module",
   "scripts": {
     "android": "react-native run-android",

@@ -176,7 +176,7 @@ export const ReservationDetailScreen: React.FC = () => {
   const canCancelReservation = (status: string) => {
     // Solo permitir cancelación en estados PENDING e IN_PROGRESS
     const cancellableStates = ['PENDING', 'IN_PROGRESS'];
-    return cancellableStates.includes(status.toUpperCase());
+    return status ? cancellableStates.includes(status.toUpperCase()) : false;
   };
 
   if (isLoading) {
@@ -226,7 +226,7 @@ export const ReservationDetailScreen: React.FC = () => {
         <InfoContainer>
           <ServiceHeader>
             <ServiceTitle>
-              Reservación #{reservation.confirmationId?.slice(-8) || reservation.id.slice(-8)}
+              Reservación #{reservation.confirmationId?.slice(-8) || reservation.id?.slice(-8) || 'N/A'}
             </ServiceTitle>
           </ServiceHeader>
 

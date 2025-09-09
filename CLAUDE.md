@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+**Autor**: Roberto Ramirez (danny.danzka21@gmail.com)
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## 🎯 Contexto del Proyecto ReservApp
@@ -19,7 +21,7 @@ Esta es la **aplicación móvil nativa React Native** del ecosistema ReservApp, 
 
 ### 🏢 6 Categorías de Venues (Mercado Expandido)
 1. **🏨 Alojamiento** - Hoteles boutique, suites, cabañas
-2. **🍽️ Gastronomía** - Restaurantes, experiencias culinarias privadas  
+2. **🍽️ Gastronomía** - Restaurantes, experiencias culinarias privadas
 3. **💆 Bienestar y Belleza** - Spas, tratamientos, terapias
 4. **🎯 Tours y Experiencias** - Actividades locales, tours culturales
 5. **🎉 Eventos** - Salones, venues para celebraciones
@@ -82,7 +84,7 @@ src/
 ├── components/             # Reusable UI Components
 │   ├── Form/              # Form components (Input, Button, Select)
 │   ├── Layout/            # Layout components (ScreenLayout)
-│   ├── Toast/             # Toast notification system  
+│   ├── Toast/             # Toast notification system
 │   ├── Modal/             # Modal system with provider
 │   └── ErrorBoundary.tsx  # Error handling component
 ├── screens/               # Screen Components
@@ -202,7 +204,7 @@ src/
 
 ### 📱 Mobile-First Features
 - **SafeArea handling** across all screens
-- **KeyboardAvoidingView** with intelligent platform detection  
+- **KeyboardAvoidingView** with intelligent platform detection
 - **Pull-to-refresh** support in scrollable screens
 - **Gesture handling** for toasts and modals
 - **Platform-specific UI** adaptations
@@ -213,7 +215,7 @@ src/
 ```typescript
 interface RootState {
   auth: AuthState;           // ✅ User authentication & session
-  ui: UIState;              // ✅ UI state (modals, loading, etc.)  
+  ui: UIState;              // ✅ UI state (modals, loading, etc.)
   reservation: ReservationState;    // ✅ Reservation flow state
   venues: VenuesState;      // ✅ Venue search & filters
   reservations: ReservationsState; // ✅ User reservations CRUD
@@ -252,7 +254,7 @@ interface RootState {
 - **ReservationFlowScreen** ✅ - Complete 5-step reservation process with real API
 - **MyReservationsScreen** ✅ - User reservations management (drawer)
 
-### 👤 User Management  
+### 👤 User Management
 - **UserProfileScreen** ✅ - Complete profile management with 3 tabs
 - **ProfileScreen** ✅ - Profile editing in main screens and drawer
 
@@ -281,7 +283,7 @@ interface RootState {
 ### Testing Strategy (Planned)
 - **Unit Testing**: Jest + React Native Testing Library
 - **Component Testing**: Isolated component testing
-- **Hook Testing**: Custom hook testing utilities  
+- **Hook Testing**: Custom hook testing utilities
 - **Integration Testing**: Redux integration testing
 - **E2E Testing**: Detox for critical user flows
 
@@ -314,7 +316,7 @@ interface RootState {
 
 ### ✅ USER EXPERIENCE SCREENS COMPLETED (100%)
 17. **🏢 VenueListScreen** - Complete venue discovery with filters, search, and pagination
-18. **🛍️ ServiceSelectionScreen** - Full service catalog with category filtering and reservation integration  
+18. **🛍️ ServiceSelectionScreen** - Full service catalog with category filtering and reservation integration
 19. **🔔 NotificationsScreen** - Complete notifications center with filtering and real-time updates
 20. **👤 ProfileScreen** - Full profile management with editing, image upload, and navigation menu
 21. **📋 MyReservationsScreen** - Comprehensive reservation management with cancellation and status tracking
@@ -354,13 +356,13 @@ const ComponentName: React.FC<Props> = ({ prop1, prop2 }) => {
   // 1. Hooks and state
   const { t } = useI18n();
   const [state, setState] = useState();
-  
-  // 2. Event handlers  
+
+  // 2. Event handlers
   const handleAction = () => {};
-  
+
   // 3. Effects
   useEffect(() => {}, []);
-  
+
   // 4. Render
   return <StyledComponent />;
 };
@@ -376,7 +378,7 @@ export default ComponentName;
 // Service class pattern
 class ServiceName {
   private baseUrl = API_BASE_URL;
-  
+
   async methodName(params: Params): Promise<Response> {
     return handleRequest<Response>({
       url: this.baseUrl,
@@ -423,7 +425,7 @@ export default new ServiceName();
 - **Code Splitting**: Lazy loading for screens and services
 - **Asset Optimization**: Optimized images and icons
 
-### Runtime Performance  
+### Runtime Performance
 - **Memoization**: React.memo, useMemo, useCallback usage
 - **State Optimization**: Normalized state structure
 - **List Virtualization**: Ready for large data sets
@@ -449,7 +451,7 @@ export default new ServiceName();
 ### 🎯 Endpoints Principales para Móvil
 **Autenticación** (✅ Funcionando):
 - `POST /api/auth/login` - JWT authentication
-- `POST /api/auth/register` - Registro de usuarios  
+- `POST /api/auth/register` - Registro de usuarios
 - `GET /api/auth/profile` - Validación de token + perfil
 
 **Venues** (✅ API Pública):
@@ -491,7 +493,7 @@ export default new ServiceName();
 - getPopularVenues(pagination) → Popular venues
 - searchVenues(query) → Search results
 - addToFavorites(venueId) → Add to user favorites
-- removeFromFavorites(venueId) → Remove from favorites  
+- removeFromFavorites(venueId) → Remove from favorites
 - getFavoriteVenues(pagination) → User's favorite venues
 - isFavorite(venueId) → Check if venue is favorited
 - getVenueReviews(venueId) → Venue reviews
@@ -560,7 +562,7 @@ export default new ServiceName();
 # Sistema Administrador (Ve TODO)
 admin@reservapp.com - SUPER_ADMIN 🔥
 
-# Propietarios de Negocios  
+# Propietarios de Negocios
 admin.salazar@reservapp.com - ADMIN (Hotel Boutique) 🏨
 admin.restaurant@reservapp.com - ADMIN (Restaurante) 🍽️
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { ActivityIndicator, Alert, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { ArrowLeft, Calendar, CheckCircle, CreditCard, User } from 'lucide-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -555,16 +555,19 @@ export const ReservationFlowScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-      <LoadingContainer>
-        <ActivityIndicator color='#FF8A00' size='large' />
-        <LoadingText>Procesando reservación...</LoadingText>
-      </LoadingContainer>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <LoadingContainer>
+          <ActivityIndicator color='#FF8A00' size='large' />
+          <LoadingText>Procesando reservación...</LoadingText>
+        </LoadingContainer>
+      </SafeAreaView>
     );
   }
 
   return (
-    <Container>
-      <HeaderContainer>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Container>
+        <HeaderContainer>
         <BackButton onPress={() => navigation.goBack()}>
           <ArrowLeft color='#000' size={24} />
         </BackButton>
@@ -611,6 +614,7 @@ export const ReservationFlowScreen: React.FC = () => {
           </ContinueButtonText>
         )}
       </ContinueButton>
-    </Container>
+      </Container>
+    </SafeAreaView>
   );
 };
