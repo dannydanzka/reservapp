@@ -60,7 +60,9 @@
       "Bash(kill:*)",
       "Bash(node:*)",
       "Bash(yarn type-check:*)",
-      "Bash(yarn format:*)"
+      "Bash(yarn format:*)",
+      "Bash(yarn eslint:*)",
+      "Bash(python3:*)"
     ],
     "deny": []
   }

@@ -23,15 +23,15 @@ graph TD
     B -->|feature/*, develop| C[Debug Builds]
     B -->|main, release/*| D[Release Builds]
     B -->|main + tag| E[Production Builds]
-    
+
     C --> F[Quality Checks]
     C --> G[iOS Debug IPA]
     C --> H[Android Debug APK]
-    
+
     D --> I[Quality Checks + Tests]
     D --> J[iOS Release IPA]
     D --> K[Android Release APK]
-    
+
     E --> L[Pre-Production Checks]
     E --> M[iOS Production + TestFlight]
     E --> N[Android Production + Play Store]
@@ -82,7 +82,7 @@ lane :release_ios do
   increment_build_number(xcodeproj: "ios/ReservApp.xcodeproj")
   gym(
     scheme: "ReservApp",
-    configuration: "Release", 
+    configuration: "Release",
     export_method: "ad-hoc",
     output_directory: "./builds/ios/release",
     clean: true
@@ -97,10 +97,10 @@ lane :production_ios do
     bump_type: "patch"
   )
   increment_build_number(xcodeproj: "ios/ReservApp.xcodeproj")
-  
+
   # Match certificates
   match(type: "appstore", readonly: true)
-  
+
   # Build
   gym(
     scheme: "ReservApp",
@@ -108,7 +108,7 @@ lane :production_ios do
     export_method: "app-store",
     clean: true
   )
-  
+
   # Upload to TestFlight
   pilot(
     skip_waiting_for_build_processing: false,
@@ -132,7 +132,7 @@ lane :debug_android do
   )
 end
 
-# Release Build  
+# Release Build
 lane :release_android do
   gradle(
     task: "assembleRelease",
@@ -150,13 +150,13 @@ lane :production_android do
   android_set_version_code(
     gradle_file: "android/app/build.gradle"
   )
-  
+
   # Build AAB
   gradle(
     task: "bundleRelease",
     project_dir: "android/"
   )
-  
+
   # Upload to Play Store
   upload_to_play_store(
     track: "internal",
@@ -172,7 +172,7 @@ end
 lane :debug_all do
   debug_ios
   debug_android
-  
+
   # Notify team
   slack(
     message: "🛠️ Debug builds completed",
@@ -184,9 +184,9 @@ end
 lane :release_all do
   release_ios
   release_android
-  
+
   slack(
-    message: "🚀 Release builds completed", 
+    message: "🚀 Release builds completed",
     channel: "#mobile-builds"
   )
 end
@@ -195,7 +195,7 @@ end
 lane :production_all do
   production_ios
   production_android
-  
+
   slack(
     message: "🎉 Production builds deployed to stores!",
     channel: "#mobile-builds"
@@ -207,7 +207,7 @@ end
 ```ruby
 # iOS
 app_identifier("com.reservapp.mobile")
-apple_id("team@reservapp.com") 
+apple_id("team@reservapp.com")
 team_id("XXXXXXXXXX")
 
 # Android
@@ -239,16 +239,16 @@ jobs:
         with:
           node-version: '18'
           cache: 'yarn'
-      
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      
+
       - name: TypeScript check
         run: yarn type-check
-      
+
       - name: ESLint check
         run: yarn lint --max-warnings 0
-      
+
       - name: Test suite
         run: yarn test --coverage
 
@@ -261,25 +261,25 @@ jobs:
         with:
           node-version: '18'
           cache: 'yarn'
-      
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
           bundler-cache: true
           working-directory: ios
-      
+
       - name: Install CocoaPods
         run: cd ios && bundle exec pod install
-      
+
       - name: Build iOS Debug
         run: bundle exec fastlane debug_ios
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      
+
       - name: Upload iOS artifact
         uses: actions/upload-artifact@v4
         with:
@@ -295,22 +295,22 @@ jobs:
         with:
           node-version: '18'
           cache: 'yarn'
-      
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-      
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      
+
       - name: Build Android Debug
         run: bundle exec fastlane debug_android
-      
+
       - name: Upload Android artifact
         uses: actions/upload-artifact@v4
         with:
@@ -335,26 +335,26 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup environment
         uses: ./.github/actions/setup-environment
-      
+
       - name: Quality gates
         run: |
           yarn type-check
           yarn lint --max-warnings 0
           yarn test --coverage --passWithNoTests
-      
+
       - name: Build iOS Release
         run: bundle exec fastlane release_ios
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      
+
       - name: Build Android Release
         run: bundle exec fastlane release_android
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -381,17 +381,17 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup environment
         uses: ./.github/actions/setup-environment
-      
+
       - name: Pre-production checks
         run: |
           yarn type-check
           yarn lint --max-warnings 0
           yarn test --coverage --passWithNoTests
           ./scripts/pre-production-checks.sh
-      
+
       - name: Deploy to Production
         run: bundle exec fastlane production_all
         env:
@@ -400,7 +400,7 @@ jobs:
           GOOGLE_PLAY_JSON_KEY_FILE: ${{ secrets.GOOGLE_PLAY_JSON_KEY_FILE }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
-      
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -486,7 +486,7 @@ fastlane match appstore
 android {
     compileSdk 34
     namespace "com.reservapp.mobile"
-    
+
     defaultConfig {
         applicationId "com.reservapp.mobile"
         minSdk 21
@@ -494,7 +494,7 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
-    
+
     signingConfigs {
         release {
             storeFile file(MYAPP_UPLOAD_STORE_FILE)
@@ -503,7 +503,7 @@ android {
             keyPassword MYAPP_UPLOAD_KEY_PASSWORD
         }
     }
-    
+
     buildTypes {
         release {
             minifyEnabled true
@@ -557,31 +557,31 @@ const ICON_SIZES = {
 
 async function generateIcons() {
   const sourceIcon = 'assets/icon-source.png';
-  
+
   // iOS Icons
   for (const iconSize of ICON_SIZES.ios) {
     for (const scale of iconSize.scale) {
       const size = iconSize.size * scale;
       const filename = `icon-${iconSize.size}@${scale}x.png`;
-      
+
       await sharp(sourceIcon)
         .resize(size, size)
         .png()
         .toFile(`ios/ReservApp/Images.xcassets/AppIcon.appiconset/${filename}`);
     }
   }
-  
+
   // Android Icons
   for (const iconSize of ICON_SIZES.android) {
     const filename = `ic_launcher.png`;
     const outputPath = `android/app/src/main/res/mipmap-${iconSize.density}/${filename}`;
-    
+
     await sharp(sourceIcon)
       .resize(iconSize.size, iconSize.size)
       .png()
       .toFile(outputPath);
   }
-  
+
   console.log('✅ Icons generated successfully!');
 }
 
@@ -605,7 +605,7 @@ generateIcons().catch(console.error);
 
 #### Required Documents
 - [ ] Privacy Policy URL
-- [ ] Terms of Service URL  
+- [ ] Terms of Service URL
 - [ ] Support URL
 - [ ] Marketing URL (optional)
 
@@ -680,7 +680,7 @@ echo "✅ Pre-build tests completed!"
 - [ ] iPhone 14/15 (iOS 17+)
 - [ ] iPad (iPadOS 15+)
 
-**Android Testing**  
+**Android Testing**
 - [ ] Android 8.0 (API 26)
 - [ ] Android 10.0 (API 29)
 - [ ] Android 12.0 (API 31)
@@ -700,7 +700,7 @@ echo "Bundle size: $BUNDLE_SIZE"
 # Memory usage profiling
 yarn profile:memory
 
-# Cold start time measurement  
+# Cold start time measurement
 yarn profile:startup
 
 # Navigation performance
@@ -728,7 +728,7 @@ echo "✅ Performance tests completed!"
 - [ ] Territories: All countries
 - [ ] App Store distribution
 
-#### App Review Information  
+#### App Review Information
 - [ ] Contact information
 - [ ] Demo account (if required)
 - [ ] Review notes
@@ -744,7 +744,7 @@ echo "✅ Performance tests completed!"
 
 #### Store Listing
 - [ ] App title (30 characters)
-- [ ] Short description (80 characters)  
+- [ ] Short description (80 characters)
 - [ ] Full description (4000 characters)
 - [ ] App category: Business
 - [ ] Content rating questionnaire
@@ -819,7 +819,7 @@ git push origin main --tags
 ### 🎉 New Features
 - Feature description
 
-### 🐛 Bug Fixes  
+### 🐛 Bug Fixes
 - Bug fix description
 
 ### ⚡ Improvements
@@ -892,7 +892,7 @@ yarn start:reset          # Reiniciar con caché limpio
 yarn android              # Android (debug por defecto)
 yarn android:debug        # Android debug explícito
 yarn android:release      # Android release
-yarn ios                  # iOS (debug por defecto)  
+yarn ios                  # iOS (debug por defecto)
 yarn ios:debug           # iOS debug explícito
 yarn ios:release         # iOS release
 ```
@@ -981,7 +981,7 @@ yarn lint:fix-all           # Fix + type-check
 yarn lint:js                # Solo ESLint
 yarn lint:errors:js        # Solo errores (sin warnings)
 
-# CSS/Styles  
+# CSS/Styles
 yarn lint:styles            # Solo Stylelint
 yarn lint:errors:styles    # Solo errores de estilos
 
@@ -1010,7 +1010,7 @@ yarn prettier:fix          # Auto-fix Prettier
 
 ```bash
 yarn analyze:exports        # Contar default exports
-yarn analyze:console        # Contar console statements  
+yarn analyze:console        # Contar console statements
 yarn analyze:unused         # Módulos no utilizados
 yarn analyze:bundle         # Análisis de bundle Android
 ```
@@ -1052,7 +1052,7 @@ yarn deploy:ios:appstore   # = fastlane:ios:release
 yarn fastlane:android:beta     # Deploy a Play Store (beta)
 yarn fastlane:android:release  # Deploy a Play Store (release)
 
-# Alias convenientes  
+# Alias convenientes
 yarn deploy:android:playstore:beta    # = fastlane:android:beta
 yarn deploy:android:playstore:release # = fastlane:android:release
 ```

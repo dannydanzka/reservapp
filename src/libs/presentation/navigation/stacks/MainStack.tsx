@@ -27,7 +27,7 @@ export const MainStack: React.FC = () => {
       <Stack.Screen
         component={ReservationFlowScreen}
         name='ReservationFlow'
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

@@ -1,5 +1,7 @@
 # ReservApp - Guía Completa del Producto
 
+**Autor**: Roberto Ramirez (danny.danzka21@gmail.com)
+
 ## 📋 Resumen Ejecutivo
 
 **ReservApp** es una plataforma integral de reservaciones que revoluciona la industria de hospitalidad y servicios en Guadalajara, Jalisco. Se posiciona como la **solución estratégica para pequeños hoteles y su ecosistema de servicios**, ofreciendo mayor rentabilidad, control y alcance con comisiones más bajas, pagos rápidos y herramientas de gestión integradas. Más que una plataforma de reservas: **es un socio de crecimiento**.

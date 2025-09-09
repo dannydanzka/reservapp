@@ -1,5 +1,7 @@
 # 🛠️ ReservApp Mobile - Guía Técnica Completa
 
+**Autor**: Roberto Ramirez (danny.danzka21@gmail.com)
+
 ## 📋 Índice
 - [Arquitectura del Sistema](#arquitectura-del-sistema)
 - [Stack Tecnológico](#stack-tecnológico)
@@ -24,7 +26,7 @@ src/
 │   ├── Toast/          # Toast notification system
 │   ├── Modal/          # Modal system with provider
 │   └── ErrorBoundary.tsx
-├── screens/            # Presentation Layer  
+├── screens/            # Presentation Layer
 │   ├── auth/           # Authentication screens
 │   ├── main/           # Main app screens
 │   ├── drawer/         # Drawer navigation screens
@@ -145,7 +147,7 @@ interface RootState {
 - **Async Thunks**: `loginUser`, `logoutUser`, `restoreSession`
 - **Persistencia**: Token JWT y datos de usuario
 
-#### 🏢 VenuesSlice  
+#### 🏢 VenuesSlice
 - **Estado**: Lista de venues, filtros, favoritos
 - **Async Thunks**: `fetchVenues`, `searchVenues`, `fetchVenueDetails`
 - **Filtros**: Categoría, precio, distancia, rating
@@ -331,7 +333,7 @@ yarn start
 # Ejecutar en iOS
 yarn ios
 
-# Ejecutar en Android  
+# Ejecutar en Android
 yarn android
 
 # Type checking
@@ -479,7 +481,7 @@ interface VenuesState {
   data: Venue[],
   meta: {
     page: number,
-    limit: number, 
+    limit: number,
     total: number,
     hasMore: boolean
   }
@@ -517,7 +519,7 @@ state.pagination = action.payload.meta;
 ```typescript
 export const selectVenuesList = (state: { venues: VenuesState }) => state.venues.venues;
 export const selectFavoriteIds = (state: { venues: VenuesState }) => state.venues.favoriteIds;
-export const selectIsVenueFavorite = (venueId: string) => 
+export const selectIsVenueFavorite = (venueId: string) =>
   (state: { venues: VenuesState }) => state.venues.favoriteIds.includes(venueId);
 ```
 
@@ -568,7 +570,7 @@ interface ServicesState {
 - **Before**: `favoriteIds: Set<string>` (not serializable)
 - **After**: `favoriteIds: string[]` (serializable)
 
-**❌ ➡️ ✅ Service Method Mismatches**  
+**❌ ➡️ ✅ Service Method Mismatches**
 - **Before**: Calling non-existent service methods
 - **After**: All async thunks map to actual service methods
 

@@ -209,13 +209,13 @@ ReservApp Platform (https://reservapp-web.vercel.app)
 ├── 👥 Manages: All users, businesses, and system
 └── 🎯 Dashboard: Complete system overview
 
-🟠 ADMIN (admin.salazar@reservapp.com, admin.restaurant@reservapp.com)  
+🟠 ADMIN (admin.salazar@reservapp.com, admin.restaurant@reservapp.com)
 ├── ✅ Access: Own business management routes
 ├── 🏨 Manages: Own venues, services, reservations
 └── 🎯 Dashboard: Business-specific metrics
 
 🟡 MANAGER (gestor.salazar@reservapp.com, gestor.restaurant@reservapp.com)
-├── ✅ Access: Limited management routes  
+├── ✅ Access: Limited management routes
 ├── 🎯 Manages: Specific venue operations
 └── 📊 Dashboard: Venue-specific data
 
@@ -244,26 +244,26 @@ ReservApp Platform (https://reservapp-web.vercel.app)
 - **Demo Account**: `admin@reservapp.com` (password: password123)
 - **Access**: ALL routes and API endpoints
 - **Permissions**: Complete system administration
-- **Special Features**: 
+- **Special Features**:
   - User management across all businesses
   - System logs and monitoring
   - Business account management for all companies
   - Contact form submissions
   - Complete platform oversight
 
-#### 🟠 ADMIN Role  
+#### 🟠 ADMIN Role
 - **Demo Accounts**: `admin.salazar@reservapp.com`, `admin.restaurant@reservapp.com`
 - **Access**: Own business management routes
 - **Permissions**: Full CRUD on own business resources
 - **Special Features**:
   - Own venue management
-  - Own service and reservation management  
+  - Own service and reservation management
   - Business-specific payment history
   - Team member management
   - Business analytics and reports
 
 #### 🟡 MANAGER Role
-- **Demo Accounts**: `gestor.salazar@reservapp.com`, `gestor.restaurant@reservapp.com` 
+- **Demo Accounts**: `gestor.salazar@reservapp.com`, `gestor.restaurant@reservapp.com`
 - **Access**: Limited management routes for assigned venues
 - **Permissions**: Venue-specific operations
 - **Special Features**:
@@ -392,7 +392,7 @@ ReservApp Platform (https://reservapp-web.vercel.app)
 3. **Login**: `/auth/login` → Role-based redirect to `/admin`
 4. **Management**: Full admin dashboard with role-specific features
 
-#### Individual User Journey  
+#### Individual User Journey
 1. **Discovery**: `/` → `/about` → `/contact` (Learn about platform)
 2. **Registration**: `/auth/user-register` → Account creation + welcome email
 3. **Login**: `/auth/login` → Currently redirects to landing (reservation flow future)
